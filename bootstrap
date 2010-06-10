@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+cd syntax
+  ./bootstrap
+cd ..
+
+autoxt
+autoreconf -ifv

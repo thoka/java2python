@@ -1,0 +1,365 @@
+--------------------------------------------------------------------------
+Java-front for Stratego/XT 
+--------------------------------------------------------------------------
+
+2009-07-09 - Java-front 0.9
+
+  This is a minor update of Java-front, a package that provides
+  the syntax-related support for implementing Java transformation
+  systems. 
+
+  * Wrapper strategies for Java to Java transformation tools
+
+  Added the long requested wrapper strategies for creating Java to Java
+  transformation tools.
+
+    io-java2java-wrap(s) =
+    io-java2java-wrap(extra-opts, s) =
+    io-java2java-wrap(extra-opts, usage, about, s) =
+
+  Creating a source to source tool is now as easy as:
+
+  ------------------------------
+    module foo
+    imports libstratego-lib libjava-front
+    strategies
+
+    main =
+      io-java2java-wrap(foo)
+ 
+    foo =
+    // some AST transformation
+  ------------------------------
+
+  $ strc -i foo.str $(strcflags stratego-lib java-front)
+  $ ./foo -i Foo.java -o Bar.java
+ 
+
+  * Pretty printer available as library
+  
+  The java-front pretty-printer can now be used as a
+  separately compiled library.
+
+  * Java embedding
+
+  Renovation of the Java embedding definitions. The preferred embedding is now
+  no longer using a prefixed version of Java, but a mix version of Java.
+
+  The preferred definition for embedding Java is now
+  EmbeddedJavaMix.def. This module is parameterized with two symbols:
+
+    1) The context of Java.
+    2) The expression non-terminal of the host language.
+
+  If you use StrategoRenamed, then the import can be something like
+  this:
+
+  languages/java/EmbeddedJavaMix[Java StrategoTerm]
+
+  The advantage of having EmbeddedJavaMix is that you can easily embed
+  multiple languages, even if more than one of these languages involve
+  Java. Suppose that you have a language Foo that extends Java:
+
+  -------------------------------------
+  module Foo
+  imports
+  languages/java/JavaMix[Foo] 
+  
+  exports
+  ...
+  -------------------------------------
+ 
+  and Foo is embedded in Stratego:
+
+  -------------------------------------
+  module StrategoFoo
+  imports
+  languages/stratego/StrategoMix[Stratego]
+  Foo
+
+  exports
+  ...
+  -------------------------------------
+
+  In this situation the composer of the embeddings can decide if he (she
+  is unlikely) wants to support the variables and anti-quotations in Foo
+  quotations and if Foo constructs should be supported in Java
+  quotations.
+  
+  If this should be allowed, then EmbeddedJavaMix can be imported with
+  the parameters [Foo Term[[Stratego]]]. If this should not be allowed,
+  then a different first parameter can be chosen.
+
+
+  * AST changes
+  
+  There have been some minor changes is the syntax definition that change
+  the Java AST to previous versions, and therefore might break existing 
+  code. 
+  
+  ** Replaced ClassName with TypeName. This changes the representation of:
+     - Qualified super field access
+     - Qualified super method invocation
+     - Qualified this.
+     All these constructs are now qualified by a TypeName instead of a
+     ClassName.
+  ** Change in modifiers: Anno is no longer a Mod
+  ** GenericStaticMethod has been renamed to GenericMethod and the prefix
+     of the GenericMethod is now an AmbName, not a TypeName. This
+     represents the syntactical ambiguity better.
+
+
+  * Contributors
+
+    - Martin Bravenboer
+    - Eelco Dolstra
+    - Eelco Visser
+    - Lennart Kats
+    - Danny Groenwegen
+    - Rob Vermaas
+
+  Thanks!
+
+
+2005-11-04 - Java-front 0.8
+
+  This is another major update of Java-front, a package that provides
+  the syntax-related support for implementing Java transformation
+  systems.
+
+  * Syntax Definition
+
+  By default, parse-java now uses a syntax definition that has only a
+  single start symbol (CompilationUnit). This is a major improvement
+  of the performance and error reporting of the SGLR used in
+  parse-java. If you specify a custom start symbol, then a syntax
+  definition with more start symbols will be used.
+
+  Minor change in the definition of type parameters to make the
+  structure of formal type parameters more close to the structure of
+  ordinary type parameters. Example: the new representation is
+  TypeParam(Id("T"), None). Was: TypeParam(TypeVar(Id("T")), None).
+
+  Added ClassDecStm constructor for type declarations at statement
+  level.
+
+  * Pretty Printer
+
+  Generic constructors couldn't be pretty-printed in the previous
+  release of Java-front. This has now been fixed.
+
+  * Compilation
+
+  Java-front now declares an xtc_repos variable. In Java-front
+  dependent packages you can simply refer to JAVA_FRONT_XTC instead of
+  hard-coding the path to the XTC repository.
+
+  Java-front now declares the strcflags and strcxtcflags variable. At
+  the command-line you can now compile a java-front program with:
+
+  $ strc -i foo.str $(strcflags java-front) 
+
+  and optionally: $(strcxtcflags java-front) if you want to use the
+  XTC repository of Java-front. These strcflags commands will
+  automatically add the appropriate include and XTC repository
+  arguments, so that you don't have to remember all these details.
+
+  You need the following bash shell aliases for this:
+
+  alias strcflags="pkg-config --variable=strcflags "
+  alias strcxtcflags="pkg-config --variable=strcxtcflags "
+
+  * Contributors
+
+  - Martin Bravenboer
+  - Rene de Groot
+  - Rob Vermaas
+
+  Thanks!
+
+2005-05-24 - Java-front 0.7
+
+  This is a major update of Java-front, a package that provides the
+  syntax-related support for implementing Java transformation
+  systems.
+
+  * Syntax Definition
+
+  Types that refer to member types of a parameterized class (e.g. the
+  type =M<O>.N=) are now supported. The change does not affect the AST
+  of members of unparameterized classes. The issue was reported by
+  Valentin David. Thanks!
+
+  This release adds support for hexadecimal floating-point literals,
+  which is a feature that was added to JLS3 without much
+  fanfare. Hexadecimal floating-point literals have been added to Java
+  to allow "precise and predictable specification of particular
+  floating-point values".
+  
+  The parse table =Java-15.tbl= now contains only a single start
+  symbol: =CompilationUnit=. This results in better error reporting,
+  for obscure reasons. The tool =parse-java= uses a different
+  parse table with more start-symbols if a different (i.e. not
+  =CompilationUnit=) start symbol is specified, otherwise
+  =Java-15.tbl= is used.
+
+  The constructor of the =assert= statement is now =AssertStm= (was
+  =Assert=). This was requested by Valentin David to avoid name
+  clashes.
+
+  Java-front 0.7 does no longer contain the obsolete 'basic' and
+  'generic' variants of the Java syntax definition. These variants
+  have been deprecated for quite some time and do not seem to be in
+  use anymore.
+
+  * Pretty Printer
+
+  The Java-front syntax and pretty-printer is now tested with the most
+  recent version of GNU Classpath: 0.15. This release contains much
+  more Java code, which makes the testing even more thorough.
+
+  A minor bug in the pretty-printing of qualified types has been
+  fixed. This issue only showed up when pretty-printing an AST after a
+  transformation that produces empty type qualifiers. This is pattern
+  that will never be produced by the parser. The pretty-printer now
+  supports these empty qualifiers.
+
+  Internally, the pretty-printer has been restructured to be more
+  modular. The module structure is similar to the syntax
+  definition of Java. The pretty-printer is now available as a
+  Stratego library as well (=java/pp/-= in the share directory).
+
+  * Stratego Library
+
+  This release of Java-front generates a module of typematching
+  strategies (e.g =is-Expr=) and installs it for use in your Stratego
+  programs: =java/typematch/common= (contributed by Rob Vermaas).
+
+  * Embedding of Java in Stratego
+
+  A bug in the meta variable for lists of formal parameters has been
+  fixed (reported by Pankaj Risbood, fixed by Rob Vermaas). Also,
+  several ambiguity problems have been fixed, some related to
+  undesired splitting of identifiers (fixed by Rene de Groot).
+
+  The embedding now supports more verbose meta variables, which
+  include a custom name, instead of just allowing a number. Example:
+  =bstm_foo= (contributed by Rene de Groot).
+
+  * Deployment
+
+  Java-front now uses (and requires) pkg-config. This means that
+  explicit configuration with the location of aterm, sdf, and
+  strategoxt is no longer required. A plain =./configure= should do
+  the job. However, you might need to set your =PKG_CONFIG_PATH= if
+  you did not install the dependencies in a standard
+  location. Configure will tell you to do this if it cannot find
+  aterm, sdf or strategoxt.
+
+  =pkg-config= can also be used to compile your Stratego program in a
+  more convenient way from the command-line. Java-front declares a
+  pkg-config variable =strcflags=, which contains the required include
+  flags. For an example on how to use this =strcflags= variable, see:
+  
+  http://www.stratego-language.org/Stratego/PkgConfig
+
+  * Documentation
+
+  A code browser for the syntax definition of Java is now available
+  from the Java-front website. This feature has been contributed by
+  Rob Vermaas, the author of xdoc, wich is used to generate the code
+  browser.
+  
+  http://www.stratego-language.org/Stratego/JavaFront
+
+  * Contributors
+
+  - Martin Bravenboer
+  - Rene de Groot
+  - Rob Vermaas
+  - Valentin David
+  - Pankaj Risbood
+
+  Thanks!
+
+2005-01-14 - Java-front 0.6
+
+  This a minor update of Java-front. In this release, the embedding of
+  Java in Stratego has been improved and generalized, to make it
+  reusable for embedding in other programming languages.
+
+  Java syntax definition
+
+   * Generalized parameterized types to allow any type as actual type
+     argument. The actual limitation to reference type of the current
+     Java version should be enforced by semantic checks, since it is a
+     semantic limitation.
+
+   * Introduced a general sort (=Modifier=) for all modifiers.
+
+  Java embedding in Stratego
+
+   * =e= is now a meta variable for the left-hand side of an
+     assignment.
+
+   * Added quotations for variables, quotations, names, and modifiers.
+
+   * Added disambiguations to support disabling of heuristic filters in
+     SGLR. These can be disabled by specifying =HeuristicFilters(Off)=
+     in the =.meta= file. See the new of StrategoXT 0.13 for more
+     information.
+
+   * Removed the quotation with explicit disambiguation for a list of
+     block statement. This is always ambiguous with a single block
+     statement, which only shows up if you disable the heuristic
+     filters of sglr.
+
+2004-10-04 - Java-front 0.5 
+
+  We are pleased to announce the first official release of java-front.
+
+  Java-front is a package that adds support for Java meta-programming to
+  StrategoXT. It contains a handcrafted SDF grammar for Java as it
+  appears in J2SE 5.0, Stratego signatures generated from this grammar,
+  and a handcrafted pretty printer that supports comment preserving
+  transformations.
+
+  The Java syntax definition and pretty-printer are very well
+  tested. Java-front is able to parse and pretty-print (round trip is
+  checked) all the Java sources in the GNU Classpath and Sun's JDK
+  runtime libraries.
+
+2002-11-13
+
+  The Stratego-Box grammar has been removed from Java Front. It is
+  temporary available as a separate package stratego-box until it will
+  be available as a part of GPP.
+
+2002-08-21
+
+  Java Front now comes with a grammar for Generic-Java.  Although
+  Generic-Java is a language shared by many proposals for parameterized
+  types, this grammar is designed to be compatible with JSR-14: "Adding
+  Generics to the Java Programming Language". Of course there is also a
+  Stratego-Generic-Java grammar. The pretty-printer has been extended to
+  handle generics.
+
+2002-08-20
+
+  The grammar for mixing Stratego and Java has been improved after some
+  code generation experiments. Future versions of Java Front might
+  include some strategies for code-generation in Stratego.
+
+2002-08-19
+
+  Java Front now comes with a hand-crafted pretty printer This
+  pretty-printer has been written in Stratego with concrete syntax for
+  the box language of Merijn de Jonge.
+
+2002-08-05
+
+  Started including the huge test-suite 'Jacks'.
+
+2002-07-27
+
+  Creation of package

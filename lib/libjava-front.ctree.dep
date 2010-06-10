@@ -1,0 +1,28 @@
+libjava-front.ctree: \
+	./java/postprocess/java-lift-eblocks.str \
+	./java/postprocess/java-concat-ids.str \
+	./java/typematch/common.rtree \
+	./java/signature/v5.rtree \
+	./java/pp2py/statement.rtree \
+	./java/pp2py/parenthesize.rtree \
+	./java/pp2py/helpers.rtree \
+	./java/pp2py/name.rtree \
+	./java/pp2py/literal.rtree \
+	./java/pp2py/modifier.rtree \
+	./java/pp2py/expression.rtree \
+	./java/pp2py/interface/annotation-type.rtree \
+	./java/pp2py/interface/annotation.rtree \
+	./java/pp2py/class/method-declaration.rtree \
+	./java/pp2py/class/enum-declaration.rtree \
+	./java/pp2py/type/reference.rtree \
+	./java/pp2py/type/primitive.rtree \
+	./java/pp2py/type/variable.rtree \
+	./java/pp2py/type/parameterized.rtree \
+	./java/signature/eblock.rtree \
+	/usr/share/libstratego-gpp.rtree \
+	./java/pp2py/main.rtree \
+	./java/pretty-print2py.rtree \
+	/usr/share/libstratego-sglr.rtree \
+	/usr/share/libstratego-lib.rtree \
+	./java/parse.rtree \
+	./javafront.rtree

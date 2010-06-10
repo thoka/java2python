@@ -1,0 +1,6 @@
+module class-gen
+imports Java-15
+strategies
+
+  main =
+    !compilation-unit |[ class Foo {} ]|

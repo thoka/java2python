@@ -1,0 +1,138 @@
+testsuite Comments
+topsort TypeDec
+
+test basic end of line comment (1)
+  "class Simple { // aa
+   }
+  " -> ClassDec(_, ClassBody([]))
+
+test basic end of line comment (2)
+  "class Simple {// aa
+   }
+  " -> ClassDec(_, ClassBody([]))
+  
+test basic end of line comment at end of file.
+  "class Simple {} // aa" -> ClassDec(_, ClassBody([]))
+
+test basic long comment (1)
+  "class Test { /* */ }" succeeds
+
+test basic long comment (2)")
+  "class Test {/* */}" succeeds
+
+test Silly (1)
+  "class Test { /* \\ */}" succeeds
+
+test Silly (2)
+  "class Test { /* \u */}" fails
+
+test /* anything */ is a comment (1)
+  "class T371 { /* / * // * / exit */ }" -> ClassDec(_, ClassBody([]))
+
+test /* anything */ is a comment (2)
+  "class T371 { /* / * // * / exit */}" succeeds
+
+test /* */ comment can span multiple lines
+  "class T372 { /* hello
+     bye
+    */}
+  " -> ClassDec(_, ClassBody([]))
+
+test // comment inside /* */ comment is ignored
+  "class T373 { /* hello
+   // */}"
+   -> ClassDec(_, ClassBody([]))
+
+test // comment inside // comment is ignored
+  "class T374 { // //
+  }"
+  -> ClassDec(_, ClassBody([]))
+
+test /* */ comment inside // comment is ignored
+  "class T375 { // /*
+   //*/
+   }" -> ClassDec(_, ClassBody([]))
+
+test /* or // inside /* */ comment is ignored
+  "class T376 { /* comment /* // /* */}"
+   -> ClassDec(_, ClassBody([]))
+
+test /* or // inside /** */ comment is ignored
+  "class T377 { /** comment /* // /* */}"
+   -> ClassDec(_, ClassBody([]))
+
+test /**/ is a documentation comment
+  "class T378 { /**/}"
+   -> ClassDec(_, ClassBody([]))
+
+test // comment separates tokens
+  "class T379 {int//
+   i;}
+  " succeeds
+
+test /**/ comment separates tokens"
+  "class T3710 {int/* */i;}"
+  succeeds
+
+test // comment cannot appear in literal")
+  "comments/T3711.java"
+  fails
+
+test /**/ comment cannot appear in literal")
+  "class T3712 {float f = 1./* */0;}"
+  fails
+
+test // comment cannot appear in literal")
+  "class T3711 {float f = 1.//
+  0;}
+  " fails
+
+test /**/ comment cannot appear in literal
+  "class T3714 {char c = 'a/* */';}" fails
+
+test /* must have matching */
+  "class T3715 {} /*" fails
+
+test // may not end at EOF, only LineTerminator (incompatible with JLS, allowed anyway: breaks some tests ... )
+  "class T3716 {} //" succeeds
+
+test */ is not a comment, but an opening for /* */
+  "class T3726 { /*/}" fails
+
+test /*/ is not a comment, but an opening for /* */
+  "class T3727 { /*/ */ }" succeeds
+
+test /** */ doc comments are legal, in spite of
+  "class T3728 { /** */ }" succeeds
+
+test /* */ comments don't nest
+  "class T3728 { /* /* */ */ }" fails
+
+test /* */ comments don't nest in //
+  "class T3731 { // /*
+   */ }
+  " fails
+
+test /** */ comment separates tokens
+  "class T3732 {int/** */i;}" succeeds
+
+test /** */ comment separates tokens
+  "class T3733 {float f = 1./** */0;}" fails
+
+test /** */ comment cannot appear in literal
+  "class T3734 {char c = 'a/** */';}" fails
+
+test /** must have matching */
+  "class T3735 {} /**" fails
+
+test /* must have matching */
+  "class T3736 {} /* " fails
+
+test /** must have matching */
+  "class T3737 {} /** " fails
+
+test /* must have matching */
+  "class T3738 {} /* *" fails
+
+test /** must have matching */
+  "class T3739 {} /** *" fails

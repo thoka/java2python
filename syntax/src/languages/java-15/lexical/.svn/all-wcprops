@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical
+END
+Main.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/Main.sdf
+END
+Comments.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/Comments.sdf
+END
+Identifiers.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/Identifiers.sdf
+END
+Keywords.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/Keywords.sdf
+END
+UnicodeEscapes.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/UnicodeEscapes.sdf
+END
+WhiteSpace.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/WhiteSpace.sdf
+END
+LineTerminators.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/LineTerminators.sdf
+END
+Modifiers.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/StrategoXT/!svn/ver/16943/java-front/trunk/syntax/src/languages/java-15/lexical/Modifiers.sdf
+END

@@ -1,0 +1,41 @@
+testsuite Java Enum Declarations
+topsort TypeDec
+
+test Empty enum
+  " enum Foo { } " succeeds
+
+test Simple enum
+  " enum Foo { FRED, BAR, BARNEY } " succeeds
+
+test Simple enum
+  " public enum Foo { FRED, BAR, BARNEY } " succeeds
+
+test Trailing comma
+  " enum Foo { FRED, BAR, BARNEY, } " succeeds
+
+test Trailing semi-colon
+  " enum Foo { FRED, BAR, BARNEY ; } " succeeds
+
+test Trailing comma and semi-colon
+  " enum Foo { FRED, BAR, BARNEY , ; } " succeeds
+
+test Enum body declaration
+  " enum Foo { FRED, BAR, BARNEY ; static {} } " succeeds
+
+test Enum body declaration
+  " enum Foo { FRED, BAR, BARNEY static {} } " fails
+
+test Enum body declaration
+  " enum Foo { FRED, BAR, BARNEY, static {} } " fails
+
+test Enum constant argument
+  " enum Foo { FRED() } " succeeds
+
+test Enum constant argument
+  " enum Foo { FRED(1, 2, 3) } " succeeds
+
+test Enum implementing an interface
+  " enum Foo implements Whatever { FRED, BARNEY } " succeeds
+
+test Private enum
+  " private enum Foo implements Whatever { FRED, BARNEY } " succeeds

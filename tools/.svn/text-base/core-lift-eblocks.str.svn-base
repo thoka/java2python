@@ -1,0 +1,11 @@
+module core-lift-eblocks
+imports
+  libstratego-lib 
+  libjava-front
+  java-concat-ids
+
+strategies
+  
+  main-core-lift-eblocks =
+    io-wrap(java-lift-eblocks)
+

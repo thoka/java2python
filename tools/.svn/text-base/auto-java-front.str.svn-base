@@ -1,0 +1,15 @@
+module auto-java-front
+imports
+  libstratego-lib
+  libstratego-xtc
+
+strategies
+
+  main-auto-java-front =
+      install-java-front-m4
+    ; <exit> 0
+
+  install-java-front-m4 =
+      <xtc-find-file> "java-front.m4"
+    ; copy-to(!"java-front.m4")
+

@@ -1,0 +1,7 @@
+module Stratego-Java-15
+imports
+  StrategoMix[StrategoHost]
+  languages/java/EmbeddedJavaMix[JavaObject Term[[StrategoHost]]]
+
+exports
+  context-free start-symbols Module[[StrategoHost]]

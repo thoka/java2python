@@ -1,0 +1,9 @@
+module jtree15-to-abox
+imports
+  libstratego-lib
+  libjava-front
+
+strategies
+
+  main-jtree15-to-abox = 
+    io-wrap(pp-java5-to-abox)

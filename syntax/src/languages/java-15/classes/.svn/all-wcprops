@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes
+END
+Main.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/Main.sdf
+END
+MethodDeclarations.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/MethodDeclarations.sdf
+END
+InstanceInitializers.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/InstanceInitializers.sdf
+END
+FieldDeclarations.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/FieldDeclarations.sdf
+END
+EnumDeclarations.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/EnumDeclarations.sdf
+END
+ClassDeclarations.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/ClassDeclarations.sdf
+END
+ConstructorDeclarations.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/ConstructorDeclarations.sdf
+END
+StaticInitializers.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/classes/StaticInitializers.sdf
+END

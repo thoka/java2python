@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/StrategoXT/!svn/ver/17202/java-front/trunk/test/syn/StrategoJava
+END
+Main.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/StrategoXT/!svn/ver/16428/java-front/trunk/test/syn/StrategoJava/Main.sdf
+END
+term.testsuite
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/StrategoXT/!svn/ver/17202/java-front/trunk/test/syn/StrategoJava/term.testsuite
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/StrategoXT/!svn/ver/16945/java-front/trunk/test/syn/StrategoJava/Makefile.am
+END

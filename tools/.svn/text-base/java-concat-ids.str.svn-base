@@ -1,0 +1,14 @@
+module java-concat-ids
+
+imports 
+  libstrategolib  
+  libjava-front
+
+signature constructors
+  ConcatIds : ID -> ID
+
+strategies
+  
+  main-java-concat-ids =
+    io-wrap(java-concat-ids)
+

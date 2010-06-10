@@ -1,0 +1,60 @@
+include $(top_srcdir)/Makefile.xt
+
+GNUCP_VERSION=0.19
+
+# create GNU classpath testsuites
+
+classpath-$(GNUCP_VERSION) : $(top_builddir)/test/gnu-classpath/classpath-$(GNUCP_VERSION).tar.gz
+	rm -rf classpath-$(GNUCP_VERSION)
+	cp $< classpath-$(GNUCP_VERSION).tar.gz
+	tar zxvf classpath-$(GNUCP_VERSION).tar.gz
+
+# @todo BasicLookAndFeel causes a SEGV on OS X
+gnu-classpath.list : classpath-$(GNUCP_VERSION)
+	find classpath-$(GNUCP_VERSION) -name '*.java' | grep -v BasicLookAndFeel | grep -v MetalLookAndFeel | sort > $@
+
+# gnu-classpath.atestsuite : gnu-classpath.list
+# 	 $(top_builddir)/xtc/files2parse-unit-testsuite -i $< -o $@
+# 
+# parsecheck : $(GNU_TESTSUITES:.testsuite=.runtestsuite)
+
+# targets
+# GNU_TESTSUITES = \
+#   gnu-classpath.testsuite
+
+PARSEJAVA=XTC_REPOSITORY="$(BUILD_REPOSITORY)" $(XTC)/bin/xtc call parse-java
+PPJAVA=XTC_REPOSITORY="$(BUILD_REPOSITORY)" $(XTC)/bin/xtc call pp-java
+
+check : ppcheck
+
+parsecheck : gnu-classpath.list
+	FILES="`cat gnu-classpath.list`" && \
+	for file in $$FILES; do \
+	    grep ' enum =' "$$file" \
+            || $(MAKE) "$${file%.java}.jtree" \
+            || exit 1; \
+	done
+
+# pretty-print tests
+ppcheck : gnu-classpath.list
+	FILES="`cat gnu-classpath.list`" && \
+	for file in $$FILES; do \
+	    grep ' enum =' "$$file" \
+            || $(MAKE) "$${file%.java}.ppdiff" \
+            || exit 1; \
+	done
+
+%.ppdiff : %.jtree %.ppjtree
+	diff $*.jtree $*.ppjtree
+
+%.ppjtree : %.jtree
+	$(PPJAVA) -i $< | $(PARSEJAVA) -$(JAVA_VERSION) -o $@
+
+%.jtree : %.java
+	$(PARSEJAVA) -$(JAVA_VERSION) -i $< -o $@
+
+clean-local :
+	rm -rf classpath-$(GNUCP_VERSION) classpath-$(GNUCP_VERSION).tar.gz
+
+CLEANFILES = \
+  gnu-classpath.list

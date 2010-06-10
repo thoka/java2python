@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals
+END
+Main.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/Main.sdf
+END
+StringLiterals.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/StringLiterals.sdf
+END
+NullLiteral.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/NullLiteral.sdf
+END
+CharacterLiterals.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/CharacterLiterals.sdf
+END
+EscapeSequences.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/EscapeSequences.sdf
+END
+FloatingPointLiterals.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/FloatingPointLiterals.sdf
+END
+IntegerLiterals.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/IntegerLiterals.sdf
+END
+BooleanLiterals.sdf
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repos/StrategoXT/!svn/ver/17503/java-front/trunk/syntax/src/languages/java-15/lexical/literals/BooleanLiterals.sdf
+END
