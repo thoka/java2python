@@ -73,6 +73,12 @@ class ATerm (list):
             yield exp.up
             exp = exp.up
 
+    def path(exp):
+        "gives a filesystem style path to node exp" 
+        res = [ p.name for p in exp.parents() ]
+        res.reverse()
+        return '/'.join(res)
+        
 
 class AList(ATerm):
     def __init__(self):
