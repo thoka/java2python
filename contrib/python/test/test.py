@@ -11,6 +11,12 @@ TODO:
 """
   
 import unittest
+
+#TODO: is there a better way to do this ?
+import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from aterm import decode, ATerm, ATuple
 from itertools import izip,count
  
@@ -48,6 +54,18 @@ class TestDecode(unittest.TestCase):
         self.assertEquals(t.name, "T")
         self.assertEquals(len(t), 4)
 
+    def test_strings(self):
+        t = decode('T("")')
+        self.assert_(isinstance(t, ATerm))
+        self.assertEquals(len(t[0]), 0)
+        t = decode('T("\\"")')
+        self.assert_(isinstance(t, ATerm))
+        self.assertEquals(len(t[0]), 1)
+        t = decode('T("\\"\\"")')
+        self.assert_(isinstance(t, ATerm))
+        self.assertEquals(len(t[0]), 2)
+
+
 
 class TestTree(unittest.TestCase):
     def test_tree(self):
@@ -74,10 +92,12 @@ class TestEncode(unittest.TestCase):
         self.de('A(){}','A()')
         self.de('A(){1}','A(){1}')
         self.de('A("")')
+        self.de('A("\\"")')
         self.de('A("b")')
         self.de('A([])')
         self.de('A([B()])')
         self.de('A([B(),C()])')
+        
 
 class TestPos(unittest.TestCase):
     def test_pos(self):
@@ -96,6 +116,6 @@ class TestFind(unittest.TestCase):
         self.assertEquals(len(r), 1)
         self.assertEquals(r[0][0].name,"D")        
                                
-if __name__ == '__main__':
+if __name__ == '__main__':   
     unittest.main()
  

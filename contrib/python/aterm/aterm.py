@@ -15,9 +15,10 @@ DEBUG=False
 
 FLAGS = re.VERBOSE | re.MULTILINE | re.DOTALL
 
+
 class AString(str):
     def __repr__(self):
-        return '"%s"' % str.__repr__(self)[1:-1]
+        return encode_string(self)
         
 class ATerm (list):
     def __init__(self,name,params=[],annotation=None):
@@ -67,7 +68,7 @@ class ATerm (list):
         self.up[self.pos()] = new_node
     
     def parents(exp):
-       "iterates over the parents of exp"
+        "iterates over the parents of exp"
         while exp.up is not None:
             yield exp.up
             exp = exp.up
@@ -138,6 +139,7 @@ def scanstring(s, end, encoding=None, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.
                 errmsg("Unterminated string starting at", s, begin))
         end = chunk.end()
         content, terminator = chunk.groups()
+ 
         # Content is contains zero or more unescaped string characters
         if content:
             if not isinstance(content, unicode):
@@ -147,9 +149,9 @@ def scanstring(s, end, encoding=None, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.
         # or a backslash denoting that an escape sequence follows
         if terminator == '"':
             break
-        elif terminator != '\\':
+        elif terminator != "\\":
             if strict:
-                msg = "Invalid control character %r at" % (terminator,)
+                msg = "Strict Mode: Invalid control character %r at " % (terminator,)
                 #msg = "Invalid control character {0!r} at".format(terminator)
                 raise ValueError(errmsg(msg, s, end))
             else:
@@ -307,6 +309,34 @@ def parse_list(string,idx,terminator):
 def decode(string):
     res,idx = scan(string,0)
     return res
+
+
+### Encoding ###
+
+ESCAPE = re.compile(r'[\x00-\x1f\\"\b\f\n\r\t]')
+ESCAPE_ASCII = re.compile(r'([\\"]|[^\ -~])')
+HAS_UTF8 = re.compile(r'[\x80-\xff]')
+ESCAPE_DCT = {
+    '\\': '\\\\',
+    '"': '\\"',
+    '\b': '\\b',
+    '\f': '\\f',
+    '\n': '\\n',
+    '\r': '\\r',
+    '\t': '\\t',
+}
+
+
+for i in range(0x20):
+    #ESCAPE_DCT.setdefault(chr(i), '\\u{0:04x}'.format(i))
+    ESCAPE_DCT.setdefault(chr(i), '\\u%04x' % (i,))
+
+def encode_string(s):
+    "Return a JSON representation of a Python string"
+    def replace(match):
+        return ESCAPE_DCT[match.group(0)]
+    return '"' + ESCAPE.sub(replace, s) + '"'
+
 
 if __name__ == '__main__':
     import sys
