@@ -6,7 +6,7 @@ Unittests for aterm.
 
 TODO:
 - ATerm.parents()
-
+- ATerm.path()
 
 """
   
@@ -79,6 +79,13 @@ class TestTree(unittest.TestCase):
         t = decode("A(B(C(),D()))")
         w = ''.join([n.name for n in t.walk()])
         self.assertEquals(w, "ABCD")        
+
+    def test_walkback(self):
+        t = decode('A(B(),B(C(D(),E())),F())')
+        e = t.findfirst('E')
+        wb = ''.join([ n.name for n in e.walkback()])
+        self.assertEquals(wb,'DCBBA')
+
 
 class TestEncode(unittest.TestCase):
     def de(self,src,enc=None):

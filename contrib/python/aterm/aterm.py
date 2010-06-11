@@ -52,12 +52,34 @@ class ATerm (list):
             if isinstance(c,ATerm):
                 for i in c.walk():
                     yield i
+                    
+    def walkback(exp):
+        """ 
+        returns iterator over all nodes before node exp
+        
+        
+        """ 
+        if exp.up is None:
+            raise StopIteration()
+        pos = exp.pos()-1
+        exp = exp.up
+        while pos>=0:
+            yield exp[pos]
+            pos -= 1
+        yield exp    
+        for n in exp.walkback():
+            yield n
+
 
     def findall(self,name):
-        "returns all nodes with name 'name'"
+        "returns all subnodes with name 'name'"
         for i in self.walk():
             if isinstance(i,ATerm) and i.name == name:
                 yield i
+                
+    def findfirst(self,name):
+        "returns first subnode with name 'name'"
+        return self.findall(name).next()
                                 
     def pos(self):
         "returns self position in parent"
