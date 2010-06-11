@@ -16,7 +16,7 @@ not ready yet ...
 DEBUG = False
 
 def imported_names(ast):
-    res = []
+    res = ["System","Math"]
     for n in ast.findall("TypeImportDec"):
         assert n[0].name == "TypeName"
         assert n[0][1].name == "Id"

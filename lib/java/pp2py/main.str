@@ -124,7 +124,7 @@ rules
       ->
     V vs=0 [
       H hs=1 ["class" H hs=0 [~lit:name b* "(" ~extends "):"]]
- /*     H hs=4 ["" "def __init(self):"] */
+      "" 
       ~body
       ""
     ]
@@ -169,10 +169,10 @@ rules
   java-to-box:
     ConstrDec(ConstrDecHead(mods, type-params, class, params, throws), body)
       ->
-    V vs=0 [H hs=0 ["def __init__(self, " ~args "):"] ~body ""]
+    V vs=0 [H hs=0 ["def __init_" ~targboxes "(self, " ~args "): ##Should have been rewriten by j2py.py"] ~body ""]
     where 
       <list-to-args2> params => args 
-    ; <type-params-to-boxes> type-params => targboxes 
+    ; <type-params-to-boxes2> type-params => targboxes 
     ; !Conc(mods, targboxes) => foo 
 
   java-to-box:

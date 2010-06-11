@@ -44,6 +44,15 @@ As demonstrated by the third example above, python scripts can step in, to chang
 ## TODO
 Write and collect example java files with supposed translations.
 
+Currently broken:
+ 
+- class initializing
+- subcass parent scope access,  Test needed
+- do {} while (cond); , see DoWhileDemo.java
+- post/pre decr/incr, Test needed
 
+
+
+ 
 
 

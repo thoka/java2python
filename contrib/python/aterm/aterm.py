@@ -97,7 +97,9 @@ class ATerm (list):
                 
     def replace(self,new_node):
         "replace self with new_node on parent"
-        self.up[self.pos()] = new_node
+        up = self.up
+        up[self.pos()] = new_node
+        new_node.up = up
     
     def parents(exp):
         "iterates over the parents of exp"
