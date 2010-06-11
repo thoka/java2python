@@ -32,9 +32,14 @@ On my Ubuntu system this was:
     make
 
 Test it
-    tools/parse-java --preserve-comments -i contrib/python/test/locals1.java
-    tools/parse-java --preserve-comments -i contrib/python/test/locals1.java | tools/pp-java2py
-    tools/parse-java --preserve-comments -i contrib/python/test/locals1.java | contrib/python/j2py.py | tools/pp-java2py
+   j2py/transform_all.sh
+and look inside j2py/test for java files with transformation.
+   
+
+Play
+    tools/parse-java --preserve-comments -i j2py/test/locals1.java
+    tools/parse-java --preserve-comments -i j2py/test/locals1.java | tools/pp-java2py
+    tools/parse-java --preserve-comments -i j2py/test/locals1.java | j2py/j2py.py | tools/pp-java2py
 
 ## python AST transformations
 

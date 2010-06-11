@@ -6,5 +6,5 @@ for src in $(find -name "*.java"); do
     cat $src.aterm | pp-aterm > $src.aterm.pp
     cat $src.aterm | ./j2py.py 2>&1 >  $src.j2py
     cat $src.j2py | pp-aterm >  $src.j2py.pp
-    cat $src.j2py | ../../tools/pp-java2py > $src.py    
+    cat $src.j2py | ../tools/pp-java2py > $src.py    
 done
