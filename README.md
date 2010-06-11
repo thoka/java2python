@@ -32,21 +32,17 @@ On my Ubuntu system this was:
     make
 
 Test it
-    tools/parse-java --preserve-comments -i contrib/python/test/bigtest.java
-    tools/parse-java --preserve-comments -i contrib/python/test/bigtest.java | tools/pp-java2py
-    tools/parse-java --preserve-comments -i contrib/python/test/bigtest.java | contrib/python/fixcomments.py | tools/pp-java2py
+    tools/parse-java --preserve-comments -i contrib/python/test/locals1.java
+    tools/parse-java --preserve-comments -i contrib/python/test/locals1.java | tools/pp-java2py
+    tools/parse-java --preserve-comments -i contrib/python/test/locals1.java | contrib/python/j2py.py | tools/pp-java2py
 
 ## python AST transformations
 
 The stratego toolchain is build out of modules, which can be chained together by piping.
 As demonstrated by the third example above, python scripts can step in, to change the java AST.
- 
- 
+   
 ## TODO
 Write and collect example java files with supposed translations.
-
-Implement:
-- java transforms to get local/static etc variables / methods right (add appropriate 'this.')
 
 
 
