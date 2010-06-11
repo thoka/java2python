@@ -25,3 +25,11 @@ tools/jtree15-to-abox
 tools/parse-java
 tools/pp-java2py
 java-front.pc
+BUILDTIME_XTC
+autom4te.cache/*
+java-front.pc
+config.status
+libtool
+java-front.spec
+
+
