@@ -72,13 +72,23 @@ class ATerm (list):
 
 
     def findall(self,name):
-        "returns all subnodes with name 'name'"
+        """
+        returns all subnodes with name 'name'
+        
+        name can be a string or a list of strings
+        """
+        if not isinstance(name,list):
+            name = [name]
         for i in self.walk():
-            if isinstance(i,ATerm) and i.name == name:
+            if isinstance(i,ATerm) and i.name in name:
                 yield i
                 
     def findfirst(self,name):
-        "returns first subnode with name 'name'"
+        """
+        returns first subnode with name 'name'
+        
+        name can be a string or a list of strings
+        """
         return self.findall(name).next()
                                 
     def pos(self):
@@ -95,11 +105,13 @@ class ATerm (list):
             yield exp.up
             exp = exp.up
 
-    def path(exp):
-        "gives a filesystem style path to node exp" 
+    def path(exp,join=None):
+        "gives a list of parent names of node exp, concatenated by join, if given" 
         res = [ p.name for p in exp.parents() ]
         res.reverse()
-        return '/'.join(res)
+        if join is None:
+            return res
+        return join.join(res)
         
 
 class AList(ATerm):
@@ -287,8 +299,8 @@ def scan(string, idx):
     if m is not None:
         id_ = string[ m.start() : m.end() ]
         idx = m.end()
-        #if string[idx:idx+1] != '(':
-        #   return ( ATerm(id_), m.end() )
+        if string[idx:idx+1] != '(':
+            return ( ATerm(id_), m.end() )
         idx = expect(string,idx,'(')
         params,idx = parse_list(string,idx,')')
         annotation=None

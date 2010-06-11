@@ -23,7 +23,7 @@ if it is bash. If not, change the symlink  `/bin/sh` to point to `/bin/bash`.
 Clone the git repo
     git clone git@github.com:thoka/java2python.git java2python
 
-Next, configure it. 
+Next, configure and make it. 
 On my Ubuntu system this was:
 
     cd java2python
@@ -36,6 +36,12 @@ Test it
     tools/parse-java --preserve-comments -i contrib/python/test/bigtest.java | tools/pp-java2py
     tools/parse-java --preserve-comments -i contrib/python/test/bigtest.java | contrib/python/fixcomments.py | tools/pp-java2py
 
+## python AST transformations
+
+The stratego toolchain is build out of modules, which can be chained together by piping.
+As demonstrated by the third example above, python scripts can step in, to change the java AST.
+ 
+ 
 ## TODO
 Write and collect example java files with supposed translations.
 

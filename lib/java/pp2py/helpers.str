@@ -29,7 +29,7 @@ rules
 rules
 
   java-to-box :
-    SuperDec(c) -> box |[ H hs=1 [ "#SuperDec" ~c] ]|
+    SuperDec(c) -> box |[ H hs=1 [ ~c] ]|
 
   java-to-box :
     ImplementsDec(is) -> box |[ H hs=1 [KW["#implementsDec"] ~interfaces] ]|

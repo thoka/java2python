@@ -70,14 +70,14 @@ rules
       ; <pprules> t => b
       )
 
-    ; if !b => V(_, _) then
+    ; if !b => V(_, _) then // block comments
         !|[ V vs=0 [s b] ]|
       else
         if <explode-string> s => cs@['/', '/' | _] then
           <trim(?'\n' + ?'\r' + ?' ' + ?'\t'); implode-string> cs => s1
-          ; !|[ V vs=0 [s1 b] ]|
-        else
-          !|[ H hs=1 [s b] ]|
+          ; !|[ V vs=0 [b s1] ]|
+        else // inline comments
+          !|[ H hs=1 [b s] ]|
         end
       end
  

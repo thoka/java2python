@@ -1,5 +1,7 @@
 module java/pp2py/expression
 
+//TODO: Solve NOTIMPL
+
 strategies
 
   java-to-box =
@@ -23,10 +25,10 @@ strategies
 
   expr-to-box: Plus(e)     -> H hs=0 [   "+"  ~e]
   expr-to-box: Minus(e)    -> H hs=0 [   "-"  ~e]
-  expr-to-box: PreIncr(e)  -> H hs=0 [   "++" ~e]
-  expr-to-box: PreDecr(e)  -> H hs=0 [   "--" ~e]
-  expr-to-box: PostIncr(e) -> H hs=0 [~e "++"   ]
-  expr-to-box: PostDecr(e) -> H hs=0 [~e "--"   ]
+  expr-to-box: PreIncr(e)  -> H hs=0 [   "++" ~e "###NOTIMPL###"]
+  expr-to-box: PreDecr(e)  -> H hs=0 [   "--" ~e "###NOTIMPL###"]
+  expr-to-box: PostIncr(e) -> H hs=0 [~e "++"    "###NOTIMPL###"]
+  expr-to-box: PostDecr(e) -> H hs=0 [~e "--"    "###NOTIMPL###"]
 
   expr-to-box: Mul(e1, e2)          -> H hs=1 [~e1  "*"   ~e2]
   expr-to-box: Div(e1, e2)          -> H hs=1 [~e1  "/"   ~e2]
@@ -42,23 +44,23 @@ strategies
   expr-to-box: LtEq(e1, e2)         -> H hs=1 [~e1  "<="  ~e2]
   expr-to-box: GtEq(e1, e2)         -> H hs=1 [~e1  ">="  ~e2]
   expr-to-box: Eq(e1, e2)           -> H hs=1 [~e1  "=="  ~e2]
-  expr-to-box: NotEq(e1, e2)        -> H hs=1 [~e1  "!="  ~e2]
-  expr-to-box: LazyAnd(e1, e2)      -> H hs=1 [~e1  "&&"  ~e2]
-  expr-to-box: LazyOr(e1, e2)       -> H hs=1 [~e1  "||"  ~e2]
+  expr-to-box: NotEq(e1, e2)        -> H hs=1 [~e1  "is not"  ~e2]
+  expr-to-box: LazyAnd(e1, e2)      -> H hs=1 [~e1  "and"  ~e2]
+  expr-to-box: LazyOr(e1, e2)       -> H hs=1 [~e1  "or"  ~e2]
   expr-to-box: And(e1, e2)          -> H hs=1 [~e1  "&"   ~e2]
   expr-to-box: ExcOr(e1, e2)        -> H hs=1 [~e1  "^"   ~e2]
   expr-to-box: Or(e1, e2)           -> H hs=1 [~e1  "|"   ~e2]
 
   expr-to-box: InstanceOf(e1, e2)   -> H hs=0 [ "isinstance(" ~e1 ","  ~e2 ")" ]
 
-  expr-to-box: Complement(e)         -> box |[ H hs=0 ["~" ~e] ]|
+  expr-to-box: Complement(e)         -> box |[ H hs=0 ["~" ~e "###NOTIMPL###"] ]|
   expr-to-box: Not(e)                -> box |[ H hs=0 ["not " ~e] ]|
   expr-to-box: Cond(e1, e2, e3)    -> box |[ H hs=1 [ "(" ~e2  "if" ~e1 "else" ~e3 ")" ] ]|
 
   /* java-to-box: Name(s) -> s */
 
   java-to-box: This()   -> box |[ "self" ]|
-  java-to-box: QThis(q) -> box |[ H hs=0 [~q "." "self"] ]|
+  java-to-box: QThis(q) -> box |[ H hs=0 [~q "." "self" "###NOTIMPL###"] ]|
 
 /**
  * Method Invocations
@@ -77,17 +79,17 @@ rules
       <type-args-to-boxes> type-args => type-args'
 
   java-to-box: 
-    SuperMethod(type-args, Id(s)) -> box |[ H hs=0 [KW["super"] "."  s] ]|
+    SuperMethod(type-args, Id(s)) -> box |[ H hs=0 [KW["super(self.__class__,self)"] "."  s] ]|
     where
       <type-args-to-boxes> type-args => type-args'
 
   java-to-box: 
-    QSuperMethod(q, type-args, Id(s)) -> box |[ H hs=0 [~q "." KW["super"] "."  s] ]|
+    QSuperMethod(q, type-args, Id(s)) -> box |[ H hs=0 [~q "." KW["super"] "."  s "###NOTIMPL###" ] ]|
     where
       <type-args-to-boxes> type-args => type-args'
 
   java-to-box: 
-    GenericMethod(type-name, type-args, Id(s)) -> box |[ H hs=0 [~type-name "."  s] ]|
+    GenericMethod(type-name, type-args, Id(s)) -> box |[ H hs=0 [~type-name "."  s "###NOTIMPL###" ] ]|
     where
       <type-args-to-boxes> Some(type-args) => type-args'
 
@@ -105,7 +107,7 @@ rules
   java-to-box: 
     QNewInstance(e, type-args1, Id(s), type-args2, exprs, None())
       ->
-    box |[ H hs=0 [~e "."  s  ~args ] ]|
+    box |[ H hs=0 [~e "."  s  ~args] ]|
     where
       <list-to-args> exprs => args
       ; <type-args-to-boxes> type-args1 => type-args1'
@@ -164,10 +166,10 @@ rules
     Field(b, Id(s)) -> H hs=0 [b "." s]
 
   java-to-box: 
-    SuperField(Id(s)) -> H hs=0 [KW["##super"] "." s]
+    SuperField(Id(s)) -> H hs=0 [KW["##SuperField"] "." s]
 
   java-to-box: 
-    QSuperField(b, Id(s)) -> H hs=0 [b "." KW["##super"] "." s]
+    QSuperField(b, Id(s)) -> H hs=0 [b "." KW["##QSuperField"] "." s]
 
 signature
   constructors
