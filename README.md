@@ -48,7 +48,6 @@ Currently broken:
  
 - class initializing
 - subcass parent scope access,  Test needed
-- do {} while (cond); , see DoWhileDemo.java
 - post/pre decr/incr, Test needed
 
 

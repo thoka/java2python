@@ -88,10 +88,18 @@ rules
 rules
 
   java-to-box:
-    While(cond, b) -> V vs=0 [H hs=0 [KW["while"] " " ~cond ":"] ~b]
+    While(cond, b) -> V vs=0 [H hs=0 ["while " ~cond ":"] ~b]
 
   java-to-box:
-    DoWhile(b, cond) -> V vs=0 [KW["while"] " " KW["True"] ":" ~b H hs=0 [KW["if"] " " ~cond ": break" ]]
+    DoWhile(b, cond) -> 
+      V vs=0 [
+        "while True:" 
+        V vs=0 [
+          ~b 
+          H hs=0 ["    if " ~cond ":"] 
+          "        break"
+        ]
+      ]
 
 /**
  * For Statements
