@@ -4,6 +4,8 @@
 import aterm
 import sys
 import yaml
+import os
+
 
 from simplify import simplify_names
 
@@ -13,7 +15,8 @@ rename packages
 
 DEBUG = False
 
-conversions = yaml.load(open("translatepackages.yaml"))
+yamlpath = os.path.join(os.path.dirname(__file__), "translatepackages.yaml")
+conversions = yaml.load(open(yamlpath))
 
 def translate_packages(ast):
     for p in ast.findall("TypeImportDec"):

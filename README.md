@@ -52,8 +52,9 @@ Play
 The stratego toolchain is build out of modules, which can be chained together by piping.
 As demonstrated by the third example above, python scripts can step in, to change the java AST.
    
-## TODO
+## TODO / Roadmap
 
+- put @classmethod in front of static methods 
 - get some Verbatim(pre,ast,post) token into pp-java2py to be able to write raw text into translation
 - add some magic to call main methods, to be able to do tests by comparing output of java and translated java 
 - Write and collect example/test java files with supposed translations.
@@ -61,12 +62,12 @@ As demonstrated by the third example above, python scripts can step in, to chang
 
 ### Currently broken
  
+- make install
 - class initializing
 - subcass parent scope access,  Test needed
 - post/pre decr/incr, Test needed
 - arrays
 - enums
 - ...
- 
- 
- 
+  
+
