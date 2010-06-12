@@ -69,7 +69,6 @@ As demonstrated by the third example above, python scripts can step in, to chang
 - class initializing
 - subcass parent scope access,  Test needed
 - post/pre decr/incr, Test needed
-- arrays
 - enums
 - ...
  

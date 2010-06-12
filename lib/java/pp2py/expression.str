@@ -137,7 +137,7 @@ rules
 rules
 
   java-to-box: 
-    NewArray(type, dimexprs, dims) -> box |[ H hs=0 [H hs=1 ["#NewArray1" ~type] ~*dimexprs ~*dims] ]|
+    NewArray(type, dimexprs, dims) -> box |[ H hs=0 ["[ None for i in " ~*dimexprs "] ###" ~*dims] ]|
     where
         <is-list> dimexprs
       ; <is-list> dims
@@ -152,6 +152,10 @@ rules
     UnboundWld(name) -> box |[ H hs=0 [ ~name "<" "?" ">"] ]|
 
 rules
+
+
+  java-to-box: 
+    ToStr(b) -> H hs=0 [ "str(" b ")"]
 
   java-to-box: 
     ArrayAccess(b1, b2) -> H hs=0 [ b1 "[" b2 "]"]
@@ -174,3 +178,6 @@ rules
 signature
   constructors
     Parenthetical : Unknown -> Unknown
+    
+    ToStr : Unknown -> Unknown
+     

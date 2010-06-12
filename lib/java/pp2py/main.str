@@ -204,10 +204,10 @@ rules
     ArrayVarDecId(Id(s), b*) -> H hs=0 [s b*]
 
   java-to-box:
-    Dim() -> H hs=0 ["[" "]"]
+    Dim() -> H hs=0 ["range(0)"]
 
   java-to-box:
-    Dim(e) -> H hs=0 ["[" ~e "]"]
+    Dim(e) -> H hs=0 ["range(" ~e ")"]
 
   java-to-box:
     ArrayInit(exprs) -> H hs=0 ["{#" ~vals "#}"]
