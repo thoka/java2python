@@ -68,9 +68,10 @@ def fix_names(ast,decorate=False):
                     local = local_vars(exp)
                     if DEBUG:
                         print "  locals:",local
-                    if exp[0][0] in local:
+                    varname = exp[0][0].split('.')[0]  
+                    if varname in local:
                         exp[0][0] =aterm.AString(dec_local + exp[0][0])
-                    elif exp[0][0] in imports:
+                    elif varname in imports:
                         exp[0][0] =aterm.AString(dec_imported + exp[0][0])
                     else:
                         exp[0][0] =aterm.AString("self." + exp[0][0])                    

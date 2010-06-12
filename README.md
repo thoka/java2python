@@ -3,6 +3,9 @@
 This is a hack of the JavaFront library for stratego, which
 includes a pretty printer to print a python representation of a java src.
 
+This project is in an early stage. Basic translation is working.
+You can not expect to get full java2python translation.
+
 See COPYING for Copyright and License.
 
 See http://www.strategoxt.org/Stratego/JavaFront for JavaFront
@@ -31,8 +34,11 @@ On my Ubuntu system this was:
     ./configure --prefix=/usr --with-aterm=/usr --with-sdf=/usr --with-strategoxt=/usr --enable-bootstrap
     make
 
+__DO NOT__ try to install this package using `make install` 
+
 Test it
-   j2py/transform_all.sh
+   cd j2py
+   ./transform_all.sh
 and look inside j2py/test for java files with transformation.
    
 
@@ -47,16 +53,20 @@ The stratego toolchain is build out of modules, which can be chained together by
 As demonstrated by the third example above, python scripts can step in, to change the java AST.
    
 ## TODO
-Write and collect example java files with supposed translations.
 
-Currently broken:
+- get some Verbatim(pre,ast,post) token into pp-java2py to be able to write raw text into translation
+- add some magic to call main methods, to be able to do tests by comparing output of java and translated java 
+- Write and collect example/test java files with supposed translations.
+- Complete list of not working issues
+
+### Currently broken
  
 - class initializing
 - subcass parent scope access,  Test needed
 - post/pre decr/incr, Test needed
-
-
-
+- arrays
+- enums
+- ...
  
-
-
+ 
+ 

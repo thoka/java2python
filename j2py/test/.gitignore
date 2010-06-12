@@ -1,6 +1,2 @@
-*.aterm
-*.java.py
-*.j2py
-*.pp
-*.class
-
+out/*
+java/out*
