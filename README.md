@@ -47,6 +47,9 @@ Play
     tools/parse-java --preserve-comments -i j2py/test/locals1.java | tools/pp-java2py
     tools/parse-java --preserve-comments -i j2py/test/locals1.java | j2py/j2py.py | tools/pp-java2py
 
+    j2py/run.py j2py/test/java/out/ArithmeticDemo.py
+    
+
 ## python AST transformations
 
 The stratego toolchain is build out of modules, which can be chained together by piping.
@@ -69,5 +72,12 @@ As demonstrated by the third example above, python scripts can step in, to chang
 - arrays
 - enums
 - ...
-  
+ 
+### Pitfalls
 
+- Due to a bug in stratego pp-aterm, quotes in comments are not quoted by pp-aterm.
+  AST of java src, which include quotes in comments will not be understood by j2py/aterm parser.
+  
+  
+  
+  

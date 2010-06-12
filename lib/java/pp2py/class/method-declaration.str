@@ -8,6 +8,20 @@ rules
     MethodDec(dec, NoMethodBody()) -> H hs=0 [~dec "pass #0004" ""]
 
   java-to-box:
+    MethodDecHead([Public(), Static()], type-params, type, Id(n), params, None())
+      ->
+    box |[
+      V [ 
+        "@classmethod"
+        H hs=1 ["def" H hs=0 [~lit:n ~args ":" /* "##MethodDecHead public static" */] ]
+      ] 
+    ]|
+    where
+      <list-to-args3> params => args
+    ; <type-params-to-boxes> type-params => targboxes
+    // ; !Conc(mods, targboxes) => foo
+
+  java-to-box:
     MethodDecHead(mods, type-params, type, Id(n), params, None())
       ->
     box |[ H hs=1 ["def" H hs=0 [~lit:n ~args ":" /* "##MethodDecHead1" */] ] ]|
@@ -16,10 +30,11 @@ rules
     ; <type-params-to-boxes> type-params => targboxes
     ; !Conc(mods, targboxes) => foo
 
+
   java-to-box:
     MethodDecHead(mods, type-params, type, Id(n), params, Some(throws))
       ->
-    box |[ H hs=1 ["def" H hs=0 [~lit:n ~args ":" /*"##MethodDecHead2"*/ ]] ]|
+    box |[ H hs=1 ["def" H hs=0 [~lit:n ~args ":" /* "##MethodDecHead2" */ ]] ]|
     where
       <list-to-args3> params => args
     ; <type-params-to-boxes> type-params => targboxes
@@ -28,7 +43,7 @@ rules
   java-to-box:
     DeprMethodDecHead(mods, type-params, type, Id(n), params, dims, throws)
       ->
-    H hs=1 ["def" H hs=0 [~lit:n ~args] H hs=0 [~*dims ":" /*"#DeprMethodDecHead"*/ ]]
+    H hs=1 ["def" H hs=0 [~lit:n ~args] H hs=0 [~*dims ":" "#DeprMethodDecHead" /* */ ]]
     where
       <list-to-args3> params => args
     ; <type-params-to-boxes> type-params => b*
