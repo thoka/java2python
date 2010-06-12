@@ -46,11 +46,19 @@ strategies
    */
   pp-java5-to-abox(extension) =    
     parenthesize-Java5
+    ; bottomup(try(j2py))
     ; topdown(
         try(very-special-conflict)
         ; try(pp-comments(extension <+ java-to-box))
-        ; repeat(extension <+ java-to-box)
+        ; repeat(j2py <+ extension <+ java-to-box)
       )
+
+rules
+ 
+  j2py: ExprStm(PreIncr(e))  -> H hs=1 [ ~e "+= 1"]
+  j2py: ExprStm(PreDecr(e))  -> H hs=1 [ ~e "-= 1"]
+  j2py: ExprStm(PostIncr(e)) -> H hs=1 [ ~e "+= 1"]
+  j2py: ExprStm(PostDecr(e)) -> H hs=1 [ ~e "-= 1"]
 
 rules
 
