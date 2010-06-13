@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $(dirname "$0")
+
 for src in $(find -name "*.java"); do
     echo transforming $src ...
     src=${src%.java}
