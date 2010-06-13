@@ -19,10 +19,10 @@ def convert_comment(s,make_docstring=False):
     while len(res)>0 and len(res[len(res)-1]) == 0:
         res.pop()
     if make_docstring: 
-        if len(res)>2:
+        if True or len(res)>2:
             res=['    """']+["        "+l for l in res]+['        """']
         elif len(res)==1:
-            res[0]='  """%s"""' % res[0]    
+            res[0]='  "%s"' % res[0]    
     else:
         res=['# '+l for l in res]        
     return aterm.AString('\n'.join(res))    
