@@ -14,6 +14,7 @@ not ready yet ...
 """
 
 DEBUG = False
+DECORATE = False
 
 def imported_names(ast):
     res = ["System","Math"]
@@ -27,7 +28,7 @@ def local_vars(treepos):
     "try to find local vars at treepos"
     res = []
     for n in treepos.walkback():
-        if n.name in ['FieldDec','LocalVarDecStm','For']:
+        if n.name in ['LocalVarDecStm','For']:
             for t in n.findall("VarDec"):
                 res.append(t[0][0])
         if n.name in ['MethodDecHead']:
@@ -35,7 +36,7 @@ def local_vars(treepos):
                 res.append(p[2][0])
     return res          
  
-def fix_names(ast,decorate=False):
+def fix_names(ast,decorate=DECORATE):
     """
     look for local variables, add __local__ to their name
     add self. to all other variables
