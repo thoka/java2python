@@ -15,7 +15,7 @@ therefore, replace str + expr with str + str(expr)
 DEBUG = False
         
 def is_string(e):
-    return e.name == "Lit" and e[0].name=="String"
+    return (e.name == "Lit" and e[0].name=="String") or e.name == "ToStr"
             
 
 def make_string(e):
@@ -23,7 +23,7 @@ def make_string(e):
 
 def fix_str_add(ast):
     "replace str + expr with str + str(expr)" 
-    for p in ast.findall("Plus"):
+    for p in aterm.reverse(ast.findall("Plus")):
         if len(p)==2:
             if is_string(p[0]) or is_string(p[1]):
                if not is_string(p[0]):
