@@ -27,7 +27,7 @@ def local_vars(treepos):
     "try to find local vars at treepos"
     res = []
     for n in treepos.walkback():
-        if n.name in ['FieldDec','LocalVarDecStm']:
+        if n.name in ['FieldDec','LocalVarDecStm','For']:
             for t in n.findall("VarDec"):
                 res.append(t[0][0])
         if n.name in ['MethodDecHead']:

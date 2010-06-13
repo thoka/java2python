@@ -122,7 +122,7 @@ rules
     For(init, cond, update, body)
       ->
     H hs=0 [
-      "for"
+      "::###NOTIMPL for"
       " "
       ~binit
       H hs=1 [";" ~*bcond]

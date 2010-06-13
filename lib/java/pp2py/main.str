@@ -59,6 +59,11 @@ rules
   j2py: ExprStm(PreDecr(e))  -> H hs=1 [ ~e "-= 1"]
   j2py: ExprStm(PostIncr(e)) -> H hs=1 [ ~e "+= 1"]
   j2py: ExprStm(PostDecr(e)) -> H hs=1 [ ~e "-= 1"]
+  j2py: For( 
+          LocalVarDec([],Int(),[VarDec(e, e1)]),
+          Some(Lt(ExprName(e), e2)),
+          [PostIncr(ExprName(e))],
+          body) -> V [ H hs=0 ["for " ~e " in range(" ~e1 "," ~e2 "):"] ~body]
 
 rules
 
