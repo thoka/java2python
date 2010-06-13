@@ -180,4 +180,5 @@ signature
     Parenthetical : Unknown -> Unknown
     
     ToStr : Unknown -> Unknown
-     
+    Pass: Unknown -> Unknown
+ 

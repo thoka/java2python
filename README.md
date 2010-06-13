@@ -49,7 +49,6 @@ Play
 
     j2py/run.py j2py/test/java/out/ArithmeticDemo.py
     
-
 ## python AST transformations
 
 The stratego toolchain is build out of modules, which can be chained together by piping.
@@ -57,26 +56,31 @@ As demonstrated by the third example above, python scripts can step in, to chang
    
 ## TODO / Roadmap
 
-- put @classmethod in front of static methods 
+- add static attr init into class
 - get some Verbatim(pre,ast,post) token into pp-java2py to be able to write raw text into translation
-- add some magic to call main methods, to be able to do tests by comparing output of java and translated java 
+- add __init__
 - Write and collect example/test java files with supposed translations.
 - Complete list of not working issues
 
 ### Currently broken
  
-- make install
 - class initializing
 - subcass parent scope access,  Test needed
 - post/pre decr/incr, Test needed
 - enums
 - ...
+- make install
  
 ### Pitfalls
 
+- switch statement implementation uses variable "_switch". 
+  nested switch statemens will use the same variable and thus will not work
 - Due to a bug in stratego pp-aterm, quotes in comments are not quoted by pp-aterm.
   AST of java src, which include quotes in comments will not be understood by j2py/aterm parser.
   
-  
+### recently done
+
+- switch statement is working
+- add some magic to call main methods, to be able to do tests by comparing output of java and translated java 
   
   
