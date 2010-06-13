@@ -21,7 +21,7 @@ rules
       not(!elems => [])
 
   block-structure :
-    (_, []) -> box |[ H hs=1 ["    pass"] ]|
+    (_, []) -> box |[ V ["    pass"] ]|
 
 /**
  * @todo What is this doing here???
