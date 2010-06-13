@@ -3,6 +3,8 @@
 
 import aterm
 import sys
+
+DEBUG = False
         
 def convert_comment(s,make_docstring=False):
     "convert java comment to python comment or docstring if make_docstring is True"
@@ -26,6 +28,12 @@ def convert_comment(s,make_docstring=False):
     else:
         res=['# '+l for l in res]        
     return aterm.AString('\n'.join(res))    
+
+def append_annotation(dest,annotation):
+    if dest.annotation is None:
+        dest.annotation = annotation
+    else:
+        dest.annotation[0].append(annotation[0])            
 
 def convert_comments(ast):
     """
@@ -53,6 +61,22 @@ def convert_comments(ast):
     for exp in move:
         exp[1].annotation = exp.annotation
         exp.annotation = None    
+
+    
+    # move comments out of inner constructs
+    not_wanted = ["Case","[]","()"]
+    for exp in ast.walk():
+        if isinstance(exp,aterm.ATerm):
+            if exp.annotation is not None:
+                if DEBUG:
+                    print exp.name, exp.path()
+                if exp.name in not_wanted:
+                    for dest in exp.parents():
+                        if not dest.name in not_wanted:
+                            break
+                    append_annotation(dest,exp.annotation)
+                    exp.annotation = None
+         
                  
 if __name__ == '__main__':
     ast = aterm.decode(sys.stdin.read())
