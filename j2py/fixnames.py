@@ -75,7 +75,8 @@ def fix_names(ast,decorate=DECORATE):
                     elif varname in imports:
                         exp[0][0] =aterm.AString(dec_imported + exp[0][0])
                     else:
-                        exp[0][0] =aterm.AString("self." + exp[0][0])                    
+                    	if not varname[0].isupper():
+	            	    exp[0][0] =aterm.AString("self." + exp[0][0])                    
                     if 0:    
                         for n in exp.walkback():
                             print "   ->",n.name
