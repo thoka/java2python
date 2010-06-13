@@ -65,6 +65,11 @@ rules
           [PostIncr(ExprName(e))],
           body) -> V [ H hs=0 ["for " ~e " in range(" ~e1 "," ~e2 "):"] ~body]
 
+/* exists in statement.str
+  j2py:
+    Block([]) -> Block([Pass(None())])
+*/
+
 rules
 
   very-special-conflict:
@@ -195,11 +200,18 @@ rules
     ConstrBody(Some(cinvoke), stms) -> <block-structure> (0, [cinvoke | stms])
 
   java-to-box:
+    FieldDec(mods, type, ds) -> None()
+
+
+/* TODO: init static attrs
+  java-to-box:
     FieldDec(mods, type, ds)
       ->
-    H hs=1 [ H hs=0 ["self." ~decs /* "#001" */] ] 
+    H hs=1 [ H hs=0 ["self." ~decs ] ] 
     where
       <separate-by-comma> ds => decs
+
+*/
 
   java-to-box:
     ConstantDec(mods, type, ds) -> FieldDec(mods, type, ds)
