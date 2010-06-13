@@ -18,7 +18,7 @@ def convert_comment(s,make_docstring=False):
         res.pop(0)
     while len(res)>0 and len(res[len(res)-1]) == 0:
         res.pop()
-    if not False and make_docstring: #currently not activated, do not know hot to render that correctly
+    if make_docstring: 
         if len(res)>2:
             res=['    """']+["        "+l for l in res]+['        """']
         elif len(res)==1:
@@ -26,7 +26,6 @@ def convert_comment(s,make_docstring=False):
     else:
         res=['# '+l for l in res]        
     return aterm.AString('\n'.join(res))    
-
 
 def convert_comments(ast):
     """
@@ -53,16 +52,7 @@ def convert_comments(ast):
                     
     for exp in move:
         exp[1].annotation = exp.annotation
-        exp.annotation = None
-    
-def simplify_names(ast):
-    "replaces AmbNames by Ids" 
-    for exp in ast.findall("AmbName"):
-        if len(exp)==1:
-            exp.replace(exp[0])
-        elif len(exp)==2:
-            if exp[0].name == "Id" and exp[1].name == "Id":
-                exp.replace(aterm.decode('Id("%s.%s")' % (exp[0][0],exp[1][0]) ))
+        exp.annotation = None    
                  
 if __name__ == '__main__':
     ast = aterm.decode(sys.stdin.read())

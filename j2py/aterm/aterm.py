@@ -379,6 +379,11 @@ def encode_string(s):
         return ESCAPE_DCT[match.group(0)]
     return '"' + ESCAPE.sub(replace, s) + '"'
 
+def reverse(iterator):
+    a = [i for i in iterator]
+    a.reverse()
+    for i in a:
+        yield i
 
 if __name__ == '__main__':
     import sys

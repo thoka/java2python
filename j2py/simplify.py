@@ -16,16 +16,9 @@ TODO: more doc
 
 DEBUG = False
 
-def reverse(iterator):
-    a = [i for i in iterator]
-    a.reverse()
-    for i in a:
-        yield i
-        
-
 def simplify_names(ast):
     "replaces AmbNames by Ids" 
-    for exp in itertools.chain(reverse(ast.findall("AmbName")),reverse(ast.findall("PackageOrTypeName"))):
+    for exp in itertools.chain(aterm.reverse(ast.findall("AmbName")),aterm.reverse(ast.findall("PackageOrTypeName"))):
         if len(exp)==1:
             exp.replace(exp[0])
         elif len(exp)==2:
