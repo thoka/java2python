@@ -24,6 +24,7 @@ tools/jtree15-parenthesize
 tools/jtree15-to-abox
 tools/parse-java
 tools/pp-java2py
+tools/java2py
 java-front.pc
 BUILDTIME_XTC
 autom4te.cache/*

@@ -12,7 +12,7 @@ for src in $(find -name "*.java"); do
     cat $_src.aterm | pp-aterm > $dst.aterm.pp
     cat $dst.aterm | ./j2py.py 2>&1 >  $dst.j2py
     cat $dst.j2py | pp-aterm >  $dst.j2py.pp
-    cat $dst.j2py | ../tools/pp-java2py > $dst.py    
+    cat $dst.j2py | ../tools/java2py > $dst.py    
 done
 
 

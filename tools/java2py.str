@@ -1,4 +1,4 @@
-module pp-java2py
+module java2py
 imports
   libstratego-lib
   libjava-front
@@ -6,15 +6,15 @@ imports
 
 strategies
 
-  main-pp-java2py =
+  main-java2py =
     io-stream-wrap(
       fail
-    , pp-java-usage
-    , pp-java-about
-    , pp-java <+ report-failure-no-trace
+    , java2py-usage
+    , java2py-about
+    , java2py <+ report-failure-no-trace
     )
 
-  pp-java =
+  java2py =
     ?(<read-from-stream>, fout)
     ; pp-java2py-stream(|fout)
     ; <fputs> ("\n", fout)
@@ -24,14 +24,14 @@ strategies
  */
 strategies
 
-  pp-java-usage =
+  java2py-usage =
     <tool-doc>
       [ Usage("pp-java [OPTIONS]")
-      , Summary("Pretty-prints a Java abstract syntax tree in ATerm format to a Java source file.")
+      , Summary("Convers a Java abstract syntax tree in ATerm format to a Python source file.")
       , OptionUsage()
       , AutoReportBugs()
       ]
-  pp-java-about =
+  java2py-about =
     <tool-doc>
       [ AutoProgram()
       , Author(Person("Martin Bravenboer", "martin.bravenboer@gmail.com"))

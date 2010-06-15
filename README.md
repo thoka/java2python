@@ -44,8 +44,8 @@ and look inside j2py/test for java files with transformation.
 
 Play
     tools/parse-java --preserve-comments -i j2py/test/locals1.java
-    tools/parse-java --preserve-comments -i j2py/test/locals1.java | tools/pp-java2py
-    tools/parse-java --preserve-comments -i j2py/test/locals1.java | j2py/j2py.py | tools/pp-java2py
+    tools/parse-java --preserve-comments -i j2py/test/locals1.java | tools/java2py
+    tools/parse-java --preserve-comments -i j2py/test/locals1.java | j2py/j2py.py | tools/java2py
 
     j2py/run.py j2py/test/java/out/ArithmeticDemo.py
     
