@@ -14,25 +14,25 @@ javafrontlib = $(javafrontlibsrc) $(javafrontlibgen)
 
 javafrontlibsrc = \
   javafront.str \
-  $(wildcard $(srcdir)/java/*.str) \
-  $(wildcard $(srcdir)/java/pp2py/*.str) \
-  $(wildcard $(srcdir)/java/pp2py/class/*.str) \
-  $(wildcard $(srcdir)/java/pp2py/interface/*.str) \
-  $(wildcard $(srcdir)/java/pp2py/type/*.str)
+  $(wildcard $(srcdir)/java/*.str) 
+#  $(wildcard $(srcdir)/java/pp2py/*.str) \
+#  $(wildcard $(srcdir)/java/pp2py/class/*.str) \
+#  $(wildcard $(srcdir)/java/pp2py/interface/*.str) \
+#  $(wildcard $(srcdir)/java/pp2py/type/*.str)
 
 javafrontlibsrcextra = \
   $(wildcard $(srcdir)/java/*.meta) \
-  $(wildcard $(srcdir)/java/pp2py/*.meta) \
-  $(wildcard $(srcdir)/java/pp2py/class/*.meta) \
-  $(wildcard $(srcdir)/java/pp2py/interface/*.meta) \
-  $(wildcard $(srcdir)/java/pp2py/type/*.meta) \
   $(wildcard $(srcdir)/java/typematch/*.meta)
+#  $(wildcard $(srcdir)/java/pp2py/*.meta) \
+#  $(wildcard $(srcdir)/java/pp2py/class/*.meta) \
+#  $(wildcard $(srcdir)/java/pp2py/interface/*.meta) \
+#  $(wildcard $(srcdir)/java/pp2py/type/*.meta) 
 
 javafrontlibgen = \
   java/signature/v5.str \
   java/signature/eblock.str \
   java/typematch/common.str \
-  java/pp2py/parenthesize.str
+  java/pp/parenthesize.str
 
 BUILT_SOURCES = \
   java/typematch/common.str
