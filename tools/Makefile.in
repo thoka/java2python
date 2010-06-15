@@ -54,9 +54,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 @XT_XTC_REGISTER_TRUE@am__append_1 = -DDEFAULT_XTC_REPOSITORY="\"$(REPOSITORY)\""
 bin_PROGRAMS = parse-java$(EXEEXT) pp-java2py$(EXEEXT) \
 	auto-java-front$(EXEEXT)
-libexec_PROGRAMS = jtree15-to-abox$(EXEEXT) \
-	jtree15-parenthesize$(EXEEXT) core-lift-eblocks$(EXEEXT) \
-	java-concat-ids$(EXEEXT)
+libexec_PROGRAMS =
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/autoxt.m4 $(top_srcdir)/libtool.m4 \
@@ -78,34 +76,6 @@ am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
 auto_java_front_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(top_builddir)/lib/libjava-front.la \
-	$(am__DEPENDENCIES_2)
-core_lift_eblocks_SOURCES = core-lift-eblocks.c
-core_lift_eblocks_OBJECTS = core-lift-eblocks.$(OBJEXT)
-core_lift_eblocks_LDADD = $(LDADD)
-core_lift_eblocks_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(top_builddir)/lib/libjava-front.la \
-	$(am__DEPENDENCIES_2)
-java_concat_ids_SOURCES = java-concat-ids.c
-java_concat_ids_OBJECTS = java-concat-ids.$(OBJEXT)
-java_concat_ids_LDADD = $(LDADD)
-java_concat_ids_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(top_builddir)/lib/libjava-front.la \
-	$(am__DEPENDENCIES_2)
-jtree15_parenthesize_SOURCES = jtree15-parenthesize.c
-jtree15_parenthesize_OBJECTS = jtree15-parenthesize.$(OBJEXT)
-jtree15_parenthesize_LDADD = $(LDADD)
-jtree15_parenthesize_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(top_builddir)/lib/libjava-front.la \
-	$(am__DEPENDENCIES_2)
-jtree15_to_abox_SOURCES = jtree15-to-abox.c
-jtree15_to_abox_OBJECTS = jtree15-to-abox.$(OBJEXT)
-jtree15_to_abox_LDADD = $(LDADD)
-jtree15_to_abox_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(top_builddir)/lib/libjava-front.la \
 	$(am__DEPENDENCIES_2)
@@ -134,12 +104,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = auto-java-front.c core-lift-eblocks.c java-concat-ids.c \
-	jtree15-parenthesize.c jtree15-to-abox.c parse-java.c \
-	pp-java2py.c
-DIST_SOURCES = auto-java-front.c core-lift-eblocks.c java-concat-ids.c \
-	jtree15-parenthesize.c jtree15-to-abox.c parse-java.c \
-	pp-java2py.c
+SOURCES = auto-java-front.c parse-java.c pp-java2py.c
+DIST_SOURCES = auto-java-front.c parse-java.c pp-java2py.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -504,18 +470,6 @@ clean-libexecPROGRAMS:
 auto-java-front$(EXEEXT): $(auto_java_front_OBJECTS) $(auto_java_front_DEPENDENCIES) 
 	@rm -f auto-java-front$(EXEEXT)
 	$(LINK) $(auto_java_front_OBJECTS) $(auto_java_front_LDADD) $(LIBS)
-core-lift-eblocks$(EXEEXT): $(core_lift_eblocks_OBJECTS) $(core_lift_eblocks_DEPENDENCIES) 
-	@rm -f core-lift-eblocks$(EXEEXT)
-	$(LINK) $(core_lift_eblocks_OBJECTS) $(core_lift_eblocks_LDADD) $(LIBS)
-java-concat-ids$(EXEEXT): $(java_concat_ids_OBJECTS) $(java_concat_ids_DEPENDENCIES) 
-	@rm -f java-concat-ids$(EXEEXT)
-	$(LINK) $(java_concat_ids_OBJECTS) $(java_concat_ids_LDADD) $(LIBS)
-jtree15-parenthesize$(EXEEXT): $(jtree15_parenthesize_OBJECTS) $(jtree15_parenthesize_DEPENDENCIES) 
-	@rm -f jtree15-parenthesize$(EXEEXT)
-	$(LINK) $(jtree15_parenthesize_OBJECTS) $(jtree15_parenthesize_LDADD) $(LIBS)
-jtree15-to-abox$(EXEEXT): $(jtree15_to_abox_OBJECTS) $(jtree15_to_abox_DEPENDENCIES) 
-	@rm -f jtree15-to-abox$(EXEEXT)
-	$(LINK) $(jtree15_to_abox_OBJECTS) $(jtree15_to_abox_LDADD) $(LIBS)
 parse-java$(EXEEXT): $(parse_java_OBJECTS) $(parse_java_DEPENDENCIES) 
 	@rm -f parse-java$(EXEEXT)
 	$(LINK) $(parse_java_OBJECTS) $(parse_java_LDADD) $(LIBS)
@@ -530,10 +484,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/auto-java-front.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core-lift-eblocks.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/java-concat-ids.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jtree15-parenthesize.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jtree15-to-abox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parse-java.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pp-java2py.Po@am__quote@
 
