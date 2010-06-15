@@ -1,7 +1,7 @@
 module java/pp2py/type/variable
 rules
 
-  java-to-box:
+  java2py-to-box:
     TypeParams(params) -> box |[ H hs=0 [] ]|
     where
       <separate-by-comma> params => parameters
@@ -23,14 +23,14 @@ rules
 
 rules
 
-  java-to-box:
+  java2py-to-box:
   
     TypeParam(var, None()) -> var
 
-  java-to-box:
+  java2py-to-box:
     TypeParam(var, Some(bound)) -> box |[ H hs=1 [~var ~bound] ]|
 
-  java-to-box:
+  java2py-to-box:
     TypeBound(bounds) -> box |[ H hs=1 ["#TypeBound extends" ~*bounds' ] ]|
     where
       <separate-by(!S("&"))> bounds => bounds'

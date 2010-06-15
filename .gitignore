@@ -1,5 +1,6 @@
 Makefile
 */Makefile
+Makefile.in
 *~
 *.c
 *.o
@@ -32,5 +33,5 @@ java-front.pc
 config.status
 libtool
 java-front.spec
-
+*.Po
 

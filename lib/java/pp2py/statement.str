@@ -9,24 +9,24 @@ rules
     Block([]) -> Block([Pass(None())])
 */
 
-  java-to-box:
+  java2py-to-box:
     Block(stms) -> <block-structure> (0, stms)
 
-  java-to-box:
+  java2py-to-box:
     ClassDecStm(classdec) -> classdec
 
-  java-to-box: Return(None())  -> <stm-box> box |[  KW["return"] ]|
-  java-to-box: Return(Some(e)) -> <stm-box> box |[ H hs=1 [KW["return"] ~e] ]|
+  java2py-to-box: Return(None())  -> <stm-box> box |[  KW["return"] ]|
+  java2py-to-box: Return(Some(e)) -> <stm-box> box |[ H hs=1 [KW["return"] ~e] ]|
 
-  java-to-box:
+  java2py-to-box:
     ExprStm(e) -> <stm-box> e
 
-  java-to-box:
+  java2py-to-box:
     Empty()  -> box |[ V ["pass ##Empty"] ]|
 
 rules
 
-  java-to-box :
+  java2py-to-box :
     LocalVarDecStm(lvardec) -> H hs=0 [b]
       where <LocalVarDec-to-box> lvardec => b
 
@@ -36,20 +36,20 @@ rules
 
 rules
 
-  java-to-box:
+  java2py-to-box:
     Try(block, catches) -> V vs=0 ["try:" ~block ~*catches]
 
-  java-to-box:
+  java2py-to-box:
     Try(block, catches, finally)
       ->
     V vs=0 [KW["try:"] ~block ~*catches "finally:" ~finally]
 
-  java-to-box:
+  java2py-to-box:
     Catch(param, block)
       ->
      V vs=0 [H hs=0 ["except Exception " ~param ":"] ~block]
 
-  java-to-box:
+  java2py-to-box:
     Throw(e) -> H hs=1 ["raise" H hs=0[~e ]]
 
 /**
@@ -57,11 +57,11 @@ rules
  */
 rules
 
-  java-to-box =
+  java2py-to-box =
     ?If(_, _)
     ; if-then-to-box
 
-  java-to-box:
+  java2py-to-box:
     If(b1, b2, b3) -> V vs=0 [b4 b5]
     where
         <if-then-to-box> If(b1, b2) => b4
@@ -92,10 +92,10 @@ rules
  */
 rules
 
-  java-to-box:
+  java2py-to-box:
     While(cond, b) -> V vs=0 [H hs=0 ["while " ~cond ":"] ~b]
 
-  java-to-box:
+  java2py-to-box:
     DoWhile(b, cond) -> 
       V vs=0 [
         "while True:" 
@@ -111,13 +111,13 @@ rules
  */
 rules
 
-  java-to-box:
+  java2py-to-box:
     f@For(init, cond, update, b2) -> box |[ V is=2 vs=0 [b1 b2] ]|
     where
       <for-head> f => b1
       ; not(!b2 => Block(_))
 
-  java-to-box:
+  java2py-to-box:
     f@For(init, cond, update, b2) -> box |[ V vs=0 [b1 b2] ]|
     where
       <for-head> f => b1
@@ -150,13 +150,13 @@ rules
  */
 rules
 
-  java-to-box:
+  java2py-to-box:
     f@ForEach(param, source, b2) -> box |[ V is=2 vs=0 [b1 b2] ]|
     where
       <for-each-head> f => b1
       ; not(!b2 => Block(_))
 
-  java-to-box:
+  java2py-to-box:
     f@ForEach(param, source, b2) -> box |[ V vs=0 [b1 b2] ]|
     where
       <for-each-head> f => b1
@@ -171,47 +171,47 @@ rules
 
 rules
 
-  java-to-box:
+  java2py-to-box:
     Pass(None()) -> H hs=0 [KW["pass"] ]
 
-  java-to-box:
+  java2py-to-box:
     Synchronized(e, b) -> box |[ V vs=0 [H hs=0 ["@synchronized" "(" ~e ")"] ~b] ]|
 
-  java-to-box:
+  java2py-to-box:
     Break(Some(Id(s))) -> H hs=0 [H hs=1 ["::###NOTIMPL break" s] ]
 
-  java-to-box:
+  java2py-to-box:
     Break(None()) -> H hs=0 [KW["break"] ]
 
-  java-to-box:
+  java2py-to-box:
     Continue(Some(Id(s))) -> H hs=0 [H hs=1 ["::###NOTIMPL continue" s] ]
 
-  java-to-box:
+  java2py-to-box:
     Continue(None())      -> H hs=0 [KW["continue"] ]
 
-  java-to-box:
+  java2py-to-box:
     Labeled(Id(s), stm) -> box |[ V [ H hs=0 [ "#LABELED" s ":" ] ~stm] ]| 
 
-  java-to-box:
+  java2py-to-box:
     AssertStm(e) -> box |[ H hs=0 [H hs=1 ["assert" ~e] ] ]| 
 
-  java-to-box:
+  java2py-to-box:
     AssertStm(e1, e2) -> H hs=0 [V vs=0 [ "assert:" H hs=4 ["" ~e1] "except:" H hs=0 ["    raise Exception(" ~e2 ")"]] ]
 
-  java-to-box:
+  java2py-to-box:
     Switch(b1, b2) -> V vs=0 [H hs=0 ["for _switch in ["  b1 "]:"] b2]
 
-  java-to-box:
+  java2py-to-box:
     SwitchBlock(groups, labels) ->
       <block-structure> (1, <conc> (groups, labels))
 
 
-  java-to-box:
+  java2py-to-box:
     SwitchGroup([Default()], stms) 
       -> 
      V is=4 vs=0 [ H hs=1 ["if True:"] ~*stms ]
 
-  java-to-box:
+  java2py-to-box:
     SwitchGroup(labels, stms) 
       -> 
      V is=4 vs=0 [ H hs=0 ["if _switch in [" ~params "]:"] ~*stms ]
@@ -219,11 +219,11 @@ rules
        <list-to-args2> labels => params
       
 
-  java-to-box:
+  java2py-to-box:
     Case(e) -> H hs=0 [~e]
 
 /*
-  java-to-box:
+  java2py-to-box:
     Default() -> H hs=0 ["if True: ##default"]
 */
 

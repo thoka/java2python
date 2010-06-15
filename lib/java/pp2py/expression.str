@@ -4,10 +4,10 @@ module java/pp2py/expression
 
 strategies
 
-  java-to-box =
+  java2py-to-box =
     expr-to-box
 
-  java-to-box: Lit(l) -> l
+  java2py-to-box: Lit(l) -> l
 
   expr-to-box: Parenthetical(e)           -> box |[ H hs=0 ["(" ~e ")"] ]|
   expr-to-box: Assign(lval, e)            -> box |[ H hs=1 [~lval "="    ~e] ]|
@@ -57,38 +57,38 @@ strategies
   expr-to-box: Not(e)                -> box |[ H hs=0 ["not " ~e] ]|
   expr-to-box: Cond(e1, e2, e3)    -> box |[ H hs=1 [ "(" ~e2  "if" ~e1 "else" ~e3 ")" ] ]|
 
-  /* java-to-box: Name(s) -> s */
+  /* java2py-to-box: Name(s) -> s */
 
-  java-to-box: This()   -> box |[ "self" ]|
-  java-to-box: QThis(q) -> box |[ H hs=0 [~q "." "self" "###NOTIMPL###"] ]|
+  java2py-to-box: This()   -> box |[ "self" ]|
+  java2py-to-box: QThis(q) -> box |[ H hs=0 [~q "." "self" "###NOTIMPL###"] ]|
 
 /**
  * Method Invocations
  */
 rules
-  java-to-box: 
+  java2py-to-box: 
     Invoke(method, exprs) -> box |[ H hs=0 [~method ~args] ]|
       where <list-to-args> exprs => args
 
-  java-to-box: 
+  java2py-to-box: 
     Method(n) -> n
 
-  java-to-box: 
+  java2py-to-box: 
     Method(e, type-args, Id(s)) -> box |[ H hs=0 [~e "." s] ]|
     where
       <type-args-to-boxes> type-args => type-args'
 
-  java-to-box: 
+  java2py-to-box: 
     SuperMethod(type-args, Id(s)) -> box |[ H hs=0 [KW["super(self.__class__,self)"] "."  s] ]|
     where
       <type-args-to-boxes> type-args => type-args'
 
-  java-to-box: 
+  java2py-to-box: 
     QSuperMethod(q, type-args, Id(s)) -> box |[ H hs=0 [~q "." KW["super"] "."  s "###NOTIMPL###" ] ]|
     where
       <type-args-to-boxes> type-args => type-args'
 
-  java-to-box: 
+  java2py-to-box: 
     GenericMethod(type-name, type-args, Id(s)) -> box |[ H hs=0 [~type-name "."  s "###NOTIMPL###" ] ]|
     where
       <type-args-to-boxes> Some(type-args) => type-args'
@@ -98,13 +98,13 @@ rules
  */
 rules
 
-  java-to-box: 
+  java2py-to-box: 
     NewInstance(type-args, type, exprs, None()) -> box |[ H hs=0 [~type ~args] ]|
     where
       <list-to-args> exprs => args
       ; <type-args-to-boxes> type-args => type-args'
 
-  java-to-box: 
+  java2py-to-box: 
     QNewInstance(e, type-args1, Id(s), type-args2, exprs, None())
       ->
     box |[ H hs=0 [~e "."  s  ~args] ]|
@@ -118,14 +118,14 @@ rules
  */
 rules
 
-  java-to-box: 
+  java2py-to-box: 
     NewInstance(type-args, type, exprs, Some(body)) 
       -> box |[ V vs=0[H hs=0 [H hs=1 [~type ~args] ] ~body] ]|
     where
       <list-to-args> exprs => args
       ; <type-args-to-boxes> type-args => type-args'
 
-  java-to-box: 
+  java2py-to-box: 
     QNewInstance(e, type-args1, Id(s), type-args2, exprs, Some(body))
       ->
     box |[ V vs=0 [H hs=0 [~e "."  H hs=1 [ H hs=0  [s] ] ~args] ~body] ]|
@@ -136,43 +136,43 @@ rules
 
 rules
 
-  java-to-box: 
+  java2py-to-box: 
     NewArray(type, dimexprs, dims) -> box |[ H hs=0 ["[ None for i in " ~*dimexprs "] ###" ~*dims] ]|
     where
         <is-list> dimexprs
       ; <is-list> dims
 
-  java-to-box: 
+  java2py-to-box: 
     NewArray(type, dims, init@ArrayInit(_)) -> box |[ H hs=0 [H hs=1 ["#NewArray2" ~type] ~*dims ~init] ]|
 
   /**
    * Special ArrayBaseType
    */
-  java-to-box: 
+  java2py-to-box: 
     UnboundWld(name) -> box |[ H hs=0 [ ~name "<" "?" ">"] ]|
 
 rules
 
 
-  java-to-box: 
+  java2py-to-box: 
     ToStr(b) -> H hs=0 [ "str(" b ")"]
 
-  java-to-box: 
+  java2py-to-box: 
     ArrayAccess(b1, b2) -> H hs=0 [ b1 "[" b2 "]"]
 
-  java-to-box: 
+  java2py-to-box: 
     CastPrim(b1, b2) -> H hs=0 [b2]
 
-  java-to-box: 
+  java2py-to-box: 
     CastRef(b1, b2) -> H hs=0 [ b2]
 
-  java-to-box: 
+  java2py-to-box: 
     Field(b, Id(s)) -> H hs=0 [b "." s]
 
-  java-to-box: 
+  java2py-to-box: 
     SuperField(Id(s)) -> H hs=0 [KW["##SuperField"] "." s]
 
-  java-to-box: 
+  java2py-to-box: 
     QSuperField(b, Id(s)) -> H hs=0 [b "." KW["##QSuperField"] "." s]
 
 signature

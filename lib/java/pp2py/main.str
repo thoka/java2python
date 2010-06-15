@@ -49,8 +49,8 @@ strategies
     ; bottomup(try(j2py))
     ; topdown(
         try(very-special-conflict)
-        ; try(pp-comments(extension <+ java-to-box))
-        ; repeat(j2py <+ extension <+ java-to-box)
+        ; try(pp-comments(extension <+ java2py-to-box))
+        ; repeat(j2py <+ extension <+ java2py-to-box)
       )
 
 rules
@@ -98,61 +98,61 @@ rules
 rules
 
   // TODO: This could probably be written much nicer; learn stratego ....
-  java-to-box:
+  java2py-to-box:
     Verbatim(None(),e,None()) ->  box |[ V [ ~e ] ]|
 
-  java-to-box:
+  java2py-to-box:
     Verbatim(None(),e,s2) ->  box |[ V [ ~e s2 ] ]|
 
-  java-to-box:
+  java2py-to-box:
     Verbatim(s1,e,None()) ->  box |[ V [ s1 ~e ] ]|
 
-  java-to-box:
+  java2py-to-box:
     Verbatim(s1,e,s2) ->  box |[ V [ s1 ~e s2 ] ]|
     
-  java-to-box:
+  java2py-to-box:
     Verbatim(e) ->  box |[ V [ ~*e ] ]|
 
 /*
   // TODO: how to have a list of strings, or a string automatically split at \n in Verbatim ?
 
-  java-to-box:
+  java2py-to-box:
     Verbatim(s) ->  box |[ V [ s2 ] ]|
     where <get-lines> s => s2*
 
-  java-to-box:
+  java2py-to-box:
     Verbatim(s) ->  box |[ V [ s ] ]|
 */
 
-  java-to-box:
+  java2py-to-box:
     CompilationUnit(Some(package), imports, types) -> box |[ V vs=1 [~package V vs=0 [ ~*imports ] V vs=1 [ ~*types ]] ]|
 
-  java-to-box:
+  java2py-to-box:
     CompilationUnit(None(), imports, types) -> box |[ V vs=1 [V vs=0 [~*imports] V vs=1 [~*types]] ]|
 
-  java-to-box:
+  java2py-to-box:
     PackageDec(annos, name) -> V hs=0 [  H ["#" ~*annos KW["package"] H hs=0 [~name ]]]
 
 rules
 
-  java-to-box:
+  java2py-to-box:
     TypeImportDec(TypeName(pname,Id(s))) -> H hs=1 [ "from" ~pname "import" s ]
 
-  java-to-box:
+  java2py-to-box:
     TypeImportOnDemandDec(pname) -> H hs=1 ["from " ~pname "import *"] 
 
-  java-to-box:
+  java2py-to-box:
     StaticImportDec(tname, Id(s)) -> H hs=1 ["from"  ~tname "import" s ] 
 
-  java-to-box:
+  java2py-to-box:
     StaticImportOnDemandDec(tname)  -> H hs=1 ["from" ~tname "import *" ] 
 
 rules
 
-  java-to-box:
+  java2py-to-box:
     Semicolon() -> box |[ ";" ]|
 
-  java-to-box:
+  java2py-to-box:
     InterfaceDec(InterfaceDecHead(mods, Id(name), type-args, implements), body)
       ->
     V vs=0 [H hs=0 [~lit:name b*] b2 ""]
@@ -160,7 +160,7 @@ rules
       <type-params-to-boxes> type-args => b*
     ; <block-structure> (1, body) => b2
 
-  java-to-box:
+  java2py-to-box:
     ClassDec(ClassDecHead(mods, Id(name), type-args, extends, implements), body)
       ->
     V vs=0 [
@@ -172,42 +172,42 @@ rules
     where
       <type-params-to-boxes> type-args => b*
 
-  java-to-box:
+  java2py-to-box:
     ClassBody(decs) -> <block-structure> (1, decs)
 
-  java-to-box:
+  java2py-to-box:
     None() -> box |[ H hs=0 [""] ]|
 
-  java-to-box:
+  java2py-to-box:
     Some(c) -> c
 
-  java-to-box:
+  java2py-to-box:
     SuperDec(c) -> box |[ H hs=1 ["(" ~c ")"] ]|
 
-  java-to-box:
+  java2py-to-box:
     ImplementsDec(is) -> box |[ H hs=1 [KW["implements"] ~interfaces] ]|
       where <separate-by-comma> is; ?interfaces
 
-  java-to-box:
+  java2py-to-box:
     ExtendsInterfaces(is) -> box |[ H hs=1 ["(" ~interfaces ")"] ]|
       where <separate-by-comma> is; ?interfaces
 
 rules
 
-  java-to-box:
+  java2py-to-box:
     StaticInit(b)   -> box |[ V vs=0  [~b] ]|
 
-  java-to-box:
+  java2py-to-box:
     InstanceInit(b) -> box |[ V vs=1 [ "##InstanceInit" b ] ]|
 
 rules
 
-  java-to-box:
+  java2py-to-box:
     AbstractMethodDec(mods, type-params, type, Id(n), params, throws)
       ->
     box |[ H hs=0 [ ~MethodDecHead(mods, type-params, type, Id(n), params, throws) ] ]|
 
-  java-to-box:
+  java2py-to-box:
     ConstrDec(ConstrDecHead(mods, type-params, class, params, throws), body)
       ->
     V vs=0 [H hs=0 ["def __init_" ~targboxes "(self, " ~args "): ##Should have been rewriten by j2py.py"] ~body ""]
@@ -216,18 +216,18 @@ rules
     ; <type-params-to-boxes2> type-params => targboxes 
     ; !Conc(mods, targboxes) => foo 
 
-  java-to-box:
+  java2py-to-box:
     ConstrBody(None(), stms) -> <block-structure> (0, stms)
 
-  java-to-box:
+  java2py-to-box:
     ConstrBody(Some(cinvoke), stms) -> <block-structure> (0, [cinvoke | stms])
 
-  java-to-box:
+  java2py-to-box:
     FieldDec(mods, type, ds) -> None()
 
 
 /* TODO: init static attrs
-  java-to-box:
+  java2py-to-box:
     FieldDec(mods, type, ds)
       ->
     H hs=1 [ H hs=0 ["self." ~decs ] ] 
@@ -236,54 +236,54 @@ rules
 
 */
 
-  java-to-box:
+  java2py-to-box:
     ConstantDec(mods, type, ds) -> FieldDec(mods, type, ds)
 
-  java-to-box:
+  java2py-to-box:
     VarDec(i) -> H hs=1 [~i "= None" ]
 
-  java-to-box:
+  java2py-to-box:
     VarDec(i, init) -> H hs=1 [~i "=" ~init]
 
-  java-to-box:
+  java2py-to-box:
     Id(s) -> box |[ s ]|
 
-  java-to-box:
+  java2py-to-box:
     ArrayVarDecId(Id(s), b*) -> H hs=0 [s b*]
 
-  java-to-box:
+  java2py-to-box:
     Dim() -> H hs=0 ["range(0)"]
 
-  java-to-box:
+  java2py-to-box:
     Dim(e) -> H hs=0 ["range(" ~e ")"]
 
-  java-to-box:
+  java2py-to-box:
     ArrayInit(exprs) -> H hs=0 ["{#" ~vals "#}"]
     where
       <separate-by-comma> exprs => vals
 
-  java-to-box:
+  java2py-to-box:
     AltConstrInv(type-args, exprs) 
       -> H hs=0 [ "self" ~args " ##AltConstrInv" ]
     where
       <list-to-args> exprs => args
     ; <type-args-to-boxes> type-args => b1*
 
-  java-to-box:
+  java2py-to-box:
     SuperConstrInv(type-args, exprs) 
       -> box |[ H hs=0 [ "self.__bases__[0].__init__" b2 /* "##SuperConstrInv" */] ]|
     where
       <list-to-args3> exprs => b2
     ; <type-args-to-boxes> type-args => b1*
 
-  java-to-box:
+  java2py-to-box:
     QSuperConstrInv(b0, type-args, exprs) 
       -> box |[ H hs=0 [ "self.__bases__[0].__init__" b2 /* "##QSuerConstrInv" */ ] ]|
     where
       <list-to-args3> exprs => b2
     ; <type-args-to-boxes> type-args => b1*
 
-  java-to-box :
+  java2py-to-box :
     amb(alts) -> V vs=0[V vs=0 is=2 [ "##amb>" ~*alts' ] "##<amb"]
     where
       <map-with-index({s: \
@@ -292,7 +292,7 @@ rules
            <int-to-string> i => s
        \})> alts => alts'
 
-  java-to-box :
+  java2py-to-box :
     PreEBlock(stms, e) -> V vs=0 [ "##PreEBlock" V is=2 ["|" ~*stms] H hs=1 ["|" ~e "|"]]
 
 signature

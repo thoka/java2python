@@ -11,14 +11,14 @@ rules
 
 rules
 
-  java-to-box :
+  java2py-to-box :
     Wildcard(None()) -> box |[ "?" ]|
 
-  java-to-box :
+  java2py-to-box :
     Wildcard(Some(bound)) -> box |[ H hs=1 ["?" ~bound] ]|
 
-  java-to-box :
+  java2py-to-box :
     WildcardUpperBound(type) -> box |[ H hs=1 [KW["extends"] ~type] ]|
 
-  java-to-box :
+  java2py-to-box :
     WildcardLowerBound(type) -> box |[ H hs=1 [KW["super"] ~type] ]|
