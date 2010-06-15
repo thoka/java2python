@@ -14,19 +14,20 @@ javafrontlib = $(javafrontlibsrc) $(javafrontlibgen)
 
 javafrontlibsrc = \
   javafront.str \
-  $(wildcard $(srcdir)/java/*.str) 
-#  $(wildcard $(srcdir)/java/pp2py/*.str) \
-#  $(wildcard $(srcdir)/java/pp2py/class/*.str) \
-#  $(wildcard $(srcdir)/java/pp2py/interface/*.str) \
-#  $(wildcard $(srcdir)/java/pp2py/type/*.str)
+  $(wildcard $(srcdir)/java/*.str) \
+  $(srcdir)/java/pp/parenthesize.str \
+  $(wildcard $(srcdir)/java/pp/*.str) \
+  $(wildcard $(srcdir)/java/pp/class/*.str) \
+  $(wildcard $(srcdir)/java/pp/interface/*.str) \
+  $(wildcard $(srcdir)/java/pp/type/*.str)
 
 javafrontlibsrcextra = \
   $(wildcard $(srcdir)/java/*.meta) \
-  $(wildcard $(srcdir)/java/typematch/*.meta)
-#  $(wildcard $(srcdir)/java/pp2py/*.meta) \
-#  $(wildcard $(srcdir)/java/pp2py/class/*.meta) \
-#  $(wildcard $(srcdir)/java/pp2py/interface/*.meta) \
-#  $(wildcard $(srcdir)/java/pp2py/type/*.meta) 
+  $(wildcard $(srcdir)/java/typematch/*.meta) \
+  $(wildcard $(srcdir)/java/pp/*.meta) \
+  $(wildcard $(srcdir)/java/pp/class/*.meta) \
+  $(wildcard $(srcdir)/java/pp/interface/*.meta) \
+  $(wildcard $(srcdir)/java/pp/type/*.meta) 
 
 javafrontlibgen = \
   java/signature/v5.str \
@@ -61,9 +62,9 @@ java/signature/eblock.rtg :
 	rm -f $@
 	$(LN_S) @abs_top_builddir@/syntax-embedding/Java-EBlock.rtg $@
 
-java/pp2py/parenthesize.str : $(top_builddir)/syntax/src/Java-15.tbl
+java/pp/parenthesize.str : $(top_builddir)/syntax/src/Java-15.tbl
 	$(SDF_TOOLS)/bin/sdf2parenthesize -i $< -o $@ \
-	  --omod java/pp2py/parenthesize \
+	  --omod java/pp/parenthesize \
 	  --sig-module java/signature/v5 \
 	  --main-strategy io-java5-parenthesize \
 	  --lang Java5

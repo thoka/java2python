@@ -5,7 +5,7 @@
  */
 module java/pretty-print2py
 imports
-  java/pp2py/main
+  pp2py/main
 
 strategies
 

@@ -3,6 +3,8 @@ imports
   libstratego-lib
   libjava-front
   libstratego-tool-doc
+  pp2py/main
+  java/pretty-print2py
 
 strategies
 

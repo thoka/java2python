@@ -1,29 +1,30 @@
-module java/pp2py/main
+module pp2py/main
 imports
   libstratego-lib
   libstratego-gpp
   java/signature/v5
   java/signature/eblock
   
-  java/pp2py/helpers
-  java/pp2py/statement
-  java/pp2py/expression
-  java/pp2py/literal
-  java/pp2py/name
-  java/pp2py/modifier
+  pp2py/helpers
+  pp2py/statement
+  pp2py/expression
+  pp2py/literal
+  pp2py/name
+  pp2py/modifier
 
-  java/pp2py/type/parameterized
-  java/pp2py/type/variable
-  java/pp2py/type/primitive
-  java/pp2py/type/reference
+  pp2py/type/parameterized
+  pp2py/type/variable
+  pp2py/type/primitive
+  pp2py/type/reference
 
-  java/pp2py/class/enum-declaration
-  java/pp2py/class/method-declaration
+  pp2py/class/enum-declaration
+  pp2py/class/method-declaration
 
-  java/pp2py/interface/annotation
-  java/pp2py/interface/annotation-type
+  pp2py/interface/annotation
+  pp2py/interface/annotation-type
   
-  java/pp2py/parenthesize
+  java/pp/parenthesize
+
 
 strategies
 

@@ -10,8 +10,10 @@ CLEANFILES     = $(wildcard *.dep) $(wildcard *.c)
 STRCFLAGS    = --main main-$* 
 STRINCLUDES  = \
   -I $(srcdir) \
+  -I $(srcdir)/pp2py \
   -I $(XTC)/share/xtc \
   -I $(top_builddir)/lib \
+  -I $(GPP)/share/sdf/gpp \
   $(STRATEGO_TOOL_DOC_STRCFLAGS)
 
 LDADD += $(STRATEGO_TOOL_DOC_LIBS) $(top_builddir)/lib/libjava-front.la $(SSL_LIBS)
