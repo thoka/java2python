@@ -30,21 +30,21 @@ strategies
   /**
    * @type Java -> String
    */
-  pp-java5-to-string =
-    pp-java5-to-abox
-    ; box2text-string(|80)
+  pp-java52py-to-string =
+    pp-java52py-to-abox
+    ; box2text-string(|800)
 
   /**
    * @type Java -> Box
    */
-  pp-java5-to-abox =
-    pp-java5-to-abox(fail)
+  pp-java52py-to-abox =
+    pp-java52py-to-abox(fail)
     
   /**
    *  @param extension  Strategy that converts an aterm to an abox,
    *                    overriding the default pretty printing rules.
    */
-  pp-java5-to-abox(extension) =    
+  pp-java52py-to-abox(extension) =    
     parenthesize-Java5
     ; bottomup(try(j2py))
     ; topdown(

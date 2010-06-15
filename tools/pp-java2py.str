@@ -16,7 +16,7 @@ strategies
 
   pp-java =
     ?(<read-from-stream>, fout)
-    ; pp-java-stream(|fout)
+    ; pp-java2py-stream(|fout)
     ; <fputs> ("\n", fout)
 
 /**
