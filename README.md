@@ -57,7 +57,6 @@ As demonstrated by the third example above, python scripts can step in, to chang
 ## TODO / Roadmap
 
 - add static attr init into class
-- get some Verbatim(pre,ast,post) token into pp-java2py to be able to write raw text into translation
 - add __init__
 - Write and collect example/test java files with supposed translations.
 - Complete list of not working issues
@@ -80,6 +79,8 @@ As demonstrated by the third example above, python scripts can step in, to chang
   
 ### recently done
 
+- elif 
+- get some Verbatim(pre,ast,post) token into pp-java2py to be able to write raw text into translation
 - switch statement is working
 - add some magic to call main methods, to be able to do tests by comparing output of java and translated java 
   
