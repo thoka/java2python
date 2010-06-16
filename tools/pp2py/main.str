@@ -137,13 +137,13 @@ rules
 rules
 
   java2py-to-box:
-    TypeImportDec(TypeName(pname,Id(s))) -> H hs=1 [ "from" ~pname "import" s ]
+    TypeImportDec(TypeName(pname,Id(s))) -> H hs=0 [ "from " ~pname "." s  " import " s ]
 
   java2py-to-box:
     TypeImportOnDemandDec(pname) -> H hs=1 ["from " ~pname "import *"] 
 
   java2py-to-box:
-    StaticImportDec(tname, Id(s)) -> H hs=1 ["from"  ~tname "import" s ] 
+    StaticImportDec(tname, Id(s)) -> H hs=0 ["from " ~tname "." s " import " s ] 
 
   java2py-to-box:
     StaticImportOnDemandDec(tname)  -> H hs=1 ["from" ~tname "import *" ] 
@@ -224,7 +224,9 @@ rules
     ConstrBody(Some(cinvoke), stms) -> <block-structure> (0, [cinvoke | stms])
 
   java2py-to-box:
-    FieldDec(mods, type, ds) -> None()
+    FieldDec(mods, type, ds) -> V [ H [ "#FieldDec" ~decs]] 
+    where
+      <separate-by-comma> ds => decs
 
 
 /* TODO: init static attrs
