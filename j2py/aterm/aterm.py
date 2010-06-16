@@ -19,6 +19,7 @@ FLAGS = re.VERBOSE | re.MULTILINE | re.DOTALL
 class AString(str):
     def __repr__(self):
         return encode_string(self)
+    
         
 class ATerm (list):
     def __init__(self,name,params=[],annotation=None):
@@ -114,6 +115,10 @@ class ATerm (list):
         if join is None:
             return res
         return join.join(res)
+        
+    def copy(self):
+        "returns a new copy of self"
+        return decode(repr(self))
         
 
 class AList(ATerm):
