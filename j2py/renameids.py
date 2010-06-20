@@ -24,12 +24,16 @@ def rename_ids(ast):
             tn[0][0]=ren[tn[0][0]]
     
     ren = {
-      "class" : AString("__class__")
+      "class" : "__class__"
     }
-
+ 
+    kw = "and,del,elif,from,in,is,not,or,print,str,None".split(',')
+ 
     for id in ast.findall("Id"):
         if id[0] in ren.keys():
-            id[0]=ren[id[0]]       
+            id[0]=AString(ren[id[0]])
+        elif id[0] in kw:
+            id[0]=AString(id[0]+'_')
    
 if __name__ == '__main__':
     ast = decode(sys.stdin.read())

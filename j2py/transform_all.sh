@@ -4,6 +4,9 @@ cd $(dirname "$0")
 scriptpath=$PWD
 logfile=$scriptpath/transform.log
 
+rm $logfile
+
+
 transform() {
     local src=$1
     echo "- transforming $src ..."
@@ -28,13 +31,14 @@ compile_and_run() {
     java $class > $class.java.run
     echo -n "- running python ... "
     local dst=out/$class.py
-    $scriptpath/run.py $dst > $dst.run
+    $scriptpath/run.py $dst > $dst.run 2>> $logfile
     ( diff $class.java.run $dst.run && echo "OK" ) || 
-      ( echo "Output differs: $1" > $logfile && echo "Error" )
+      ( echo "Output differs: $1" >> $logfile && echo "Error" )
     popd > /dev/null
 }
 
-for src in $(find -iname "*.java"); do
+
+for src in $(find -iname "Key*.java"); do
     echo "## $src ###################################"
     transform $src
     compile_and_run $src
