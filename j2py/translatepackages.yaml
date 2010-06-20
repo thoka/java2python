@@ -1,3 +1,9 @@
-com.google.gwt.user : pyjs
+com.google.gwt.user: pyjs
 java.util: j2py
+com.allen_sauer.gwt.dnd.client: dnd
+com.google.gwt.core.client.GWT: pyjs.ui
+
+
+
+
 

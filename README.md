@@ -56,14 +56,15 @@ As demonstrated by the third example above, python scripts can step in, to chang
    
 ## TODO / Roadmap
 
-- add static attr init into class
-- add __init__
 - Write and collect example/test java files with supposed translations.
+  - class initialization for all java types, see Class2.java
+  
 - Complete list of not working issues
 
 ### Currently broken
  
 - class initializing
+- interfaces
 - subcass parent scope access,  Test needed
 - post/pre decr/incr, Test needed
 - enums
@@ -79,6 +80,10 @@ As demonstrated by the third example above, python scripts can step in, to chang
   
 ### recently done
 
+
+- do ... while
+- add static attr init into class
+- add __init__
 - elif 
 - get some Verbatim(pre,ast,post) token into pp-java2py to be able to write raw text into translation
 - switch statement is working

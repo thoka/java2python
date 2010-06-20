@@ -5,5 +5,8 @@ enum Day  {
 class Enum1 {
     public static void main(String[] args) {
         System.out.println(Day.SUNDAY);
+        System.out.println(Day.SATURDAY);
     }
 }
+
+

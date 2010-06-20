@@ -53,6 +53,7 @@ strategies
         ; try(pp-comments(extension <+ java2py-to-box))
         ; repeat(j2py <+ extension <+ java2py-to-box)
       )
+    // ; where(<debug> [ "//////////////////", <id> ])  
 
 rules
  
@@ -156,7 +157,7 @@ rules
   java2py-to-box:
     InterfaceDec(InterfaceDecHead(mods, Id(name), type-args, implements), body)
       ->
-    V vs=0 [H hs=0 [~lit:name b*] b2 ""]
+    V vs=0 [~mods H hs=0 [~lit:name b*] b2 ""]
     where
       <type-params-to-boxes> type-args => b*
     ; <block-structure> (1, body) => b2
@@ -165,6 +166,7 @@ rules
     ClassDec(ClassDecHead(mods, Id(name), type-args, extends, implements), body)
       ->
     V vs=0 [
+      ~*mods
       H hs=1 ["class" H hs=0 [~lit:name b* "(" ~extends "):"]]
       "" 
       ~body
@@ -211,10 +213,16 @@ rules
   java2py-to-box:
     ConstrDec(ConstrDecHead(mods, type-params, class, params, throws), body)
       ->
-    V vs=0 [H hs=0 ["def __init_" ~targboxes "(self, " ~args "): ##Should have been rewriten by j2py.py"] ~body ""]
+    V vs=0 [
+      H ["@java.constructor" ~targboxes ] 
+      ~*mods
+      H hs=0 ["def __init_" ~targboxes "(self, " ~args "):"]
+      ~body 
+      ""
+    ]
     where 
       <list-to-args2> params => args 
-    ; <type-params-to-boxes2> type-params => targboxes 
+    ; <type-params-to-boxes> type-params => targboxes 
     ; !Conc(mods, targboxes) => foo 
 
   java2py-to-box:

@@ -17,7 +17,7 @@ strategies
       <type-args-to-boxes> type-args => b2*
 
   java2py-to-box:
-    ArrayType(t) -> box |[ H hs=0 [~t "[" "]"] ]|
+    ArrayType(t) -> box |[ H hs=0 [ "[" ~t "]"] ]|
     
   java2py-to-box:
     TypeVar(x) -> x

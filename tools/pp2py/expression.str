@@ -53,7 +53,7 @@ strategies
 
   expr-to-box: InstanceOf(e1, e2)   -> H hs=0 [ "isinstance(" ~e1 ","  ~e2 ")" ]
 
-  expr-to-box: Complement(e)         -> box |[ H hs=0 ["~" ~e "###NOTIMPL###"] ]|
+  expr-to-box: Complement(e)         -> box |[ H hs=0 ["~" ~e ] ]|
   expr-to-box: Not(e)                -> box |[ H hs=0 ["not " ~e] ]|
   expr-to-box: Cond(e1, e2, e3)    -> box |[ H hs=1 [ "(" ~e2  "if" ~e1 "else" ~e3 ")" ] ]|
 
@@ -155,7 +155,7 @@ rules
 
 
   java2py-to-box: 
-    ToStr(b) -> H hs=0 [ "str(" b ")"]
+    ToStr(b) -> H hs=0 [ "java.str(" b ")"]
 
   java2py-to-box: 
     ArrayAccess(b1, b2) -> H hs=0 [ b1 "[" b2 "]"]

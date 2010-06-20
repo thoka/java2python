@@ -6,7 +6,7 @@ rules
   java2py-to-box: False()     -> box |[ "False" ]|
   java2py-to-box: Null()      -> box |[ "None" ]|
   java2py-to-box: VoidClass() -> H hs=0 [KW["void"] "." KW["class"]]
-  java2py-to-box: Class(type) -> H hs=0 [~type "." KW["class"]]
+  java2py-to-box: Class(type) -> H hs=0 [~type ".__class__"]
 
   java2py-to-box: Bool(b)  -> b
   java2py-to-box: Char(c)  -> box |[ H hs=0 ["'" ~c "'"] ]|

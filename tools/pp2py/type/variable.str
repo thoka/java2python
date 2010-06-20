@@ -2,7 +2,7 @@ module java/pp2py/type/variable
 rules
 
   java2py-to-box:
-    TypeParams(params) -> box |[ H hs=0 [] ]|
+    TypeParams(params) -> box |[ H hs=0 [ ~parameters ] ]|
     where
       <separate-by-comma> params => parameters
 

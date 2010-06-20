@@ -2,15 +2,31 @@ module java/pp2py/class/enum-declaration
 rules
 
   java2py-to-box:
-    EnumDec(head, body) -> box |[ V hs=0 [~head ~body] ]|
+    EnumDec(head, body) 
+      -> 
+    box |[ 
+      V hs=0 [
+        ~head1
+        ~body1
+      ] 
+    ]|
+    where 
+      <java2py-to-box> head => head1
+      ; <java2py-to-box> body => body1 
 
   java2py-to-box:
     EnumDecHead(mods, Id(name), implements)
       ->
-    box |[ H hs=1 [~*mods KW["enum"] ~lit:name ~implements] ]|
+    box |[ 
+      V [  
+        "@enum"
+        H hs=0 [/* ~*mods */  "class "  ~lit:name "(Enum):" /* ~implements */]
+        "    pass"
+      ]
+    ]|
 
   java2py-to-box:
-    EnumBody(consts, body) -> <block-structure> (1, [consts2, body2])
+    EnumBody(consts, body) -> <block-structure> (1, [ |[  H ["#consts2" ~consts2] ]| , body2])
     where
       <separate-by-comma> consts => consts2
     ; (!body => None() < ![] +  ![body]) => body2
@@ -19,14 +35,14 @@ rules
     EnumConst(Id(s), None(), None()) -> box |[ s ]|
 
   java2py-to-box:
-    EnumConst(Id(s), Some(args), None()) -> box |[ H hs=0 [s ~args'] ]|
+    EnumConst(Id(s), Some(args), None()) -> box |[ H hs=0 ["\"" s "\"," ~args'] ]|
     where
       <list-to-args> args => args'
 
   java2py-to-box:
-    EnumConst(Id(s), args, Some(body)) -> box |[ V vs=0 [~enum  ~body] ]|
+    EnumConst(Id(s), args, Some(body)) -> box |[ V vs=0 [ ~enum  "#body" ~body] ]|
     where
       !EnumConst(Id(s), args, None()) => enum
 
   java2py-to-box:
-   EnumBodyDecs(decs) -> box |[ V vs=1 [";" ~*decs] ]|
+   EnumBodyDecs(decs) -> box |[ V vs=1 ["#EnumBodyDecs;" ~*decs] ]|

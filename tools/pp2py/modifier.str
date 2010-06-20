@@ -2,15 +2,33 @@ module java/pp2py/modifier
 
 strategies
 
-  java2py-to-box: Public()       -> box |[ KW["public"]       ]|
-  java2py-to-box: Private()      -> box |[ KW["private"]      ]|
-  java2py-to-box: Protected()    -> box |[ KW["protected"]    ]|
-  java2py-to-box: Abstract()     -> box |[ KW["abstract"]     ]|
-  java2py-to-box: Final()        -> box |[ KW["final"]        ]|
-  java2py-to-box: Static()       -> box |[ KW["static"]       ]|
-  java2py-to-box: Native()       -> box |[ KW["native"]       ]|
-  java2py-to-box: Transient()    -> box |[ KW["transient"]    ]|
-  java2py-to-box: Volatile()     -> box |[ KW["volatile"]     ]|
-  java2py-to-box: Synchronized() -> box |[ KW["synchronized"] ]|
-  java2py-to-box: StrictFP()     -> box |[ KW["strictfp"]     ]|
+  java2py-to-box: Public()       -> box |[ "#public"  ]|
+  java2py-to-box: Private()      -> box |[ "@java.private"  ]|
+  java2py-to-box: Protected()    -> box |[ "@java.protected" ]|
+  java2py-to-box: Abstract()     -> box |[ "@java.abstract" ]|
+  java2py-to-box: Final()        -> box |[ "@java.final" ]|
+  java2py-to-box: Static()       -> box |[ "@java.static"   ]|
+  java2py-to-box: Native()       -> box |[ "@java.native"       ]|
+  java2py-to-box: Transient()    -> box |[ "@java.transient"    ]|
+  java2py-to-box: Volatile()     -> box |[ "@java.volatile"  ]|
+  java2py-to-box: Synchronized() -> box |[ "@java.synchronized" ]|
+  java2py-to-box: StrictFP()     -> box |[ "Qjava.strictfp" ]|
+  java2py-to-box: Decorator(s)   -> box |[ s ]|
+
+  java2py-to-box: 
+    Typed(l)      
+        -> 
+    box |[ 
+       H hs=0 [ "@java.typed" ~l1 ] 
+    ]|
+    where 
+      <list-to-args> l => l1
+      
+  
+  
+signature
+  constructors
+    Decorator  : String -> Unknown
+    Typed      : Unknown -> Unknown
+    
     
