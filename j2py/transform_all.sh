@@ -33,13 +33,16 @@ compile_and_run() {
     local dst=out/$class.py
     $scriptpath/run.py $dst > $dst.run 2>> $logfile
     ( diff $class.java.run $dst.run && echo "OK" ) || 
-      ( echo "Output differs: $1" >> $logfile && echo "Error" )
+      ( (echo "Output differs: $1" >> $logfile) && ( echo "Error") \
+        && (diff $class.java.run $dst.run >> $logfile))
     popd > /dev/null
 }
 
 
-for src in $(find -iname "Key*.java"); do
+for src in $(find -iname "*.java"); do
     echo "## $src ###################################"
+    echo "## $src ###################################" >> $logfile
+
     transform $src
     compile_and_run $src
     echo

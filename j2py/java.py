@@ -43,3 +43,10 @@ System.out.println = println
 #__all__ = "Enum,enum,System,_dispatch_init,init,typed".split(',')
 
 
+class Array(list):
+    def __getattr__(self,key):
+        if key == 'length':
+            return len(self)
+        raise Exception('key not found') #TODO raise right exception, read docs ...
+                            
+

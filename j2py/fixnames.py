@@ -30,8 +30,11 @@ def local_vars(treepos):
     for n in treepos.walkback():
         if n.name in ['LocalVarDecStm','For']:
             for t in n.findall("VarDec"):
-                res.append(t[0][0])
-        if n.name in ['MethodDecHead']:
+                if t[0].name == 'ArrayVarDecId':
+                    res.append(t[0][0][0])
+                else:    
+                    res.append(t[0][0])
+        if n.name in ['ForEach','MethodDecHead']:
             for p in n.findall("Param"):
                 res.append(p[2][0])
     return res          

@@ -263,13 +263,13 @@ rules
     ArrayVarDecId(Id(s), b*) -> H hs=0 [s b*]
 
   java2py-to-box:
-    Dim() -> H hs=0 ["range(0)"]
+    Dim() -> H hs=0 [ "" ]
 
   java2py-to-box:
-    Dim(e) -> H hs=0 ["range(" ~e ")"]
+    Dim(e) -> H hs=0 [ "" ]
 
   java2py-to-box:
-    ArrayInit(exprs) -> H hs=0 ["{#" ~vals "#}"]
+    ArrayInit(exprs) -> H hs=0 ["java.Array([" ~vals "])"]
     where
       <separate-by-comma> exprs => vals
 
