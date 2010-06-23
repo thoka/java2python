@@ -9,9 +9,9 @@ class Class2 {
         Class2 c = new Class2();
         System.out.println(c.w);
         System.out.println(c.x);
-	System.out.println(c.y);
-	System.out.println(c.z);
-	System.out.println(c.a);
-	System.out.println(c.b);
+	    System.out.println(c.y);
+	    System.out.println(c.z);
+	    System.out.println(c.a);
+	    System.out.println(c.b);
     }
 }
