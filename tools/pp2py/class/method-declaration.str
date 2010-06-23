@@ -8,21 +8,6 @@ rules
     MethodDec(dec, NoMethodBody()) -> H hs=0 [~dec "pass #0004" ""]
 
   java2py-to-box:
-    MethodDecHead([Public(), Static()], type-params, type, Id(n), params, None())
-      ->
-    box |[
-      V [ 
-        "@classmethod"
-        H hs=1 ["def" H hs=0 [~lit:n ~args ":" /* "##MethodDecHead public static" */] ]
-      ] 
-    ]|
-    where
-      <list-to-args3> params => args
-    ; <type-params-to-boxes> type-params => targboxes
-    // ; !targboxes => foo
-    // ; !Conc(mods, targboxes) => foo
-
-  java2py-to-box:
     MethodDecHead(mods, type-params, type, Id(n), params, None())
       ->
     // box |[ 
@@ -70,7 +55,7 @@ rules
 
 
   java2py-to-box:
-    VarArityParam(mods, type, vardecid) -> H hs=1 [~vardecid]
+    VarArityParam(mods, type, vardecid) -> H hs=0 [ "*" ~vardecid]
 
 rules
 

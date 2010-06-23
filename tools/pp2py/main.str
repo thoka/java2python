@@ -67,6 +67,13 @@ rules
           [PostIncr(ExprName(e))],
           body) -> V [ H hs=0 ["for " ~e " in range(" ~e1 "," ~e2 "):"] ~body]
 
+  j2py:
+    ClassOrInterfaceType(TypeName(Id("Object")), None())
+      -> ClassOrInterfaceType(TypeName(Id("java.Object")), None())
+      
+  j2py:
+    SuperDec(ClassType(TypeName(Id("Object")), None()))
+      -> SuperDec(ClassType(TypeName(Id("java.Object")), None()))  
 
 rules
 
@@ -214,9 +221,8 @@ rules
     ConstrDec(ConstrDecHead(mods, type-params, class, params, throws), body)
       ->
     V vs=0 [
-      H ["@java.constructor" ~targboxes ] 
       ~*mods
-      H hs=0 ["def __init_" ~targboxes "(self, " ~args "):"]
+      H hs=0 ["def __init__" ~targboxes "(self, " ~args "):"]
       ~body 
       ""
     ]
@@ -231,11 +237,11 @@ rules
   java2py-to-box:
     ConstrBody(Some(cinvoke), stms) -> <block-structure> (0, [cinvoke | stms])
 
+
   java2py-to-box:
     FieldDec(mods, type, ds) -> V [ H [ "#FieldDec" ~decs]] 
     where
       <separate-by-comma> ds => decs
-
 
 /* TODO: init static attrs
   java2py-to-box:

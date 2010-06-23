@@ -13,7 +13,7 @@ DEBUG = False
 init = """
 MethodDec(
   MethodDecHead(
-    [Public],
+    [],
     None,
     Void,
     Id("__init__"),
@@ -27,8 +27,8 @@ def make_init():
     return decode(init)
     
 def verbatim(code):
-    i = ATerm("Id")
-    i.append(AString(code))
+    i = ATerm("Id",[code])
+    #i.append(AString(code))
     return i
 
  
@@ -68,29 +68,46 @@ def add_init(ast):
         
         for n in body_code:
             if n.name == "FieldDec":
-                for v in n.findall("VarDec"):
+                for v in n.findall("VarDec"):                   
                     v=v.copy()
                     v[0][0] = AString("self.%s" % v[0][0])
                     block.append(v)
                     if DEBUG:
                         print n
         
-        block.append(verbatim("java.dispatch_init(self,*a,**kw)"))
-        
         i[0][0].append(ATerm("Id",[AString("@java.init")])) 
         body_code.insert(0,i)
         i.up = body_code ## TODO: this should not be neccesary
         
+
+skipmods=["Public"]
+def fix_mods(ast):
+    for c in ast.findall("ClassBody"):
+        # iterate all definitions in class
+        for i in c[0]:
+            if i.name in ["MethodDec","ConstrDec"]:
+                mdh = i[0]
+                mods = mdh[0]
+                newmods = AList()
+                for m in mods:
+                    #print m
+                    if m.name not in skipmods:
+                       newmods.append(m)
+                mdh[0] = newmods
+
 
 def add_typed(ast):
     #print "add typed"
     for c in ast.findall("ClassBody"):
         # iterate all definitions in class
         for i in c[0]:
-            if i.name == "MethodDec":
+            if i.name in ["MethodDec","ConstrDec"]:
                 mdh = i[0]
-                params = mdh[4]
-                if len(params)>0:
+                if i.name == "MethodDec":
+                    params = mdh[4]
+                else:
+                    params = mdh[3]
+                if len(params)>0 or i.name=="ConstrDec":
                     typed = decode("Typed([])")
                     for param in params:
                         typed[0].append(param[1])
@@ -99,13 +116,30 @@ def add_typed(ast):
                         print " -> typed:",typed
                     #print mdh
                     mdh[0].append(typed)
-    
+
+
+def decorate_constructor(ast):
+    for c in ast.findall("ClassBody"):
+        for i in c[0]:
+            if i.name in ["ConstrDec"]:
+                mdh = i[0]
+                cdec = ATerm("Id",["@__init__.register"])
+                mdh[0].append(cdec)
+
+def remove_FieldDec(ast):
+    for f in ast.findall("FieldDec"):
+        f.up.remove(f)
+        
+
+def run(ast):
+    fix_mods(ast)
+    decorate_constructor(ast)
+    add_typed(ast)
+    add_init(ast)
+    remove_FieldDec(ast)
 
 if __name__ == '__main__':
     ast = decode(sys.stdin.read())
-    add_typed(ast)
-    add_init(ast)
+    run(ast)
     if not DEBUG:
         print ast
-
-
