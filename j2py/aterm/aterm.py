@@ -34,8 +34,44 @@ class ATerm (list):
             return "%s(%s)" % (self.name,list.__repr__(self)[1:-1])
         else:
             return "%s(%s){%s}" % (self.name,list.__repr__(self)[1:-1],repr(self.annotation))
+
+    def __setitem__(self,i,y):
+        if y.__class__ is str:
+            y = AString(y)
+        elif y.__class__ is list:
+            y = AList(y)
+        if isinstance(y,ATerm):
+            y.up = self    
+        list.__setitem__(self,i,y)
+   
+    def append(self,y):
+        if y.__class__ is str:
+            y = AString(y)
+        elif y.__class__ is list:
+            y = AList(y)
+        if isinstance(y,ATerm):
+            y.up = self    
+        list.append(self,y)
+        
+    def insert(self,i,y):
+        if y.__class__ is str:
+            y = AString(y)
+        elif y.__class__ is list:
+            y = AList(y)
+        if isinstance(y,ATerm):
+            y.up = self    
+        list.insert(self,i,y)
+
+    def extend(self,l):
+        for i in l:
+            self.append(i)
+
+    #TODO: write further setters ...
         
     def _update_children(self):
+        # hm, not needed any further ... ?
+        # if all setters set up ...
+        return
         "sets up pointer on children to self"
         for c in self:
             if isinstance(c,(ATerm,AList)):

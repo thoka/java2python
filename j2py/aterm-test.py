@@ -87,6 +87,29 @@ class TestTree(unittest.TestCase):
         wb = ''.join([ n.name for n in e.walkback()])
         self.assertEquals(wb,'DCBBA')
 
+    def test_append(self):
+        a = ATerm("a")
+        b = ATerm("b")
+        a.append(b)
+        self.assertEquals(a,b.up)
+       
+    def test_setitem(self):
+        a = ATerm("a",[1])
+        b = ATerm("b")
+        a[0]=b
+        self.assertEquals(a,b.up)
+
+    def test_insert(self):
+        a = ATerm("a")
+        b = ATerm("b")
+        a.insert(0,b)
+        self.assertEquals(a,b.up)
+        a = ATerm("a",[1])
+        b = ATerm("b")
+        a.insert(0,b)
+        self.assertEquals(a,b.up)
+
+
 
 class TestEncode(unittest.TestCase):
     def de(self,src,enc=None):
