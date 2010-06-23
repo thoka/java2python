@@ -269,7 +269,7 @@ rules
     Dim() -> H hs=0 [ "" ]
 
   java2py-to-box:
-    Dim(e) -> H hs=0 [ "" ]
+    Dim(e) -> H hs=0 [ "range(" ~e ")" ]
 
   java2py-to-box:
     ArrayInit(exprs) -> H hs=0 ["java.Array([" ~vals "])"]
