@@ -35,11 +35,11 @@ def verbatim(code):
 def add_init(ast):
     """
     add __init__ to any class in ast
-    
     add import of j2py
+    add import of System,Object
     """
 
-    imp = decode('Id("from java import System")')
+    imp = decode('Id("from java import Object,System")')
     ast[1].insert(0,imp)
 
     imp = decode('Id("import java")')
@@ -61,25 +61,34 @@ def add_init(ast):
                     vd.append(decode('Id("\\"\\"")'))
                        
     for c in ast.findall("ClassDec"):
+        
+        #insert Object as base class, if none exists 
+        base_class = c[0][3]
+        if base_class.name == "None":
+            c[0][3] = ATerm("Id",["Object"])
+        
         body_code = c.findfirst("ClassBody")[0]
 
         i = make_init()
         block = i[1][0]
         
+        remove = []
         for n in body_code:
             if n.name == "FieldDec":
                 if is_static(n):
                     continue                   
                 for v in n.findall("VarDec"):
-                    v=v.copy()
-                    v[0][0] = AString("self.%s" % v[0][0])
-                    block.append(v)
+                    vc=v.copy()
+                    vc[0][0] = AString("self.%s" % v[0][0])
+                    block.append(vc)
                     if DEBUG:
                         print n
+                remove.append(n)
+        for n in remove:
+            body_code.remove(n)                
         
         i[0][0].append(ATerm("Id",[AString("@java.init")])) 
         body_code.insert(0,i)
-        i.up = body_code ## TODO: this should not be neccesary
         
 
 skipmods=["Public"]
@@ -87,7 +96,7 @@ def fix_mods(ast):
     for c in ast.findall("ClassBody"):
         # iterate all definitions in class
         for i in c[0]:
-            if i.name in ["MethodDec","ConstrDec"]:
+            if i.name in ["MethodDec","ConstrDec","InterfaceDec"]:
                 mdh = i[0]
                 mods = mdh[0]
                 newmods = AList()
@@ -129,13 +138,25 @@ def decorate_constructor(ast):
                 mdh[0].append(cdec)
 
 
+def decorate_inner_classes(ast):
+    for c in ast.findall("ClassDec"):
+        parents = [ p.name for p in c.parents() ]
+        #print c.name,':',parents
+        if "ClassDec" in parents:
+            c[0][0].append ( ATerm("Id",["@java.innerclass"]) )
+
+
 def is_static(v):
     return len([i for i in v.findall("Static")]) > 0
 
 def remove_FieldDec(ast):
+    #should not be nessesary, since add_init does removal too
+    remove = []
     for f in ast.findall("FieldDec"):
         if is_static(f):
             continue
+        remove.append(f)
+    for f in remove:
         f.up.remove(f)
         
 def run(ast):
@@ -144,6 +165,7 @@ def run(ast):
     add_typed(ast)
     add_init(ast)
     remove_FieldDec(ast)
+    decorate_inner_classes(ast)
 
 if __name__ == '__main__':
     ast = decode(sys.stdin.read())

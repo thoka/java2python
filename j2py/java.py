@@ -1,9 +1,15 @@
 from enum import Enum,enum
+from inspect import isfunction
 
 def init(func):
     return func
 
-static = classmethod
+def static(something):
+    #print "@static", something,isfunction(something)
+    if isfunction(something):
+        return classmethod(something)
+    else:
+        return staticclass(something)
 
 def protected(func):
     return func
@@ -46,7 +52,7 @@ class init(object):
     def __init__(self,f):
         self.registry = {}
         self.init = f 
-
+        
     def __get__(self,obj,typename):
         self.self = obj
         return self
@@ -70,6 +76,34 @@ class init(object):
         else:
             raise RuntimeError("No constructor found for signature " + str(key))
 
+
+class innerclass(object):
+    def __init__(self,innerclass):
+        #print "innerclass init",innerclass
+        self.innerclass = innerclass
+    
+    def __get__(self,obj,typename):
+        #print "innerclass get",obj,typename
+        self.upperclass = typename
+        self.innerclass.upperclass = typename
+        return self.innerclass
+        
+        
+class staticclass(object):
+    def __init__(self,innerclass):
+        #print "staticclass init",innerclass
+        self.innerclass = innerclass
+    
+    def __get__(self,obj,t):
+        #print "staticcclass get",obj,t
+        self.self = obj
+        self.t = t
+        return self
+        
+    def __call__(self,*a):
+        #print "staticclass call",a
+        return self.innerclass.__get__(None,self.t)
+        
 
 class override(object):
     def __init__(self,f):

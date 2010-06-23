@@ -53,7 +53,7 @@ strategies
         ; try(pp-comments(extension <+ java2py-to-box))
         ; repeat(j2py <+ extension <+ java2py-to-box)
       )
-    // ; where(<debug> [ "//////////////////", <id> ])  
+    //; where(<debug> [ "//////////////////", <id> ])  
 
 rules
  
@@ -159,12 +159,17 @@ rules
 rules
 
   java2py-to-box:
-    Semicolon() -> box |[ ";" ]|
+    Semicolon() -> None() // box |[ ";" ]|
 
   java2py-to-box:
     InterfaceDec(InterfaceDecHead(mods, Id(name), type-args, implements), body)
       ->
-    V vs=0 [~mods H hs=0 [~lit:name b*] b2 ""]
+    V vs=0 [
+      ~mods 
+      H hs=0 ["class " ~lit:name b* " #interface"] 
+      b2 
+      ""
+    ]
     where
       <type-params-to-boxes> type-args => b*
     ; <block-structure> (1, body) => b2

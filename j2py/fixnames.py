@@ -23,6 +23,18 @@ def imported_names(ast):
         assert n[0][1].name == "Id"
         res.append(n[0][1][0])
     return res    
+
+
+def inner_classes(treepos):
+    res = []
+    for p in treepos.parents():
+        if p.name in ['ClassBody']:
+            for d in p[0]:
+                if d.name in ['ClassDec']:
+                  classname = d[0][1][0]
+                  res.append(classname)
+    return res
+    
  
 def local_vars(treepos):
     "try to find local vars at treepos"
@@ -37,6 +49,7 @@ def local_vars(treepos):
         if n.name in ['ForEach','MethodDecHead','ConstrDecHead']: #TODO interface ?
             for p in n.findall("Param"):
                 res.append(p[2][0])
+            
     return res          
  
 def fix_names(ast,decorate=DECORATE):
@@ -57,38 +70,47 @@ def fix_names(ast,decorate=DECORATE):
         # do name decoration for testing purposes 
         dec_local = "@l@"
         dec_imported = "@i@"
+        dec_innerclass = "@ic@"
     else:
         dec_local = ""
         dec_imported = ""
+        dec_innerclass = ""
 
     
-    if 1:
-        for exp in ast.findall(["ExprName","MethodName"]):
-            if True or len(exp) == 2:
-                if exp[0].name == "Id":
-                    if DEBUG: 
-                        print exp
-                        print "   path:",exp.path()
-                    local = local_vars(exp)
-                    if DEBUG:
-                        print "  locals:",local
-                    varname = exp[0][0].split('.')[0]  
-                    if varname in local:
-                        exp[0][0] = dec_local + exp[0][0]
-                    elif varname in imports:
-                        exp[0][0] = dec_imported + exp[0][0]
-                    else:
-                    	if not varname[0].isupper():
-	            	    exp[0][0] = "self." + exp[0][0]                    
-                    if 0:    
-                        for n in exp.walkback():
-                            print "   ->",n.name
-                            if n.name in interesting:
-                                print "    ",n
-                                
-                        
-                        #print exp, exp[0].name == "Id" , exp[0][0]
-                
+    for exp in ast.findall(["ExprName","MethodName"]):
+        if exp[0].name == "Id":
+            if DEBUG: 
+                print exp
+                print "   path:",exp.path()
+            local = local_vars(exp)
+            if DEBUG:
+                print "  locals:",local
+            varname = exp[0][0].split('.')[0]  
+            if varname in local:
+                exp[0][0] = dec_local + exp[0][0]
+            elif varname in imports:
+                exp[0][0] = dec_imported + exp[0][0]
+            else:
+                #print "innerclasses for",exp,inner_classes(exp)
+            	if not varname[0].isupper():
+        	        exp[0][0] = "self." + exp[0][0]                    
+            if 0:    
+                for n in exp.walkback():
+                    print "   ->",n.name
+                    if n.name in interesting:
+                        print "    ",n
+    for exp in ast.findall("NewInstance"):
+        #print "checking",exp
+        classname = exp[1][0][0][0]
+        #print "  classname",classname
+        if classname in inner_classes(exp):
+            exp[1][0][0][0] = "self." + classname
+        else:
+            if dec_innerclass is not "":
+                exp[1][0][0][0] = dec_innerclass + classname
+        
+               
+#or varname[0] in inner_classes(exp):
 
 if __name__ == '__main__':
     ast = aterm.decode(sys.stdin.read())
