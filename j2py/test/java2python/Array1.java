@@ -1,9 +1,9 @@
 public class Array1  {
     public static void main(String[] args) {
 	Integer b[] = {4, 5, 6};
-        System.out.println(b[0].toString());
-        System.out.println(b[1].toString());
-        System.out.println(b[2].toString());
+        System.out.println(b[0]);
+        System.out.println(b[1]);
+        System.out.println(b[2]);
 
 	int c[] = {1,2,3};
         System.out.println(c[0]);
