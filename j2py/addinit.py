@@ -68,7 +68,9 @@ def add_init(ast):
         
         for n in body_code:
             if n.name == "FieldDec":
-                for v in n.findall("VarDec"):                   
+                if is_static(n):
+                    continue                   
+                for v in n.findall("VarDec"):
                     v=v.copy()
                     v[0][0] = AString("self.%s" % v[0][0])
                     block.append(v)
@@ -126,11 +128,16 @@ def decorate_constructor(ast):
                 cdec = ATerm("Id",["@__init__.register"])
                 mdh[0].append(cdec)
 
+
+def is_static(v):
+    return len([i for i in v.findall("Static")]) > 0
+
 def remove_FieldDec(ast):
     for f in ast.findall("FieldDec"):
+        if is_static(f):
+            continue
         f.up.remove(f)
         
-
 def run(ast):
     fix_mods(ast)
     decorate_constructor(ast)

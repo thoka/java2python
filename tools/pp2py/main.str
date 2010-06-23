@@ -237,12 +237,9 @@ rules
   java2py-to-box:
     ConstrBody(Some(cinvoke), stms) -> <block-structure> (0, [cinvoke | stms])
 
-
   java2py-to-box:
-    FieldDec(mods, type, ds) -> V [ H [ "#FieldDec" ~decs]] 
-    where
-      <separate-by-comma> ds => decs
-
+    FieldDec(mods, type, ds) -> V [ ~ds ] 
+ 
 /* TODO: init static attrs
   java2py-to-box:
     FieldDec(mods, type, ds)
