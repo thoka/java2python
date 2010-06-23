@@ -34,7 +34,7 @@ def local_vars(treepos):
                     res.append(t[0][0][0])
                 else:    
                     res.append(t[0][0])
-        if n.name in ['ForEach','MethodDecHead']:
+        if n.name in ['ForEach','MethodDecHead','ConstrDecHead']: #TODO interface ?
             for p in n.findall("Param"):
                 res.append(p[2][0])
     return res          
@@ -74,12 +74,12 @@ def fix_names(ast,decorate=DECORATE):
                         print "  locals:",local
                     varname = exp[0][0].split('.')[0]  
                     if varname in local:
-                        exp[0][0] =aterm.AString(dec_local + exp[0][0])
+                        exp[0][0] = dec_local + exp[0][0]
                     elif varname in imports:
-                        exp[0][0] =aterm.AString(dec_imported + exp[0][0])
+                        exp[0][0] = dec_imported + exp[0][0]
                     else:
                     	if not varname[0].isupper():
-	            	    exp[0][0] =aterm.AString("self." + exp[0][0])                    
+	            	    exp[0][0] = "self." + exp[0][0]                    
                     if 0:    
                         for n in exp.walkback():
                             print "   ->",n.name
