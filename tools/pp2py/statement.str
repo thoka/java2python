@@ -212,13 +212,13 @@ rules
     Synchronized(e, b) -> box |[ V vs=0 [H hs=0 ["@synchronized" "(" ~e ")"] ~b] ]|
 
   java2py-to-box:
-    Break(Some(Id(s))) -> H hs=0 [H hs=1 ["::###NOTIMPL break" s] ]
+    Break(Some(Id(s))) -> H hs=0 [H hs=1 ["break"  "###NOTIMPL LABEL" s] ]
 
   java2py-to-box:
     Break(None()) -> H hs=0 [KW["break"] ]
 
   java2py-to-box:
-    Continue(Some(Id(s))) -> H hs=0 [H hs=1 ["::###NOTIMPL continue" s] ]
+    Continue(Some(Id(s))) -> H hs=0 [H hs=1 ["continue" "###NOTIMPL LABEL" s] ]
 
   java2py-to-box:
     Continue(None())      -> H hs=0 [KW["continue"] ]
