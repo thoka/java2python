@@ -31,12 +31,11 @@ transform() {
 }
 
 
-
 compile_and_run() {
 
     #compile java
     echo "- compiling java $1 ..."
-    javac $1
+    javac -7 $1
     local path=$(dirname $1)
     local class=$(basename ${1%.java})
    

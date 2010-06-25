@@ -9,6 +9,23 @@ You can not expect to get full java2python translation.
 See COPYING for Copyright and License.
 
 See http://www.strategoxt.org/Stratego/JavaFront for JavaFront
+
+## Install on a fresh debian lenny vmware image
+
+Use the script `install_on_debian.sh` to get everything installed and build on
+a fresh debian lenny vmware image.
+
+- get http://www.thoughtpolice.co.uk/vmware/#debian5.0 running
+
+- login as root, pwd thoughtpolice
+
+    echo "deb http://ftp.debian.org/ testing main" >> /etc/apt/sources.list
+    aptitude update
+    aptitude install git-core
+    git clone http://github.com/thoka/java2python.git jf2py
+    cd jf2py
+    bash install_on_debian_lenny.sh
+
  
 ## Installation
 
@@ -24,12 +41,12 @@ The make files depend on bash. Check `/bin/sh --version`
 if it is bash. If not, change the symlink  `/bin/sh` to point to `/bin/bash`.
 
 Clone the git repo
-    git clone git@github.com:thoka/java2python.git java2python
+    git clone git://github.com/thoka/java2python.git jf2py
 
 Next, configure and make it. 
 On my Ubuntu system this was:
 
-    cd java2python
+    cd jf2py
     ./bootstrap
     ./configure --prefix=/usr --with-aterm=/usr --with-sdf=/usr --with-strategoxt=/usr --enable-bootstrap
     make

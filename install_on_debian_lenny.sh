@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# install dependencies on debian lenny, 
+# install dependencies on debian lenny/testing, 
 # then build
 
-aptitude install openssh-server sudo
-aptitude install git-core bzip2 autoconf libtool pkg-config make python python-yaml
+aptitude install git-core bzip2 autoconf libtool pkg-config make build-essential \
+    python python-yaml openjdk-6-jdk
 
-cd
 mkdir install
 cd install
 
@@ -19,5 +18,11 @@ dpkg -i sdf2-bundle_2.4-1_i386.deb
 dpkg -i strategoxt_0.17-1_i386.deb
 
 cd ..
-./rebuild.sh
+bash rebuild.sh
+
+echo "look for examples in ./j2py/test"
+
+
+
+
 
