@@ -6,32 +6,51 @@ logfile=$scriptpath/transform.log
 
 rm $logfile
 
-
 transform() {
     local src=$1
     echo "- transforming $src ..."
     src=${src%.java}
-    mkdir -p $(dirname $src)/out
-    local dst=$(dirname $src)/out/$(basename $src)
-    $scriptpath/../tools/parse-java --preserve-comments -i $src.java  > $dst.aterm
-    local _src=$(dirname $src)/out/$(basename $src)
-    cat $_src.aterm | pp-aterm > $dst.aterm.pp
-    cat $dst.aterm | $scriptpath/j2py.py > $dst.j2py 2>&1
-    cat $dst.j2py | pp-aterm >  $dst.j2py.pp
-    cat $dst.j2py | $scriptpath/../tools/java2py > $dst.py    
+    local adir=$(dirname $src)/aterm # dir containing all intermediate aterm output
+    local adst=$adir/$(basename $src)
+    mkdir -p $adir
+    local dst=$(dirname $src)/$(basename $src).py # where py goes
+    
+    #parse
+    $scriptpath/../tools/parse-java --preserve-comments -i $src.java  > $adst.aterm
+    
+    #do python conversions
+    cat $adst.aterm | $scriptpath/j2py.py > $adst.j2py 2>&1 #
+    
+    #transform ast -> python
+    cat $adst.j2py | $scriptpath/../tools/java2py > $dst    
+
+    # make nice intermediate outputs
+    cat $adst.aterm | pp-aterm > $adst.aterm.pp
+    cat $adst.j2py  | pp-aterm > $adst.j2py.pp
+
 }
 
+
+
 compile_and_run() {
+
+    #compile java
     echo "- compiling java $1 ..."
     javac $1
     local path=$(dirname $1)
     local class=$(basename ${1%.java})
+   
+    #run java
     echo "- running java ... "
-    pushd $path
+    pushd $path > /dev/null
     java $class > $class.java.run
+    
+    #run python
     echo -n "- running python ... "
-    local dst=out/$class.py
+    local dst=$class.py
     $scriptpath/run.py $dst > $dst.run 2>> $logfile
+
+    #compare output
     ( diff $class.java.run $dst.run && echo "OK" ) || 
       ( (echo "Output differs: $1" >> $logfile) && ( echo "Error") \
         && (diff $class.java.run $dst.run >> $logfile))
@@ -39,7 +58,7 @@ compile_and_run() {
 }
 
 
-for src in $(find -iname "*.java"); do
+for src in $(find -iname "*.java" | sort ); do
     echo "## $src ###################################"
     echo "## $src ###################################" >> $logfile
 
