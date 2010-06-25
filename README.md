@@ -15,10 +15,12 @@ See http://www.strategoxt.org/Stratego/JavaFront for JavaFront
 Use the script `install_on_debian.sh` to get everything installed and build on
 a fresh debian lenny vmware image.
 
-- get http://www.thoughtpolice.co.uk/vmware/#debian5.0 running
+- get 32 bit image running from http://www.thoughtpolice.co.uk/vmware/#debian5.0  
 
 - login as root, pwd thoughtpolice
 
+run following commands
+    
     echo "deb http://ftp.debian.org/ testing main" >> /etc/apt/sources.list
     aptitude update
     aptitude install git-core
@@ -26,6 +28,7 @@ a fresh debian lenny vmware image.
     cd jf2py
     bash install_on_debian_lenny.sh
 
+at least libtool have to come from debian/testing
  
 ## Installation
 
