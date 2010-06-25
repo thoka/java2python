@@ -31,6 +31,9 @@ def verbatim(code):
     #i.append(AString(code))
     return i
 
+
+def add_decorator(dec,mdec):
+    mdec[0][0].insert(0,ATerm("Id",["@"+dec]))
  
 def add_init(ast):
     """
@@ -61,6 +64,9 @@ def add_init(ast):
                     vd.append(decode('Id("\\"\\"")'))
                        
     for c in ast.findall("ClassDec"):
+        """
+        create init, decoreate overloaded methods
+        """
         
         #insert Object as base class, if none exists 
         base_class = c[0][3]
@@ -73,6 +79,9 @@ def add_init(ast):
         block = i[1][0]
         
         remove = []
+        methods = {}
+        overloaded_methods = set()
+    
         for n in body_code:
             if n.name == "FieldDec":
                 if is_static(n):
@@ -84,6 +93,16 @@ def add_init(ast):
                     if DEBUG:
                         print n
                 remove.append(n)
+            elif n.name == "MethodDec":
+                mname = n[0][3][0]
+                if not methods.has_key(mname): 
+                    methods[mname]=n
+                else:
+                    if mname not in overloaded_methods:
+                        add_decorator("java.overloaded",methods[mname])
+                        overloaded_methods.add(mname) 
+                    add_decorator(mname+".register",n)
+            
         for n in remove:
             body_code.remove(n)                
         
@@ -92,21 +111,30 @@ def add_init(ast):
         
 
 skipmods=["Public"]
+
+
+def filtered_mods(mods):
+    newmods = AList()
+    for m in mods:
+        #print m
+        if m.name not in skipmods:
+           newmods.append(m)
+    return newmods
+
 def fix_mods(ast):
     for c in ast.findall("ClassBody"):
         # iterate all definitions in class
         for i in c[0]:
-            if i.name in ["MethodDec","ConstrDec","InterfaceDec"]:
+            if i.name in ["MethodDec","ConstrDec","InterfaceDec","AbstractMethodDec"]:
                 mdh = i[0]
-                mods = mdh[0]
-                newmods = AList()
-                for m in mods:
-                    #print m
-                    if m.name not in skipmods:
-                       newmods.append(m)
-                mdh[0] = newmods
-
-
+                mdh[0] = filtered_mods(mdh[0])
+    #interfaces ...
+    for idec in ast.findall("InterfaceDec"):
+        for i in idec[1]:
+            if i.name in ["AbstractMethodDec"]:
+                i[0] = filtered_mods(i[0])
+        idec[0][0].append(ATerm("Id",["@java.interface"]))        
+                
 def add_typed(ast):
     #print "add typed"
     for c in ast.findall("ClassBody"):

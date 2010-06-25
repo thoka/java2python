@@ -32,11 +32,11 @@ rules
     SuperDec(c) -> box |[ H hs=1 [ ~c] ]|
 
   java2py-to-box :
-    ImplementsDec(is) -> box |[ H hs=1 [KW["#implementsDec"] ~interfaces] ]|
+    ImplementsDec(is) -> box |[ H hs=1 [", " ~interfaces] ]|
       where <separate-by-comma> is; ?interfaces
 
   java2py-to-box :
-    ExtendsInterfaces(is) -> box |[ H hs=1 [KW["#extendsInterfaces"] ~interfaces] ]|
+    ExtendsInterfaces(is) -> box |[ H hs=1 [~interfaces] ]|
       where <separate-by-comma> is; ?interfaces
 
 rules

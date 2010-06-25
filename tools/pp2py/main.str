@@ -166,7 +166,7 @@ rules
       ->
     V vs=0 [
       ~mods 
-      H hs=0 ["class " ~lit:name b* " #interface"] 
+      H hs=0 ["class " ~lit:name b* "(" ~implements "):"] 
       b2 
       ""
     ]
@@ -179,7 +179,7 @@ rules
       ->
     V vs=0 [
       ~*mods
-      H hs=1 ["class" H hs=0 [~lit:name b* "(" ~extends "):"]]
+      H hs=1 ["class" H hs=0 [~lit:name b* "(" ~extends ~implements"):"]]
       "" 
       ~body
       ""
@@ -220,7 +220,7 @@ rules
   java2py-to-box:
     AbstractMethodDec(mods, type-params, type, Id(n), params, throws)
       ->
-    box |[ H hs=0 [ ~MethodDecHead(mods, type-params, type, Id(n), params, throws) ] ]|
+    box |[ H hs=0 [ ~MethodDecHead(mods, type-params, type, Id(n), params, throws) " pass"] ]|
 
   java2py-to-box:
     ConstrDec(ConstrDecHead(mods, type-params, class, params, throws), body)

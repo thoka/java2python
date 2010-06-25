@@ -1,6 +1,12 @@
 from enum import Enum,enum
 from inspect import isfunction
 
+"""
+java runtime lib for j2py
+"""
+
+# DECORATORS
+
 def init(func):
     return func
 
@@ -25,14 +31,18 @@ def private(func):
 
 def constructor(func):
     return func
+    
+def interface(c):
+    return c    
 
 def typed(*sig):
     def add_sig(f):
+        "typed add_sig",f,sig
         f._type_sig = sig
         return f
     return add_sig            
 
-def typeid(a):
+def typeid(a):    
     if isinstance(a,list) or isinstance(a,tuple):
         return tuple(typeid(i) for i in a)
     elif isinstance(a,type):
@@ -105,26 +115,39 @@ class staticclass(object):
         return self.innerclass.__get__(None,self.t)
         
 
-class override(object):
+class overloaded(object):
     def __init__(self,f):
+        #print "overloaded init",f
         self.registry = {}
-        self.register_func(f,f._type_sig)
+        try:
+            self.register_func(f,f._type_sig)
+        except:
+            self.register_func(f,tuple())       
+
+    def __get__(self,obj,t):
+        #print "overloaded get",obj,t
+        self.self = obj
+        self.t = t
+        return self
         
     def register_func(self, func, sig):
         key = typeid(sig)
         self.registry[key] = func
         
-    def override(self,f):
+    def register(self,f):
         self.register_func(f,f._type_sig)
         return self
     
     def __call__(self,*a):
+        #print "overloaded call",a
         key = argtypeid(a)
         func = self.registry.get(key,None)
         if func is not None:
-            return func(self,*a)
+            return func(self.self,*a)
         else:
             raise RuntimeError("no function for signature " + str(key))
+
+# Objects ...
 
 
 class Array(list):
@@ -144,19 +167,18 @@ System.out = Object()
 
 def println(*args):
     print "".join([ str(i) for i in args])
-    
-_str = str
 
+System.out.println = println
+   
+# helpers
+
+_str = str
 def str(o):
     if o is None:
         return ""
     else:
         return _str(o)
             
-System.out.println = println
-
-#__all__ = "Enum,enum,System,_dispatch_init,init,typed".split(',')
-
 
     
 
