@@ -1,5 +1,7 @@
 #!/bin/bash
 
+JAVAC="ecj -5" # use eclipse java compiler
+
 cd $(dirname "$0")
 scriptpath=$PWD
 logfile=$scriptpath/transform.log
@@ -35,7 +37,7 @@ compile_and_run() {
 
     #compile java
     echo "- compiling java $1 ..."
-    javac -7 $1
+    $JAVAC $1
     local path=$(dirname $1)
     local class=$(basename ${1%.java})
    
@@ -47,7 +49,7 @@ compile_and_run() {
     #run python
     echo -n "- running python ... "
     local dst=$class.py
-    $scriptpath/run.py $dst > $dst.run 2>> $logfile
+    $scriptpath/run.py $dst  2>&1  > $dst.run 
 
     #compare output
     ( diff $class.java.run $dst.run && echo "OK" ) || 
@@ -57,7 +59,7 @@ compile_and_run() {
 }
 
 
-for src in $(find -iname "*.java" | sort ); do
+for src in $(find test/java2python -iname "*.java" | sort ); do
     echo "## $src ###################################"
     echo "## $src ###################################" >> $logfile
 
