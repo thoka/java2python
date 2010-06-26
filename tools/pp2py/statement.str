@@ -13,6 +13,9 @@ rules
     Block(stms) -> <block-structure> (0, stms)
 
   java2py-to-box:
+    Block2(stms) -> V [ ~*stms ]
+
+  java2py-to-box:
     ClassDecStm(classdec) -> classdec
 
   java2py-to-box: Return(None())  -> <stm-box> box |[  KW["return"] ]|
@@ -31,8 +34,8 @@ rules
       where <LocalVarDec-to-box> lvardec => b
 
   LocalVarDec-to-box :
-    LocalVarDec(mods, type, ds) -> H hs=1 [~decs]
-      where <separate-by-comma> ds => decs
+    LocalVarDec(mods, type, ds) -> V [~*ds]
+    // where <separate-by-comma> ds => decs
 
 rules
 
@@ -265,4 +268,5 @@ rules
 signature
   constructors
     Pass: Unknown -> Unknown
-
+    Block2 : Unknown -> Unknown // TODO could get a nicer name
+    

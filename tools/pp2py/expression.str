@@ -16,9 +16,9 @@ strategies
   expr-to-box: AssignRemain(lval, e)      -> box |[ H hs=1 [~lval "%="   ~e] ]|
   expr-to-box: AssignPlus(lval, e)        -> box |[ H hs=1 [~lval "+="   ~e] ]|
   expr-to-box: AssignMinus(lval, e)       -> box |[ H hs=1 [~lval "-="   ~e] ]|
-  expr-to-box: AssignLeftShift(lval, e)   -> box |[ H hs=1 [~lval "<<="  ~e] ]|
-  expr-to-box: AssignRightShift(lval, e)  -> box |[ H hs=1 [~lval ">>="  ~e] ]|
-  expr-to-box: AssignURightShift(lval, e) -> box |[ H hs=1 [~lval ">>>=" ~e] ]|
+  expr-to-box: AssignLeftShift(lval, e)   -> box |[ H hs=1 [~lval "="  ~lval "<<" ~e] ]|
+  expr-to-box: AssignRightShift(lval, e)  -> box |[ H hs=1 [~lval "="  ~lval ">>" ~e] ]|
+  expr-to-box: AssignURightShift(lval, e) -> box |[ H hs=0 [~lval " = java.bsr(" ~lval "," ~e ")" ] ]|
   expr-to-box: AssignAnd(lval, e)         -> box |[ H hs=1 [~lval "&="   ~e] ]|
   expr-to-box: AssignExcOr(lval, e)       -> box |[ H hs=1 [~lval "^="   ~e] ]|
   expr-to-box: AssignOr(lval, e)          -> box |[ H hs=1 [~lval "|="   ~e] ]|
@@ -37,7 +37,7 @@ strategies
   expr-to-box: Minus(e1, e2)        -> H hs=1 [~e1  "-"   ~e2]
   expr-to-box: LeftShift(e1, e2)    -> H hs=1 [~e1  "<<"  ~e2]
   expr-to-box: RightShift(e1, e2)   -> H hs=1 [~e1  ">>"  ~e2]
-  expr-to-box: URightShift(e1, e2)  -> H hs=1 [~e1  ">>>" ~e2]
+  expr-to-box: URightShift(e1, e2)  -> H hs=0 [ "java.bsr(" ~e1  "," ~e2 ")"]
 
   expr-to-box: Lt(e1, e2)           -> H hs=1 [~e1  "<"   ~e2]
   expr-to-box: Gt(e1, e2)           -> H hs=1 [~e1  ">"   ~e2]
@@ -60,7 +60,7 @@ strategies
   /* java2py-to-box: Name(s) -> s */
 
   java2py-to-box: This()   -> box |[ "self" ]|
-  java2py-to-box: QThis(q) -> box |[ H hs=0 [~q "." "self" "###NOTIMPL###"] ]|
+  java2py-to-box: QThis(q) -> box |[ H hs=0 [~q "." "self" "###NOTIMPL QThis###"] ]|
 
 /**
  * Method Invocations

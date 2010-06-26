@@ -75,6 +75,53 @@ rules
     SuperDec(ClassType(TypeName(Id("Object")), None()))
       -> SuperDec(ClassType(TypeName(Id("java.Object")), None()))  
 
+  j2py:
+    ExprStm( Assign(e1, PostIncr(e2)) )  
+    ->
+    Block2([ 
+        ExprStm(Assign(e1, e2))
+      , ExprStm(PostIncr( e2 ))
+    ])
+                
+  j2py:
+    ExprStm( Assign(e1, PostDecr(e2)) )  
+    ->
+    Block2([ 
+        ExprStm(Assign(e1, e2))
+      , ExprStm(PostDecr( e2 ))
+    ])
+ 
+  j2py:
+    ExprStm( Assign(e1, PreIncr(e2)) )  
+    ->
+    Block2([ 
+        ExprStm(PostIncr( e2 ))
+      , ExprStm(Assign(e1, e2))
+    ])
+
+  j2py:
+    ExprStm( Assign(e1, PreDecr(e2)) )  
+    ->
+    Block2([ 
+        ExprStm(PostDecr( e2 ))
+      , ExprStm(Assign(e1, e2))
+    ])
+
+/*
+
+  j2py:
+    ExprStm(AssignURightShift(e1, e2))
+      -> 
+    ExprStm(
+      Assign(
+        e1,
+        Invoke( Method(MethodName(Id("java"), Id("bsr"))), [e1,e2] )
+      )
+    )
+
+*/
+
+             
 rules
 
   very-special-conflict:
