@@ -4,4 +4,8 @@ java2python/out*
 *.class
 *.pyc
 *.run
+*.aterm
+*.aterm.pp
+aterm/
+*.py
 

@@ -1,5 +1,12 @@
-out/*
-java/out*
+test/out/*
+test/java/out/*
+test/java2py/out/*
 *.class
 *.pyc
+*.aterm
+*.aterm.pp
+*.j2py
+*.j2py.pp
+
+
 

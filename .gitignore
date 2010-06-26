@@ -34,4 +34,12 @@ config.status
 libtool
 java-front.spec
 *.Po
+*/.deps/*
+*.m4
+config/config.guess
+config/config.sub
+*/autom4te.cache/*
+configure
+ltmain.sh
+
 
