@@ -1,4 +1,4 @@
-from enum import Enum,enum
+from enum import Enum,enum,EnumItem
 from inspect import isfunction
 
 """

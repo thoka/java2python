@@ -1,45 +1,38 @@
-class Enum(object):
+class Enum(object):  
     @classmethod
     def __iter__(self):
         for i in self._items:
             yield i
         
 class EnumItem(object):
-
-    def __init__(self,enum_class,index,name):
-        self.enum_class = enum_class
-        self.index = index
-        self.name = name
-        self.enum_class.pos[self]=index
-
     def __repr__(self):
         return self.name
         
-def enum(*l):
-    def decorate(_class):
-        _class.pos = {}
-        print "decorate",l,_class
-        if len(l)==1:
-            names = [i.strip() for i in l[0].split(",")] 
+def enum(klass):
+    """
+    decorator to initialise enums
+    
+    reads klass.init and creates 
+      EnumItems for init == [string]
+      klass.EnumItems(*args) for init == [(string,(args))]
+    """
+      
+    klass.pos = {}
+    klass.items = []
+    
+    for index,init in enumerate(klass.init):
+        if isinstance(init,tuple):
+            name,args = init
+            item = klass.EnumItem(*args)
         else:
-            names = l 
-        _class._items = [EnumItem(_class,i,n) for i,n in enumerate(names)]
-        for i in _class._items:
-            setattr(_class,i.name,i)
-        return _class()
+            name = init
+            item = EnumItem()
+        item.enum_class = klass
+        item.index = index
+        item.name = name
+        klass.pos[item]=index
+        setattr(klass,name,item)
+        klass.items.append(item)
         
-    return decorate
+    return klass
 
-def test():
-
-    @enum("SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY")    
-    class Day(Enum):
-        pass
-            
-    for i in Day:
-        print i 
-        
-        
-    
-    
-    

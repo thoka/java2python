@@ -122,12 +122,14 @@ def filtered_mods(mods):
     return newmods
 
 def fix_mods(ast):
-    for c in ast.findall("ClassBody"):
+    for c in ast.findall(["ClassBody","EnumBodyDecs"]):
         # iterate all definitions in class
         for i in c[0]:
             if i.name in ["MethodDec","ConstrDec","InterfaceDec","AbstractMethodDec"]:
                 mdh = i[0]
                 mdh[0] = filtered_mods(mdh[0])
+
+ 
     #interfaces ...
     for idec in ast.findall("InterfaceDec"):
         for i in idec[1]:

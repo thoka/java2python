@@ -19,23 +19,57 @@ rules
       ->
     box |[ 
       V [  
-        "@enum"
-        H hs=0 [/* ~*mods */  "class "  ~lit:name "(Enum):" /* ~implements */]
-        "    pass"
+        "@java.enum"
+        ~*mods
+        H hs=0 ["class "  ~lit:name "(java.Enum):" /* ~implements */]
+        "" 
       ]
     ]|
 
+/*
+
   java2py-to-box:
-    EnumBody(consts, body) -> <block-structure> (1, [ |[  H ["#consts2" ~consts2] ]| , body2])
+    EnumBody(consts, body) -> <block-structure> (1, [ |[ 
+      V [ 
+        H hs = 0 ["init = [" ~consts2 "]" ]
+        ""
+      ] 
+    ]| , body2])
     where
       <separate-by-comma> consts => consts2
     ; (!body => None() < ![] +  ![body]) => body2
 
-  java2py-to-box:
-    EnumConst(Id(s), None(), None()) -> box |[ s ]|
+*/
 
   java2py-to-box:
-    EnumConst(Id(s), Some(args), None()) -> box |[ H hs=0 ["\"" s "\"," ~args'] ]|
+    EnumBody(consts, body ) -> <block-structure> (1, [ |[ 
+      V [ 
+        H hs = 0 ["init = [" ~consts2 "]" ]
+        ""
+      ] 
+    ]| , None() ])
+    where
+      <separate-by-comma> consts => consts2
+    ; !body => Some(EnumBodyDecs([]))
+    
+    
+  java2py-to-box:
+    EnumBody(consts, body ) -> <block-structure> (1, [ |[ 
+      V [ 
+        H hs = 0 ["init = [" ~consts2 "]" ]
+        ""
+      ] 
+    ]| , body2])
+    where
+      <separate-by-comma> consts => consts2
+    ; (!body => None() < ![] +  ![body]) => body2
+    ; not (!body => Some(EnumBodyDecs([])))
+
+  java2py-to-box:
+    EnumConst(Id(s), None(), None()) -> box |[ H hs=0 [ "\"" s "\"" ] ]|
+
+  java2py-to-box:
+    EnumConst(Id(s), Some(args), None()) -> box |[ H hs=0 [ "(\"" s "\"," ~args' ")"] ]|
     where
       <list-to-args> args => args'
 
@@ -45,4 +79,10 @@ rules
       !EnumConst(Id(s), args, None()) => enum
 
   java2py-to-box:
-   EnumBodyDecs(decs) -> box |[ V vs=1 ["#EnumBodyDecs;" ~*decs] ]|
+   EnumBodyDecs(decs) -> 
+     box |[ V vs=1 [ 
+       "class EnumItem(java.EnumItem):"
+       H hs=0 [ "    " V [ ~*decs ] ]        
+     ] ]|
+   
+  

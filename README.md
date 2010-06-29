@@ -76,18 +76,14 @@ As demonstrated by the third example above, python scripts can step in, to chang
    
 ## TODO / Roadmap
 
-- Write and collect example/test java files with supposed translations.
-  - class initialization for all java types, see Class2.java
-  
 - Complete list of not working issues
+- Write and collect example/test java files with supposed translations.
+- do switch statement right
 
 ### Currently broken
  
-- class initializing
-- interfaces
-- subcass parent scope access,  Test needed
-- post/pre decr/incr, Test needed
-- enums
+- subclass parent scope access,  Test needed
+- Annotations
 - ...
 - make install
  
@@ -100,7 +96,10 @@ As demonstrated by the third example above, python scripts can step in, to chang
   
 ### recently done
 
-
+- enums
+- post/pre decr/incr, Test needed
+- interfaces
+- class initializing
 - do ... while
 - add static attr init into class
 - add __init__
