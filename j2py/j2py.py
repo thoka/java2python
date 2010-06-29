@@ -8,7 +8,7 @@ import sys
 from renameids import rename_ids
 from fixnames import fix_names
 from translatepackages import translate_packages
-from fixstradd import fix_str_add
+import fixstradd
 import addinit
 from fixcomments import convert_comments
 from fixenum import fix_enum
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     convert_comments(ast)
     fix_names(ast)
     translate_packages(ast)
-    fix_str_add(ast)
+    fixstradd.run(ast)
  
     addinit.run(ast)
     fix_enum(ast)
