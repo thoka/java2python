@@ -47,7 +47,7 @@ def local_vars(treepos):
                 else:    
                     res.append(t[0][0])
         if n.name in ['ForEach','MethodDecHead','ConstrDecHead']: #TODO interface ?
-            for p in n.findall("Param"):
+            for p in n.findall(["Param","VarArityParam"]):
                 res.append(p[2][0])
             
     return res          
