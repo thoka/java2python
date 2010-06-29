@@ -46,7 +46,7 @@ compile_and_run() {
    
     #run java
     echo "- running java ... "
-    [[ "$class.java.run" -nt "$class.class" ]] || java $class > $class.java.run
+    [[ "$class.java.run" -nt "$class.class" ]] || java -ea $class > $class.java.run
     
     #run python
     echo -n "- running python ... "
