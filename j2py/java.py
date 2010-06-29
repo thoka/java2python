@@ -7,9 +7,6 @@ java runtime lib for j2py
 
 # DECORATORS
 
-def init(func):
-    return func
-
 def static(something):
     #print "@static", something,isfunction(something)
     if isfunction(something):
@@ -59,32 +56,100 @@ def argtypeid(a,d=0):
         return type(a)
 
 class init(object):
+
+    def __repr__(self):
+        if self.klass is None:
+            return "<init decorator for %s>" % repr(self.init)
+        else:
+            return "<init %s>" % self.klass.__name__
+
     def __init__(self,f):
+        #print "@init __init__",self,f
         self.registry = {}
+        self.self = None
+        self.klass = None
         self.init = f 
+        self.inits = None
         
-    def __get__(self,obj,typename):
-        self.self = obj
+    def __get__(self,obj,klass):
+        #print "@init __get__",self,obj,klass
+        if obj is not None:
+            self.self = obj
+            self.klass = klass
         return self
         
     def register_func(self, func, sig):
+        #print "@init register_func",self,func,sig
         key = typeid(sig)
         self.registry[key] = func
         
     def register(self,func):
+        #print "@init register",self,func
         self.register_func(func,func._type_sig)
         return self
+
+
+    def _super(self,*a):
+        key = argtypeid(a)
+        #print "init super",a,"key",key
+
+        for i in reversed(self.inits[:-1]):
+            func = i.registry.get(key,None)
+            if func is not None:
+                #print " call super", func
+                func(self.self,*a)
+                return
    
     def __call__(self,*a):
         key = argtypeid(a)
-        func = self.registry.get(key,None)
-        self.init(self.self,*a)
-        if func is not None:
-            func(self.self,*a)
-        elif key == tuple():
+        #print "@init __call__",self,a,key
+        
+        # find constructors for base classes
+        if self.inits is None:
+            k = self.klass
+            inits = []
+            while True:
+                inits.insert(0,k.__init__)
+                #print " .. bases", k.__bases__
+                base_found = False
+                
+                for b in k.__bases__:
+                    try:
+                        i = b.__init__
+                        #print " ...init=",i 
+                        if isinstance(b.__init__,init):
+                            #print "found one",b
+                            k = b
+                            base_found = True
+                    except:
+                        pass
+                        #print "no java baseclass",b
+                if not base_found: break
+            #print " ... inits:",inits
+            self.inits = inits
+            
+        # call __init__ for all java base classes
+        for i in self.inits:
+            #print " var-init",i.init
+            i.init(self.self)
+
+        # find and call __init__(key)
+        #inits.reverse()
+        
+        for i in reversed(self.inits):
+            func = i.registry.get(key,None)
+            if func is not None:
+                #print " constr init", func
+                func(self.self,*a)
+                return
+                
+        if key == tuple():
+            #print "@init __call__ () not registered"
             pass
         else:
             raise RuntimeError("No constructor found for signature " + str(key))
+
+
 
 
 class innerclass(object):

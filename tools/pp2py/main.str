@@ -337,16 +337,16 @@ rules
 
   java2py-to-box:
     SuperConstrInv(type-args, exprs) 
-      -> box |[ H hs=0 [ "self.__bases__[0].__init__" b2 /* "##SuperConstrInv" */] ]|
+      -> box |[ H hs=0 [ "self.__init__._super" b2 /* "##SuperConstrInv" */] ]|
     where
-      <list-to-args3> exprs => b2
+      <list-to-args> exprs => b2
     ; <type-args-to-boxes> type-args => b1*
 
   java2py-to-box:
     QSuperConstrInv(b0, type-args, exprs) 
-      -> box |[ H hs=0 [ "self.__bases__[0].__init__" b2 /* "##QSuerConstrInv" */ ] ]|
+      -> box |[ H hs=0 [ "self.__init__._super" b2 /* "##QSuerConstrInv" */ ] ]|
     where
-      <list-to-args3> exprs => b2
+      <list-to-args> exprs => b2
     ; <type-args-to-boxes> type-args => b1*
 
   java2py-to-box :

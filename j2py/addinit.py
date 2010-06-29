@@ -166,6 +166,20 @@ def decorate_constructor(ast):
                 mdh[0].append(cdec)
 
 
+def fix_super(ast):
+    """
+    in java super is called by default
+    so add it to python constructor as default too
+    """    
+    for c in ast.findall("ClassDec"):
+        # has bases classes ?
+        bases = c[0][3] 
+        if not bases.name == "None":
+            for i in c[1][0]:
+                if i.name in ["ConstrDec"]:
+                    if  i[1][0].name == "None":
+                        i[1][0] = decode("Some(SuperConstrInv(None(), []))")
+
 def decorate_inner_classes(ast):
     for c in ast.findall("ClassDec"):
         parents = [ p.name for p in c.parents() ]
@@ -188,6 +202,7 @@ def remove_FieldDec(ast):
         f.up.remove(f)
         
 def run(ast):
+    fix_super(ast)
     fix_mods(ast)
     decorate_constructor(ast)
     add_typed(ast)
