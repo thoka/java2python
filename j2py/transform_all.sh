@@ -36,15 +36,17 @@ transform() {
 compile_and_run() {
 
     #compile java
-    echo "- compiling java $1 ..."
-    $JAVAC $1
+
     local path=$(dirname $1)
     local class=$(basename ${1%.java})
+    pushd $path > /dev/null
+
+    echo "- compiling java $1 ..."
+    [[ "$class.class" -nt "$class.java" ]] || $JAVAC "$class.java"
    
     #run java
     echo "- running java ... "
-    pushd $path > /dev/null
-    java $class > $class.java.run
+    [[ "$class.java.run" -nt "$class.class" ]] || java $class > $class.java.run
     
     #run python
     echo -n "- running python ... "
