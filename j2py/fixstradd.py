@@ -24,6 +24,16 @@ def make_string(e):
     return aterm.decode("ToStr(%s)" % repr(e))
 
 def fix_toString(e):
+    # change defintion of methods 
+    for c in e.findall("ClassDec"):
+        body_code = c.findfirst("ClassBody")[0]
+        for n in body_code:
+            if n.name == "MethodDec":
+                mname = n[0][3][0]
+                if mname == "toString":
+                    n[0][3][0] = "__str__"
+
+    # change invocation .toString()
     for i in e.findall("Invoke"):
         if i[0][0][1][0] == "toString":
            i.replace( make_string(i[0][0][0]) )    
@@ -38,9 +48,11 @@ def fix_str_add(ast):
                if not is_string(p[1]):
                     p[1].replace(make_string(p[1])) 
 
+
+
 def run(ast):
     fix_toString(ast)
-    fix_str_add(ast)
+    #fix_str_add(ast)
                 
 if __name__ == '__main__':
     ast = aterm.decode(sys.stdin.read())
