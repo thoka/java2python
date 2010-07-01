@@ -278,5 +278,9 @@ def bsr(value, bits):
 def bsl(value,bits):
     raise NotImplemented
                 
-                
-                           
+
+# dummy, allows building of parameterized classes                
+# TODO
+def typechecker(*a):
+    return None
+                               
