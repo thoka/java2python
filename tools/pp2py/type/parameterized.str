@@ -5,7 +5,7 @@ rules
     None() -> []
 
   type-args-to-boxes :
-    Some(TypeArgs(types)) -> [ box |[ H hs=0 [] ]| ]
+    Some(TypeArgs(types)) -> [ box |[ H hs=0 [ b ] ]| ]
     where
       <separate-by-comma> types => b
 
@@ -15,10 +15,10 @@ rules
     Wildcard(None()) -> box |[ "?" ]|
 
   java2py-to-box :
-    Wildcard(Some(bound)) -> box |[ H hs=1 ["?" ~bound] ]|
+    Wildcard(Some(bound)) -> box |[ H hs=1 [ ~bound] ]|
 
   java2py-to-box :
-    WildcardUpperBound(type) -> box |[ H hs=1 [KW["extends"] ~type] ]|
+    WildcardUpperBound(type) -> box |[ H hs=1 [KW[",extends="] ~type] ]|
 
   java2py-to-box :
-    WildcardLowerBound(type) -> box |[ H hs=1 [KW["super"] ~type] ]|
+    WildcardLowerBound(type) -> box |[ H hs=1 [KW[",super="] ~type] ]|

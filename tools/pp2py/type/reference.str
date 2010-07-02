@@ -2,12 +2,12 @@ module java/pp2py/type/reference
 strategies
 
   java2py-to-box:
-    ClassOrInterfaceType(b1, type-args) -> box |[ H hs=0 [b1 b2*] ]|
+    ClassOrInterfaceType(b1, type-args) -> box |[ H hs=0 [b1 /* b2* */] ]|
     where
       <type-args-to-boxes> type-args => b2*
 
   java2py-to-box:
-    ClassType(b1, type-args) -> box |[ H hs=0 [ b1 b2*] ]|
+    ClassType(b1, type-args) -> box |[ H hs=0 [ b1 /* b2* */] ]|
     where
       <type-args-to-boxes> type-args => b2*
 

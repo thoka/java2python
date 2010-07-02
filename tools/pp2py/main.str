@@ -222,17 +222,33 @@ rules
     ; <block-structure> (1, body) => b2
 
   java2py-to-box:
-    ClassDec(ClassDecHead(mods, Id(name), type-args, extends, implements), body)
+    ClassDec(ClassDecHead(mods, Id(name), None(), extends, implements), body)
       ->
     V vs=0 [
       ~*mods
-      H hs=1 ["class" H hs=0 [~lit:name b* "(" ~extends ~implements"):"]]
+      H hs=1 ["class" H hs=0 [~lit:name "(" ~extends ~implements"):"]]
       "" 
       ~body
       ""
     ]
+
+  java2py-to-box:
+    ClassDec(ClassDecHead(mods, Id(name), Some(type-args), extends, implements), body)
+      ->
+    V vs=0 [
+        H hs=0 ["def " ~lit:name "((" b* "),*a,**kw):" ]
+        H hs=0 [ "    " V vs=0 [
+          ~*mods
+          H hs=1 ["class" H hs=0 [~lit:name "(" ~extends ~implements"):"]]
+          "" 
+          ~body
+        ] ]
+        H hs=0 ["    return " ~lit:name "(*a,**kw)" ]
+    ]
     where
-      <type-params-to-boxes> type-args => b*
+      <type-params-to-boxes> Some(type-args) => b*
+
+
 
   java2py-to-box:
     ClassBody(decs) -> <block-structure> (1, decs)
