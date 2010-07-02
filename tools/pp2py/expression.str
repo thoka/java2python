@@ -111,7 +111,7 @@ rules
       //where(<debug> [ "//////////////////", <id> ]) ;
       // !type => ClassOrInterfaceType( typeid, Some(type-args2)) ; 
         <list-to-args2> exprs => args
-      ; <type-args-to-boxes> type-args2 => type-args'
+      ; <type-args-to-boxes> Some(type-args2) => type-args'
 
 
   java2py-to-box: 
