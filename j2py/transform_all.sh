@@ -46,13 +46,18 @@ compile_and_run() {
    
     #run java
     echo "- running java ... "
+    #grep "public static void main" $class.java && \
     [[ "$class.java.run" -nt "$class.class" ]] || java -ea $class > $class.java.run
     
     #run python
     echo -n "- running python ... "
     local dst=$class.py
-    $scriptpath/run.py $dst  2>&1  > $dst.run 
-
+    $scriptpath/run.py $dst  > $dst.run 2> $logfile.tmp
+    cat $logfile.tmp
+    cat $logfile.tmp >> $dst.run
+    #cat $logfile.tmp >> $logfile
+    rm $logfile.tmp
+    
     #compare output
     ( diff $class.java.run $dst.run && echo "OK" ) || 
       ( (echo "Output differs: $1" >> $logfile) && ( echo "Error") \
@@ -61,7 +66,7 @@ compile_and_run() {
 }
 
 
-for src in $(find test/java2python -iname "*.java" | sort ); do
+for src in $(find test -iname "*.java" | sort ); do
     echo "## $src ###################################"
     echo "## $src ###################################" >> $logfile
 
