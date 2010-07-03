@@ -55,7 +55,7 @@ def fix_str_add(ast):
 
 def run(ast):
     fix_toString(ast)
-    #fix_str_add(ast)
+    fix_str_add(ast)
                 
 if __name__ == '__main__':
     ast = aterm.decode(sys.stdin.read())
