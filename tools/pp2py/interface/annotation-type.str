@@ -2,7 +2,12 @@ module java/pp2py/interface/annotation-type
 rules
 
   java2py-to-box :
-    AnnoDec(head, decs) -> box |[ V hs=0 [~head ~decs'] ]|
+    AnnoDec(head, decs) -> box |[ V hs=0 [
+      ~head
+      "    \"\"\"" 
+      ~decs'
+      "    \"\"\""
+    ] ]|
     where
       <block-structure> (1, decs) => decs'
       
@@ -12,7 +17,8 @@ rules
     box |[
       V vs=0 [
         ~*annos
-        H hs=1 [~*mods' KW["@interface"] ~lit:name ]
+        ~*mods'
+        H hs=0 ["class " ~lit:name "(java.Annotation):"]
       ]
     ]|
     where
@@ -27,7 +33,7 @@ rules
   java2py-to-box :
     AnnoMethodDec(mods, type, Id(name), default)
       ->
-    box |[ H hs=1 [~*mods ~type ~lit:name "(" ")" ~*default' ";"] ]|
+    box |[ H hs=1 [~*mods ~type ~lit:name "(" ")" ~*default' ] ]|
     where
       let default-to-boxes =
             \ None() -> [] \
