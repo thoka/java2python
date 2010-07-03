@@ -31,6 +31,7 @@ def run_class(fname):
     
 if __name__ == '__main__':
     if len(sys.argv)>1:
+        sys.path.insert(0,"./")
         run_class(sys.argv[1])
     
 

@@ -195,13 +195,18 @@ rules
     TypeImportDec(TypeName(pname,Id(s))) -> H hs=0 [ "from " ~pname "." s  " import " s ]
 
   java2py-to-box:
-    TypeImportOnDemandDec(pname) -> H hs=1 ["from " ~pname "import *"] 
+    TypeImportOnDemandDec(pname) 
+      ->
+    V [ 
+      H hs=1 ["import" ~pname ]
+      H hs=1 ["from" ~pname "import *" ] 
+    ]
+    
+  java2py-to-box:
+    StaticImportDec(tname, Id(s)) -> H hs=0 ["from " ~tname "." s " import " s " ##staticimport"] 
 
   java2py-to-box:
-    StaticImportDec(tname, Id(s)) -> H hs=0 ["from " ~tname "." s " import " s ] 
-
-  java2py-to-box:
-    StaticImportOnDemandDec(tname)  -> H hs=1 ["from" ~tname "import *" ] 
+    StaticImportOnDemandDec(tname)  -> H hs=1 ["import" ~tname "import *"  " ##staticimport"] 
 
 rules
 
