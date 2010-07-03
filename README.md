@@ -76,36 +76,14 @@ As demonstrated by the third example above, python scripts can step in, to chang
    
 ## TODO / Roadmap
 
-- Complete list of not working issues
 - Write and collect example/test java files with supposed translations.
 - do switch statement right
-
-### Currently broken
- 
-- subclass parent scope access,  Test needed
-- Annotations
-- ...
 - make install
- 
+
 ### Pitfalls
 
 - switch statement implementation uses variable "_switch". 
   nested switch statemens will use the same variable and thus will not work
 - Due to a bug in stratego pp-aterm, quotes in comments are not quoted by pp-aterm.
   AST of java src, which include quotes in comments will not be understood by j2py/aterm parser.
-  
-### recently done
-
-- enums
-- post/pre decr/incr, Test needed
-- interfaces
-- class initializing
-- do ... while
-- add static attr init into class
-- add __init__
-- elif 
-- get some Verbatim(pre,ast,post) token into pp-java2py to be able to write raw text into translation
-- switch statement is working
-- add some magic to call main methods, to be able to do tests by comparing output of java and translated java 
-  
-  
+    
