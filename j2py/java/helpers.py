@@ -38,3 +38,17 @@ def bsr(value, bits):
             
 def bsl(value,bits):
     raise NotImplemented
+        
+class synchronize(object):
+    def __init__(self,lock):
+        pass
+    
+    def __enter__(self,*a):
+        #print "__enter__",a
+        pass
+        
+    def __exit__(self,*a):
+        #print "__exit__",a
+        pass
+        
+        

@@ -212,7 +212,7 @@ rules
     Pass(None()) -> H hs=0 [KW["pass"] ]
 
   java2py-to-box:
-    Synchronized(e, b) -> box |[ V vs=0 [H hs=0 ["@synchronized" "(" ~e ")"] ~b] ]|
+    Synchronized(e, b) -> box |[ V vs=0 [H hs=0 ["with java.synchronize(" ~e "):"] ~b] ]|
 
   java2py-to-box:
     Break(Some(Id(s))) -> H hs=0 [H hs=1 ["break"  "###NOTIMPL LABEL" s] ]

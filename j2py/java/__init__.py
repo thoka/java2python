@@ -10,7 +10,7 @@ from objects import Array,Object,String,System, Interface
 
 from enum import Enum,enum,EnumItem
 
-from helpers import str,bsr
+from helpers import str,bsr,synchronize
 
 from annotation import annotated, Annotation
 
