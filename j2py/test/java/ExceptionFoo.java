@@ -4,18 +4,22 @@ class ExceptionFoo {
     public static void main(String[] args) {
 	    try
 	    {
+	        int a = 1;
+	        int b = 0;
+	        int c;
 	        // tested statement(s);
 	        System.out.println("tested statement");
+	        c = a/b;
 	    }
-	    catch (ExceptionName e1)
+	    catch (ArithmeticException e1)
 	    {
 	        // trap handler statement(s);
-	        System.out.println("Exception 1: " + e1);
+	        System.out.println("Exception 1");
 	    }
-	    catch (ExceptionName e2)  // any number of catch statements
+	    catch (Exception e2)  // any number of catch statements
 	    {
 	        // display exception to screen
-	        System.out.println("Exception 2: " + e2);
+	        System.out.println("Exception 2");
 	    }
 	    finally
 	    {
