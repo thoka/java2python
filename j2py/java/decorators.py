@@ -218,5 +218,8 @@ def extends(*interfaces):
         
     return helper
     
+def use_class_init(klass):
+    klass.class_init()
+    return klass
 
 

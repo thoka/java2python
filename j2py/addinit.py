@@ -23,6 +23,21 @@ MethodDec(
 )
 """
 
+
+class_init = """
+MethodDec(
+  MethodDecHead(
+    [Static()],
+    None,
+    Void,
+    Id("class_init"),
+    [],
+    None),
+  Block([])
+)
+"""
+
+
 def make_init():
     return decode(init)
     
@@ -81,18 +96,26 @@ def add_init(ast):
         remove = []
         methods = {}
         overloaded_methods = set()
+        
+        cblock = decode("[]")
     
         for n in body_code:
             if n.name == "FieldDec":
+                dest = block
                 if is_static(n):
-                    continue                   
+                    dest = cblock                   
                 for v in n.findall("VarDec"):
                     vc=v.copy()
-                    vc[0][0] = AString("self.%s" % v[0][0])
-                    block.append(vc)
+                    vcn = vc.findfirst("Id")
+                    vcn[0] = AString("self.%s" % vcn[0])
+                    dest.append(vc)
                     if DEBUG:
                         print n
                 remove.append(n)
+            elif n.name == "StaticInit":
+                for e in n[0][0]:
+                    cblock.append(e)
+                remove.append(n)    
             elif n.name == "MethodDec":
                 mname = n[0][3][0]
                 if not methods.has_key(mname): 
@@ -106,9 +129,15 @@ def add_init(ast):
         for n in remove:
             body_code.remove(n)                
         
+        
         i[0][0].append(ATerm("Id",[AString("@java.init")])) 
         body_code.insert(0,i)
-        
+
+        if len(cblock)>0:
+            cinit = decode(class_init)
+            cinit[1][0]=cblock
+            body_code.insert(0,cinit)
+            c[0][0].append(ATerm("Id",["@java.use_class_init"]))
 
 skipmods=["Public"]
 
@@ -208,9 +237,9 @@ def run(ast):
     fix_mods(ast)
     decorate_constructor(ast)
     add_typed(ast)
+    decorate_inner_classes(ast)
     add_init(ast)
     remove_FieldDec(ast)
-    decorate_inner_classes(ast)
 
 if __name__ == '__main__':
     ast = decode(sys.stdin.read())
