@@ -35,6 +35,25 @@ def inner_classes(treepos):
                   res.append(classname)
     return res
     
+
+
+def is_static(exp):
+    for e in exp.findall("Static"):
+        return True
+    return False
+
+
+def static_classvars(treepos):
+    res = []
+    for p in treepos.parents():
+        if p.name in ['ClassBody']:
+            for f in p[0]:
+                if f.name in ['FieldDec'] and is_static(f):
+                    for v in f.findall("VarDec"):
+                        res.append(v[0][0])
+    
+    return res
+     
  
 def local_vars(treepos):
     "try to find local vars at treepos"
@@ -91,14 +110,18 @@ def fix_names(ast,decorate=DECORATE):
             elif varname in imports:
                 exp[0][0] = dec_imported + exp[0][0]
             else:
-                #print "innerclasses for",exp,inner_classes(exp)
-            	if not varname[0].isupper():
-        	        exp[0][0] = "self." + exp[0][0]                    
+                if varname in static_classvars(exp):
+                    exp[0][0] = "self.__class__." + exp[0][0]
+                    #print "innerclasses for",exp,inner_classes(exp)
+            	else:
+                    if not varname[0].isupper():
+            	        exp[0][0] = "self." + exp[0][0]                    
             if 0:    
                 for n in exp.walkback():
                     print "   ->",n.name
                     if n.name in interesting:
                         print "    ",n
+
     for exp in ast.findall("NewInstance"):
         #print "checking",exp
         classname = exp[1][0][0][0]
