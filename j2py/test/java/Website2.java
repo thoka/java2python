@@ -27,9 +27,9 @@ public class Website2 {
     w.printme();
     //
     Website w2 = new Website();
-    w.name = "Foggi 4";
-    w.url = "http://foggi4youevery.fa";
-    w.description = "Foggi file!";
-    w.printme();  
+    w2.name = "Foggi 4";
+    w2.url = "http://foggi4youevery.fa";
+    w2.description = "Foggi file!";
+    w2.printme();  
   }
 }
