@@ -41,32 +41,45 @@ compile_and_run() {
     local class=$(basename ${1%.java})
     pushd $path > /dev/null
 
-    echo "- compiling java $1 ..."
-    [[ "$class.class" -nt "$class.java" ]] || $JAVAC "$class.java"
+    if [[ "$class.java" -nt "$class.class" ]] 
+    then
+        echo "- compiling java $1 ..."
+        $JAVAC "$class.java"
+    fi
    
-    #run java
-    echo "- running java ... "
-    #grep "public static void main" $class.java && \
-    [[ "$class.java.run" -nt "$class.class" ]] || java -ea $class > $class.java.run
+    #run and compare output
+    if grep -q "main(String" "$class.java" 
+    then
     
-    #run python
-    echo -n "- running python ... "
-    local dst=$class.py
-    $scriptpath/run.py $dst  > $dst.run 2> $logfile.tmp
-    cat $logfile.tmp
-    cat $logfile.tmp >> $dst.run
-    #cat $logfile.tmp >> $logfile
-    rm $logfile.tmp
-    
-    #compare output
-    ( diff $class.java.run $dst.run && echo "OK" ) || 
-      ( (echo "Output differs: $1" >> $logfile) && ( echo "Error") \
-        && (diff $class.java.run $dst.run >> $logfile))
+        #run java
+        echo "- running java ... "
+        #grep "public static void main" $class.java && \
+        
+        if [[ "$class.class" -nt "$class.java.run" ]]
+        then
+            java -ea $class > $class.java.run
+        fi
+        
+        #run python
+        echo -n "- running python ... "
+        local dst=$class.py
+        $scriptpath/run.py $dst  > $dst.run 2> $logfile.tmp
+        cat $logfile.tmp
+        cat $logfile.tmp >> $dst.run
+        #cat $logfile.tmp >> $logfile
+        rm $logfile.tmp
+        
+        #compare output
+        ( diff $class.java.run $dst.run && echo "OK" ) || 
+          ( (echo "Output differs: $1" >> $logfile) && ( echo "Error") \
+            && (diff $class.java.run $dst.run >> $logfile))
+    fi    
+   
     popd > /dev/null
 }
 
 
-for src in $(find test -iname "*.java" | sort ); do
+for src in $(find test -iname "$1*.java" | sort ); do
     echo "## $src ###################################"
     echo "## $src ###################################" >> $logfile
 
