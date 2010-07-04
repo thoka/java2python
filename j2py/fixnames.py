@@ -43,6 +43,11 @@ def is_static(exp):
     return False
 
 
+def method_is_static(exp):
+    for e in exp.parents():
+        if e.name in ['MethodDec']:
+            return is_static(e[0])
+
 def static_classvars(treepos):
     res = []
     for p in treepos.parents():
@@ -110,7 +115,7 @@ def fix_names(ast,decorate=DECORATE):
             elif varname in imports:
                 exp[0][0] = dec_imported + exp[0][0]
             else:
-                if varname in static_classvars(exp):
+                if not method_is_static(exp) and varname in static_classvars(exp):
                     exp[0][0] = "self.__class__." + exp[0][0]
                     #print "innerclasses for",exp,inner_classes(exp)
             	else:
