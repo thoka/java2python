@@ -229,11 +229,19 @@ rules
   java2py-to-box:
     Labeled(Id(s), stm) -> box |[ V [ H hs=0 [ "#LABELED" s ":" ] ~stm] ]| 
 
+/*
   java2py-to-box:
     AssertStm(e) -> box |[ H hs=0 [ "if not " ~e ": raise AssertionError" ] ]| 
 
   java2py-to-box:
     AssertStm(e1, e2) -> H hs=0 [ "if not " ~e1 ": raise AssertionError, " ~e2 ]
+*/
+
+  java2py-to-box:
+    AssertStm(e) -> box |[ H hs=0 [ "assert " ~e ] ]| 
+
+  java2py-to-box:
+    AssertStm(e1, e2) -> H hs=0 [ "assert " ~e1 ", " ~e2 ]
 
   java2py-to-box:
     Switch(b1, b2) -> V vs=0 [H hs=0 ["for _switch in ["  b1 "]:"] b2]
