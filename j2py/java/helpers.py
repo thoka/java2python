@@ -4,6 +4,10 @@ _str = str
 def str(o):
     if o is None:
         return ""
+    elif o is True:
+        return "true"
+    elif o is False:
+        return "false"
     else:
         return _str(o)
         
