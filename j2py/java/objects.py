@@ -1,3 +1,6 @@
+from helpers import str
+import sys
+
 class Array(list):
     def __getattr__(self,key):
         if key == 'length':
@@ -33,8 +36,14 @@ System.out = Object()
 
 def println(*args):
     print "".join([ str(i) for i in args])
+    
+def print_(o):
+    sys.stdout.write(str(o))
+    sys.stdout.flush()
 
 System.out.println = println
+System.out.print_ = print_
+
 
 class Interface(object):
     @classmethod    
