@@ -98,12 +98,22 @@ def add_init(ast):
         overloaded_methods = set()
         
         cblock = decode("[]")
+        
+        use_class_init = False
+        
+        for n in body_code:
+            if n.name == "StaticInit":
+                use_class_init = True
+                break
     
         for n in body_code:
             if n.name == "FieldDec":
                 dest = block
                 if is_static(n):
-                    dest = cblock                   
+                    if use_class_init:
+                        dest = cblock
+                    else:
+                        continue                   
                 for v in n.findall("VarDec"):
                     vc=v.copy()
                     vcn = vc.findfirst("Id")
