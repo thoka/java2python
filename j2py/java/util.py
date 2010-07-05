@@ -1,5 +1,9 @@
 class Collection(list):
-    pass
+    def add(self,o):
+        self.append(o)
+      
+    def iterator(self):
+        return Iterator(self)
 
 
 class List(Collection):
@@ -24,12 +28,12 @@ class ArrayList(Collection):
     def __init__(self,typ):
         self._typ = typ
         
-    def add(self,o):
-        self.append(o)
-      
-    def iterator(self):
-        return Iterator(self)
-        
-        
-                    
+                
+class Arrays(object):
+    @classmethod
+    def asList(self,*a):
+        res = List()
+        res.extend(a)
+        return res
+                             
 

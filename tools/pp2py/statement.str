@@ -168,7 +168,7 @@ rules
         H hs=0 [
           "while " ~*bcond ":"
         ]
-        H hs=1 ["    " ~bupdate]  
+        H hs=0 ["    " ~bupdate]  
     ]
     
     where

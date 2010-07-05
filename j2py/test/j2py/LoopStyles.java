@@ -4,7 +4,7 @@ import java.util.*;
 
 public final class LoopStyles {
 
-  public static void main(String... aArguments ) {
+  public static void main( String... aArguments ) {
     List<String> flavours = new ArrayList<String>();
     flavours.add("chocolate");
     flavours.add("strawberry");

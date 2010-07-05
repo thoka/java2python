@@ -25,10 +25,10 @@ strategies
 
   expr-to-box: Plus(e)     -> H hs=0 [   "+"  ~e]
   expr-to-box: Minus(e)    -> H hs=0 [   "-"  ~e]
-  expr-to-box: PreIncr(e)  -> H hs=0 [   "++" ~e "###NOTIMPL###"]
-  expr-to-box: PreDecr(e)  -> H hs=0 [   "--" ~e "###NOTIMPL###"]
-  expr-to-box: PostIncr(e) -> H hs=0 [~e "++"    "###NOTIMPL###"]
-  expr-to-box: PostDecr(e) -> H hs=0 [~e "--"    "###NOTIMPL###"]
+  expr-to-box: PreIncr(e)  -> H hs=0 [~e " += 1 ##PreIncr"]
+  expr-to-box: PreDecr(e)  -> H hs=0 [~e " -= 1 ##PreDecr"]
+  expr-to-box: PostIncr(e) -> H hs=0 [~e " += 1 ##PostIntcr"]
+  expr-to-box: PostDecr(e) -> H hs=0 [~e " -= 1 ##PostDecr"]
 
   expr-to-box: Mul(e1, e2)          -> H hs=1 [~e1  "*"   ~e2]
   expr-to-box: Div(e1, e2)          -> H hs=1 [~e1  "/"   ~e2]
