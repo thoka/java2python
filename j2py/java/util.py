@@ -1,3 +1,7 @@
+from objects import Iterator, Object
+from helpers import str
+
+
 class Collection(list):
     def add(self,o):
         self.append(o)
@@ -5,27 +9,16 @@ class Collection(list):
     def iterator(self):
         return Iterator(self)
 
+    def __str__(self):
+        return "[%s]" % (', '.join([str(i) for i in self]))
+        
 
 class List(Collection):
     pass
     
-
-class Iterator(object):
-
-    def __init__(self,collection):
-        self.pos = 0
-        self.collection = collection
-
-    def hasNext(self):
-        return self.pos < len(self.collection)
-
-    def next(self):
-        self.pos += 1
-        return self.collection[self.pos-1]
             
-
 class ArrayList(Collection):
-    def __init__(self,typ):
+    def __init__(self,typ = (Object,)):
         self._typ = typ
         
                 

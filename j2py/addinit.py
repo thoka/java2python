@@ -57,7 +57,7 @@ def add_init(ast):
     add import of System,Object
     """
 
-    imp = decode('Id("from java import Object,System")')
+    imp = decode('Id("from java import *")')
     ast[1].insert(0,imp)
 
     imp = decode('Id("import java")')

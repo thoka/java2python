@@ -10,12 +10,13 @@ rename ids, class -> __class__ etc ...
 
 DEBUG = False
  
+ 
 def rename_ids(ast):
     """
     """
     
     ren = {
-      "String" : AString("java.String")
+      # "String" : AString("String")
     }
     
     
@@ -24,7 +25,7 @@ def rename_ids(ast):
             tn[0][0]=ren[tn[0][0]]
     
     ren = {
-      "class" : "__class__"
+      # "class" : "__class__"
     }
  
     kw = "and,del,elif,from,in,is,not,or,print,str,None".split(',')
@@ -34,10 +35,15 @@ def rename_ids(ast):
             id[0]=AString(ren[id[0]])
         elif id[0] in kw:
             id[0]=AString(id[0]+'_')
-   
+            
+  
+
+def run(ast):
+    rename_ids(ast)
+       
 if __name__ == '__main__':
     ast = decode(sys.stdin.read())
-    rename_ids(ast)
+    run(ast)
     if not DEBUG:
         print ast
 

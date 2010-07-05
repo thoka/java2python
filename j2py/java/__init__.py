@@ -6,7 +6,7 @@ from decorators import static,protected,private,volatile,final,constructor,inter
 from decorators import init,innerclass,typed,staticclass,overloaded
 from decorators import implements,extends,use_class_init
 
-from objects import Array,Object,String,System, Interface
+from objects import Array,Object,String,System, Interface, Number, Integer, Class
 
 from enum import Enum,enum,EnumItem
 
