@@ -79,6 +79,9 @@ As demonstrated by the third example above, python scripts can step in, to chang
 - Write and collect example/test java files with supposed translations.
 - do switch statement right
 - make install
+- do java.typed right for VarArityParam (see LoopStyles)
+ 
+
 
 ### Pitfalls
 

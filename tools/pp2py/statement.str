@@ -163,14 +163,14 @@ rules
   for-head :
     For(init, cond, update, body)
       ->
-    H hs=0 [
-      "::###NOTIMPL for"
-      " "
-      ~binit
-      H hs=1 [";" ~*bcond]
-      H hs=1 [";" ~bupdate]
-      ":"
+    V [  
+        ~binit
+        H hs=0 [
+          "while " ~*bcond ":"
+        ]
+        H hs=1 ["    " ~bupdate]  
     ]
+    
     where
       <separate-by-comma> update => bupdate
 
