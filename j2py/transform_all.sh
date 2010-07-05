@@ -48,7 +48,7 @@ compile_and_run() {
     fi
    
     #run and compare output
-    if grep -q "main(String" "$class.java" 
+    if grep -q "main(\s*String" "$class.java" 
     then
     
         #run java
