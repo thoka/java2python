@@ -2,8 +2,8 @@ module pp2py/main
 imports
   libstratego-lib
   libstratego-gpp
-  java/signature/v5
-  java/signature/eblock
+//  java/signature/v5
+//  java/signature/eblock
   
   pp2py/helpers
   pp2py/statement
@@ -23,7 +23,7 @@ imports
   pp2py/interface/annotation
   pp2py/interface/annotation-type
   
-  java/pp/parenthesize
+  //java/pp/parenthesize
 
 
 strategies
@@ -50,10 +50,10 @@ strategies
     ; bottomup(try(j2py))
     ; topdown(
         try(very-special-conflict)
-        ; try(pp-comments(extension <+ java2py-to-box))
+        ; try(j2py-comments(extension <+ java2py-to-box))
         ; repeat(j2py <+ extension <+ java2py-to-box)
       )
-    //; where(<debug> [ "//////////////////", <id> ])  
+    // ; where(<debug> [ "//////////////////", <id> ])  
 
 rules
  
@@ -121,7 +121,7 @@ rules
 
 */
 
-             
+/* from java-front             
 rules
 
   very-special-conflict:
@@ -129,10 +129,11 @@ rules
 
   very-special-conflict:
     Plus(Plus(e)) -> Plus(Parenthetical(Plus(e)))
+*/
+
 
 rules
-
-  pp-comments(pprules) =
+  j2py-comments(pprules) =
     ?t{a*}
 
     ; where(
@@ -150,6 +151,7 @@ rules
           !|[ H hs=1 [b s] ]|
         end
       end
+
  
 rules
 
@@ -217,15 +219,15 @@ rules
     InterfaceDec(InterfaceDecHead(mods, Id(name), type-args, implements), body)
       ->
     V vs=0 [
-      ~mods 
+      ~*mods 
       ~implements
       H hs=0 ["class " ~lit:name b* "(java.Interface):"] 
       b2 
       ""
     ]
     where
-      <type-params-to-boxes> type-args => b*
-    ; <block-structure> (1, body) => b2
+      <j2py-type-params-to-boxes> type-args => b*
+    ; <j2py-block-structure> (1, body) => b2
 
   java2py-to-box:
     ClassDec(ClassDecHead(mods, Id(name), None(), extends, implements), body)
@@ -254,12 +256,11 @@ rules
         H hs=0 ["    return " ~lit:name "(*a,**kw)" ]
     ]
     where
-      <type-params-to-boxes> Some(type-args) => b*
-
+      <j2py-type-params-to-boxes> Some(type-args) => b*
 
 
   java2py-to-box:
-    ClassBody(decs) -> <block-structure> (1, decs)
+    ClassBody(decs) -> <j2py-block-structure> (1, decs)
 
   java2py-to-box:
     None() -> box |[ H hs=0 [""] ]|
@@ -281,17 +282,20 @@ rules
 rules
 
   java2py-to-box:
-    StaticInit(b)   -> box |[ V vs=0  [~b] ]|
+    StaticInit(b)   -> box |[ V vs=0  [ H ["##staticinit" ~b ] ] ]|
 
   java2py-to-box:
-    InstanceInit(b) -> box |[ V vs=1 [ "##InstanceInit" b ] ]|
+    InstanceInit(b) -> box |[ V vs=1 [ H[ "##InstanceInit" b ] ] ]|
 
 rules
 
   java2py-to-box:
     AbstractMethodDec(mods, type-params, type, Id(n), params, throws)
       ->
-    box |[ H hs=0 [ ~MethodDecHead(mods, type-params, type, Id(n), params, throws) " pass"] ]|
+    box |[ V [
+      H hs=0 [ ~MethodDecHead(mods, type-params, type, Id(n), params, throws) ]
+      "    pass" 
+    ] ]|
 
   java2py-to-box:
     ConstrDec(ConstrDecHead(mods, type-params, class, params, throws), body)
@@ -303,15 +307,15 @@ rules
       ""
     ]
     where 
-      <list-to-args2> params => args 
-    ; <type-params-to-boxes> type-params => targboxes 
+      <j2py-list-to-args2> params => args 
+    ; <j2py-type-params-to-boxes> type-params => targboxes 
     ; !Conc(mods, targboxes) => foo 
 
   java2py-to-box:
-    ConstrBody(None(), stms) -> <block-structure> (0, stms)
+    ConstrBody(None(), stms) -> <j2py-block-structure> (0, stms)
 
   java2py-to-box:
-    ConstrBody(Some(cinvoke), stms) -> <block-structure> (0, [cinvoke | stms])
+    ConstrBody(Some(cinvoke), stms) -> <j2py-block-structure> (0, [cinvoke | stms])
 
   java2py-to-box:
     FieldDec(mods, type, ds) -> V [ ~ds ] 
@@ -356,22 +360,22 @@ rules
     AltConstrInv(type-args, exprs) 
       -> H hs=0 [ "self" ~args " ##AltConstrInv" ]
     where
-      <list-to-args> exprs => args
-    ; <type-args-to-boxes> type-args => b1*
+      <j2py-list-to-args> exprs => args
+    ; <j2py-type-args-to-boxes> type-args => b1*
 
   java2py-to-box:
     SuperConstrInv(type-args, exprs) 
       -> box |[ H hs=0 [ "self.__init__._super" b2 /* "##SuperConstrInv" */] ]|
     where
-      <list-to-args> exprs => b2
-    ; <type-args-to-boxes> type-args => b1*
+      <j2py-list-to-args> exprs => b2
+    ; <j2py-type-args-to-boxes> type-args => b1*
 
   java2py-to-box:
     QSuperConstrInv(b0, type-args, exprs) 
       -> box |[ H hs=0 [ "self.__init__._super" b2 /* "##QSuerConstrInv" */ ] ]|
     where
-      <list-to-args> exprs => b2
-    ; <type-args-to-boxes> type-args => b1*
+      <j2py-list-to-args> exprs => b2
+    ; <j2py-type-args-to-boxes> type-args => b1*
 
   java2py-to-box :
     amb(alts) -> V vs=0[V vs=0 is=2 [ "##amb>" ~*alts' ] "##<amb"]

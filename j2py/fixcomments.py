@@ -42,7 +42,8 @@ def convert_comments(ast):
       from before class/method in java to in class/function in pythoin 
     """
     
-    make_docstring = ['ClassDec','ConstrDec','MethodDec']
+    make_docstring = ['InterfaceDec','ClassDec','ConstrDec','MethodDec','AbstractMethodDec']
+    dont_move = ['AbstractMethodDec']
     move = []
 
     for exp in ast.walk():
@@ -58,9 +59,11 @@ def convert_comments(ast):
                 if exp.name in make_docstring:
                     move.append(exp)
                     
-    for exp in move:
-        exp[1].annotation = exp.annotation
-        exp.annotation = None    
+                    
+    for exp in aterm.reverse(move):
+        if not exp.name in dont_move and len(exp)>1 and exp[1].annotation is None:
+            exp[1].annotation = exp.annotation
+            exp.annotation = None    
 
     
     # move comments out of inner constructs

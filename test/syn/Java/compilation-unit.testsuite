@@ -1,8 +1,0 @@
-testsuite Java Compilation Units
-topsort CompilationUnit
-
-test silly semicolon
-  "public class Test11 { };" succeeds
-
-test 3.2-invalid-3: The parser must consume the largest token, even if another interpretation is valid
-  "classT32i3 {}" fails

@@ -5,57 +5,72 @@ module java/pp2py/expression
 strategies
 
   java2py-to-box =
-    expr-to-box
+    j2py-expr-to-box
 
   java2py-to-box: Lit(l) -> l
 
-  expr-to-box: Parenthetical(e)           -> box |[ H hs=0 ["(" ~e ")"] ]|
-  expr-to-box: Assign(lval, e)            -> box |[ H hs=1 [~lval "="    ~e] ]|
-  expr-to-box: AssignMul(lval, e)         -> box |[ H hs=1 [~lval "*="   ~e] ]|
-  expr-to-box: AssignDiv(lval, e)         -> box |[ H hs=1 [~lval "/="   ~e] ]|
-  expr-to-box: AssignRemain(lval, e)      -> box |[ H hs=1 [~lval "%="   ~e] ]|
-  expr-to-box: AssignPlus(lval, e)        -> box |[ H hs=1 [~lval "+="   ~e] ]|
-  expr-to-box: AssignMinus(lval, e)       -> box |[ H hs=1 [~lval "-="   ~e] ]|
-  expr-to-box: AssignLeftShift(lval, e)   -> box |[ H hs=1 [~lval "="  ~lval "<<" ~e] ]|
-  expr-to-box: AssignRightShift(lval, e)  -> box |[ H hs=1 [~lval "="  ~lval ">>" ~e] ]|
-  expr-to-box: AssignURightShift(lval, e) -> box |[ H hs=0 [~lval " = java.bsr(" ~lval "," ~e ")" ] ]|
-  expr-to-box: AssignAnd(lval, e)         -> box |[ H hs=1 [~lval "&="   ~e] ]|
-  expr-to-box: AssignExcOr(lval, e)       -> box |[ H hs=1 [~lval "^="   ~e] ]|
-  expr-to-box: AssignOr(lval, e)          -> box |[ H hs=1 [~lval "|="   ~e] ]|
+  j2py-expr-to-box: Parenthetical(e)           -> box |[ H hs=0 ["(" ~e ")"] ]|
 
-  expr-to-box: Plus(e)     -> H hs=0 [   "+"  ~e]
-  expr-to-box: Minus(e)    -> H hs=0 [   "-"  ~e]
-  expr-to-box: PreIncr(e)  -> H hs=0 [~e " += 1 ##PreIncr"]
-  expr-to-box: PreDecr(e)  -> H hs=0 [~e " -= 1 ##PreDecr"]
-  expr-to-box: PostIncr(e) -> H hs=0 [~e " += 1 ##PostIntcr"]
-  expr-to-box: PostDecr(e) -> H hs=0 [~e " -= 1 ##PostDecr"]
+  j2py-expr-to-box: Assign(lval, e)            -> box |[ H hs=1 [~lval "="    ~e] ]|
+  j2py-expr-to-box: AssignMul(lval, e)         -> box |[ H hs=1 [~lval "*="   ~e] ]|
+  j2py-expr-to-box: AssignDiv(lval, e)         -> box |[ H hs=1 [~lval "/="   ~e] ]|
+  j2py-expr-to-box: AssignRemain(lval, e)      -> box |[ H hs=1 [~lval "%="   ~e] ]|
+  j2py-expr-to-box: AssignPlus(lval, e)        -> box |[ H hs=1 [~lval "+="   ~e] ]|
+  j2py-expr-to-box: AssignMinus(lval, e)       -> box |[ H hs=1 [~lval "-="   ~e] ]|
+  j2py-expr-to-box: AssignLeftShift(lval, e)   -> box |[ H hs=1 [~lval "="  ~lval "<<" ~e] ]|
+  j2py-expr-to-box: AssignRightShift(lval, e)  -> box |[ H hs=1 [~lval "="  ~lval ">>" ~e] ]|
+  j2py-expr-to-box: AssignURightShift(lval, e) -> box |[ H hs=0 [~lval " = java.bsr(" ~lval "," ~e ")" ] ]|
+  j2py-expr-to-box: AssignAnd(lval, e)         -> box |[ H hs=1 [~lval "&="   ~e] ]|
+  j2py-expr-to-box: AssignExcOr(lval, e)       -> box |[ H hs=1 [~lval "^="   ~e] ]|
+  j2py-expr-to-box: AssignOr(lval, e)          -> box |[ H hs=1 [~lval "|="   ~e] ]|
 
-  expr-to-box: Mul(e1, e2)          -> H hs=1 [~e1  "*"   ~e2]
-  expr-to-box: Div(e1, e2)          -> H hs=1 [~e1  "/"   ~e2]
-  expr-to-box: Remain(e1, e2)       -> H hs=1 [~e1  "%"   ~e2]
-  expr-to-box: Plus(e1, e2)         -> H hs=1 [~e1  "+"   ~e2]
-  expr-to-box: Minus(e1, e2)        -> H hs=1 [~e1  "-"   ~e2]
-  expr-to-box: LeftShift(e1, e2)    -> H hs=1 [~e1  "<<"  ~e2]
-  expr-to-box: RightShift(e1, e2)   -> H hs=1 [~e1  ">>"  ~e2]
-  expr-to-box: URightShift(e1, e2)  -> H hs=0 [ "java.bsr(" ~e1  "," ~e2 ")"]
+  j2py-expr-to-box: InnerAssign(lval, e)            -> box |[ H hs=1 [~lval "="    ~e] ]|
+  j2py-expr-to-box: InnerAssignMul(lval, e)         -> box |[ H hs=1 [~lval "*="   ~e] ]|
+  j2py-expr-to-box: InnerAssignDiv(lval, e)         -> box |[ H hs=1 [~lval "/="   ~e] ]|
+  j2py-expr-to-box: InnerAssignRemain(lval, e)      -> box |[ H hs=1 [~lval "%="   ~e] ]|
+  j2py-expr-to-box: InnerAssignPlus(lval, e)        -> box |[ H hs=1 [~lval "+="   ~e] ]|
+  j2py-expr-to-box: InnerAssignMinus(lval, e)       -> box |[ H hs=1 [~lval "-="   ~e] ]|
+  j2py-expr-to-box: InnerAssignLeftShift(lval, e)   -> box |[ H hs=1 [~lval "="  ~lval "<<" ~e] ]|
+  j2py-expr-to-box: InnerAssignRightShift(lval, e)  -> box |[ H hs=1 [~lval "="  ~lval ">>" ~e] ]|
+  j2py-expr-to-box: InnerAssignURightShift(lval, e) -> box |[ H hs=0 [~lval " = java.bsr(" ~lval "," ~e ")" ] ]|
+  j2py-expr-to-box: InnerAssignAnd(lval, e)         -> box |[ H hs=1 [~lval "&="   ~e] ]|
+  j2py-expr-to-box: InnerAssignExcOr(lval, e)       -> box |[ H hs=1 [~lval "^="   ~e] ]|
+  j2py-expr-to-box: InnerAssignOr(lval, e)          -> box |[ H hs=1 [~lval "|="   ~e] ]|
 
-  expr-to-box: Lt(e1, e2)           -> H hs=1 [~e1  "<"   ~e2]
-  expr-to-box: Gt(e1, e2)           -> H hs=1 [~e1  ">"   ~e2]
-  expr-to-box: LtEq(e1, e2)         -> H hs=1 [~e1  "<="  ~e2]
-  expr-to-box: GtEq(e1, e2)         -> H hs=1 [~e1  ">="  ~e2]
-  expr-to-box: Eq(e1, e2)           -> H hs=1 [~e1  "=="  ~e2]
-  expr-to-box: NotEq(e1, e2)        -> H hs=1 [~e1  "is not"  ~e2]
-  expr-to-box: LazyAnd(e1, e2)      -> H hs=1 [~e1  "and"  ~e2]
-  expr-to-box: LazyOr(e1, e2)       -> H hs=1 [~e1  "or"  ~e2]
-  expr-to-box: And(e1, e2)          -> H hs=1 [~e1  "&"   ~e2]
-  expr-to-box: ExcOr(e1, e2)        -> H hs=1 [~e1  "^"   ~e2]
-  expr-to-box: Or(e1, e2)           -> H hs=1 [~e1  "|"   ~e2]
+  j2py-expr-to-box: Plus(e)     -> H hs=0 [   "+"  ~e]
+  j2py-expr-to-box: Minus(e)    -> H hs=0 [   "-"  ~e]
+  
+  j2py-expr-to-box: PreIncr(e)  -> H hs=0 [ "java.preIncr(\"" ~e "\")" ]
+  j2py-expr-to-box: PreDecr(e)  -> H hs=0 [ "java.preDecr(\"" ~e "\")" ]
+  j2py-expr-to-box: PostIncr(e) -> H hs=0 [ "java.postIncr(\"" ~e "\")" ]
+  j2py-expr-to-box: PostDecr(e) -> H hs=0 [ "java.postDecr(\"" ~e "\")" ]
 
-  expr-to-box: InstanceOf(e1, e2)   -> H hs=0 [ "isinstance(" ~e1 ","  ~e2 ")" ]
+  j2py-expr-to-box: Mul(e1, e2)          -> H hs=1 [~e1  "*"   ~e2]
+  j2py-expr-to-box: Div(e1, e2)          -> H hs=1 [~e1  "/"   ~e2]
+  j2py-expr-to-box: Remain(e1, e2)       -> H hs=1 [~e1  "%"   ~e2]
+  j2py-expr-to-box: Plus(e1, e2)         -> H hs=1 [~e1  "+"   ~e2]
+  j2py-expr-to-box: Minus(e1, e2)        -> H hs=1 [~e1  "-"   ~e2]
+  j2py-expr-to-box: LeftShift(e1, e2)    -> H hs=1 [~e1  "<<"  ~e2]
+  j2py-expr-to-box: RightShift(e1, e2)   -> H hs=1 [~e1  ">>"  ~e2]
+  j2py-expr-to-box: URightShift(e1, e2)  -> H hs=0 [ "java.bsr(" ~e1  "," ~e2 ")"]
 
-  expr-to-box: Complement(e)         -> box |[ H hs=0 ["~" ~e ] ]|
-  expr-to-box: Not(e)                -> box |[ H hs=0 ["not " ~e] ]|
-  expr-to-box: Cond(e1, e2, e3)    -> box |[ H hs=1 [ "(" ~e2  "if" ~e1 "else" ~e3 ")" ] ]|
+  j2py-expr-to-box: Lt(e1, e2)           -> H hs=1 [~e1  "<"   ~e2]
+  j2py-expr-to-box: Gt(e1, e2)           -> H hs=1 [~e1  ">"   ~e2]
+  j2py-expr-to-box: LtEq(e1, e2)         -> H hs=1 [~e1  "<="  ~e2]
+  j2py-expr-to-box: GtEq(e1, e2)         -> H hs=1 [~e1  ">="  ~e2]
+  j2py-expr-to-box: Eq(e1, e2)           -> H hs=1 [~e1  "=="  ~e2]
+  j2py-expr-to-box: NotEq(e1, e2)        -> H hs=1 [~e1  "is not"  ~e2]
+  j2py-expr-to-box: LazyAnd(e1, e2)      -> H hs=1 [~e1  "and"  ~e2]
+  j2py-expr-to-box: LazyOr(e1, e2)       -> H hs=1 [~e1  "or"  ~e2]
+  j2py-expr-to-box: And(e1, e2)          -> H hs=1 [~e1  "&"   ~e2]
+  j2py-expr-to-box: ExcOr(e1, e2)        -> H hs=1 [~e1  "^"   ~e2]
+  j2py-expr-to-box: Or(e1, e2)           -> H hs=1 [~e1  "|"   ~e2]
+
+  j2py-expr-to-box: InstanceOf(e1, e2)   -> H hs=0 [ "isinstance(" ~e1 ","  ~e2 ")" ]
+
+  j2py-expr-to-box: Complement(e)         -> box |[ H hs=0 ["~" ~e ] ]|
+  j2py-expr-to-box: Not(e)                -> box |[ H hs=0 ["not " ~e] ]|
+  j2py-expr-to-box: Cond(e1, e2, e3)    -> box |[ H hs=1 [ "(" ~e2  "if" ~e1 "else" ~e3 ")" ] ]|
 
   /* java2py-to-box: Name(s) -> s */
 
@@ -68,7 +83,7 @@ strategies
 rules
   java2py-to-box: 
     Invoke(method, exprs) -> box |[ H hs=0 [~method ~args] ]|
-      where <list-to-args> exprs => args
+      where <j2py-list-to-args> exprs => args
 
   java2py-to-box: 
     Method(n) -> n
@@ -76,22 +91,22 @@ rules
   java2py-to-box: 
     Method(e, type-args, Id(s)) -> box |[ H hs=0 [~e "." s] ]|
     where
-      <type-args-to-boxes> type-args => type-args'
+      <j2py-type-args-to-boxes> type-args => type-args'
 
   java2py-to-box: 
     SuperMethod(type-args, Id(s)) -> box |[ H hs=0 [KW["super(self.__class__,self)"] "."  s] ]|
     where
-      <type-args-to-boxes> type-args => type-args'
+      <j2py-type-args-to-boxes> type-args => type-args'
 
   java2py-to-box: 
     QSuperMethod(q, type-args, Id(s)) -> box |[ H hs=0 [~q "." KW["super"] "."  s "###NOTIMPL###" ] ]|
     where
-      <type-args-to-boxes> type-args => type-args'
+      <j2py-type-args-to-boxes> type-args => type-args'
 
   java2py-to-box: 
     GenericMethod(type-name, type-args, Id(s)) -> box |[ H hs=0 [~type-name "."  s "###NOTIMPL###" ] ]|
     where
-      <type-args-to-boxes> Some(type-args) => type-args'
+      <j2py-type-args-to-boxes> Some(type-args) => type-args'
 
 /**
  * New instance without body
@@ -110,8 +125,8 @@ rules
     where
       //where(<debug> [ "//////////////////", <id> ]) ;
       // !type => ClassOrInterfaceType( typeid, Some(type-args2)) ; 
-        <list-to-args2> exprs => args
-      ; <type-args-to-boxes> Some(type-args2) => type-args'
+        <j2py-list-to-args2> exprs => args
+      ; <j2py-type-args-to-boxes> Some(type-args2) => type-args'
 
 
   java2py-to-box: 
@@ -124,8 +139,8 @@ rules
       -> 
     box |[ H hs=0 [~type ~args] ]|
     where
-      <list-to-args> exprs => args
-      ; <type-args-to-boxes> type-args => type-args'
+      <j2py-list-to-args> exprs => args
+      ; <j2py-type-args-to-boxes> type-args => type-args'
 
 
   java2py-to-box: 
@@ -133,9 +148,9 @@ rules
       ->
     box |[ H hs=0 [~e "."  s  ~args] ]|
     where
-      <list-to-args> exprs => args
-      ; <type-args-to-boxes> type-args1 => type-args1'
-      ; <type-args-to-boxes> type-args2 => type-args2'
+      <j2py-list-to-args> exprs => args
+      ; <j2py-type-args-to-boxes> type-args1 => type-args1'
+      ; <j2py-type-args-to-boxes> type-args2 => type-args2'
 
 /**
  * New instance with body
@@ -146,16 +161,16 @@ rules
     NewInstance(type-args, type, exprs, Some(body)) 
       -> box |[ V vs=0[H hs=0 [H hs=1 [~type ~args] ] ~body] ]|
     where
-      <list-to-args> exprs => args
-      ; <type-args-to-boxes> type-args => type-args'
+      <j2py-list-to-args> exprs => args
+      ; <j2py-type-args-to-boxes> type-args => type-args'
 
 /*
   java2py-to-box: 
     NewInstance(type-args, type, exprs, Some(body)) 
       -> box |[ V vs=0[H hs=0 [H hs=1 [~type ~args] ] ~body] ]|
     where
-      <list-to-args> exprs => args
-      ; <type-args-to-boxes> type-args => type-args'
+      <j2py-list-to-args> exprs => args
+      ; <j2py-type-args-to-boxes> type-args => type-args'
 
 */
 
@@ -165,14 +180,14 @@ rules
       ->
     box |[ V vs=0 [H hs=0 [~e "."  H hs=1 [ H hs=0  [s] ] ~args] ~body] ]|
     where
-      <list-to-args> exprs => args
-      ; <type-args-to-boxes> type-args1 => type-args1'
-      ; <type-args-to-boxes> type-args2 => type-args2'
+      <j2py-list-to-args> exprs => args
+      ; <j2py-type-args-to-boxes> type-args1 => type-args1'
+      ; <j2py-type-args-to-boxes> type-args2 => type-args2'
 
 rules
 
   java2py-to-box: 
-    NewArray(type, dimexprs, dims) -> box |[ H hs=0 ["[ None for i in " ~*dimexprs "] ###" ~*dims] ]|
+    NewArray(type, dimexprs, dims) -> box |[ H hs=0 ["[ None for i in " ~*dimexprs "]" ~*dims] ]|
     where
         <is-list> dimexprs
       ; <is-list> dims
@@ -217,3 +232,16 @@ signature
     ToStr : Unknown -> Unknown
     Pass: Unknown -> Unknown
  
+    InnerAssign : Unknown * Unknown -> Unknown
+    InnerAssignMul: Unknown * Unknown -> Unknown
+    InnerAssignDiv : Unknown * Unknown -> Unknown
+    InnerAssignRemain : Unknown * Unknown -> Unknown
+    InnerAssignPlus : Unknown * Unknown -> Unknown
+    InnerAssignMinus : Unknown * Unknown -> Unknown
+    InnerAssignLeftShift : Unknown * Unknown -> Unknown
+    InnerAssignRightShift : Unknown * Unknown -> Unknown
+    InnerAssignURightShift : Unknown * Unknown -> Unknown
+    InnerAssignAnd  : Unknown * Unknown -> Unknown       
+    InnerAssignExcOr : Unknown * Unknown -> Unknown     
+    InnerAssignOr : Unknown * Unknown -> Unknown        
+

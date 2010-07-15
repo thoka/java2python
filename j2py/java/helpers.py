@@ -1,5 +1,4 @@
-# ... simulate java in str()
-
+# ... simulate java like output in str()
 _str = str
 def str(o):
     if o is None:
@@ -12,7 +11,6 @@ def str(o):
         return _str(o)
         
 # >>> operator
-
 def bsr(value, bits):
     """ bsr(value, bits) -> value shifted right by bits
 
@@ -54,5 +52,4 @@ class synchronize(object):
     def __exit__(self,*a):
         #print "__exit__",a
         pass
-        
-        
+

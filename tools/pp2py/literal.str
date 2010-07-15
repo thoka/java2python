@@ -48,6 +48,7 @@ rules
   java2py-to-box: Hexa(h)   -> box |[ NUM[ ~S(h) ] ]|
   java2py-to-box: Octa(o)   -> box |[ NUM[ ~S(o) ] ]|
 
+/*
 strategies
 
   is-double-quote = 
@@ -55,4 +56,6 @@ strategies
 
   is-quote(c) =
     where( explode-string; ?[<c> | <last; c>] )
+
+*/
 

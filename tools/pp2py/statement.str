@@ -1,8 +1,10 @@
 module java/pp2py/statement
 rules
 
+/*
   stm-box:
     x -> box |[ H hs=0 [~x ] ]|
+*/
 
 /*
   j2py:
@@ -10,7 +12,7 @@ rules
 */
 
   java2py-to-box:
-    Block(stms) -> <block-structure> (0, stms)
+    Block(stms) -> <j2py-block-structure> (0, stms)
 
   java2py-to-box:
     Block2(stms) -> V [ ~*stms ]
@@ -31,9 +33,9 @@ rules
 
   java2py-to-box :
     LocalVarDecStm(lvardec) -> H hs=0 [b]
-      where <LocalVarDec-to-box> lvardec => b
+      where <j2py-LocalVarDec-to-box> lvardec => b
 
-  LocalVarDec-to-box :
+  j2py-LocalVarDec-to-box :
     LocalVarDec(mods, type, ds) -> V [~*ds]
     // where <separate-by-comma> ds => decs
 
@@ -62,63 +64,63 @@ rules
 
   java2py-to-box =
     ?If(_, _)
-    ; if-then-to-box
+    ; j2py-if-then-to-box
 
   java2py-to-box:
     If(b1, b2, b3) -> V vs=0 [b4 b5]
     where
        not ( !b3 => If(_,_,_) ) ;
-        <if-then-to-box> If(b1, b2) => b4
-      ; <if-else-to-box> If(b1, b2, b3) => b5
+        <j2py-if-then-to-box> If(b1, b2) => b4
+      ; <j2py-if-else-to-box> If(b1, b2, b3) => b5
 
   java2py-to-box:
     If(b1, b2, b3) -> V vs=0 [b4 b5]
     where
         ( !b3 => If(_,_,_) ) ;
-        <if-then-to-box> If(b1, b2) => b4
-      ; <elif-to-box> If(b1, b2, b3) => b5
+        <j2py-if-then-to-box> If(b1, b2) => b4
+      ; <j2py-elif-to-box> If(b1, b2, b3) => b5
 
-  if-then-to-box :
+  j2py-if-then-to-box :
     If(b1, b2) -> V is=2 vs=0 [H hs=0 ["if " b1 ":"] b2]
     where
       not(!b2 => Block(_))
 
-  if-then-to-box :
+  j2py-if-then-to-box :
     If(b1, b2) -> V vs=0 [H hs=0 ["if " b1 ":"] b2]
     where
       !b2 => Block(_)
 
-  if-else-to-box :
+  j2py-if-else-to-box :
     If(b1, b2, b3) -> V is=2 vs=0 [KW["else:"] b3]
     where
       not(!b3 => Block(_))
 
-  if-else-to-box :
+  j2py-if-else-to-box :
     If(b1, b2, b3) -> V vs=0 [KW["else:"] b3]
     where
       !b3 => Block(_)
 
 
-  elif-to-box:
+  j2py-elif-to-box:
     If(b1, b2, b3) -> V vs=0 [b4 b5]
     where
        not ( !b3 => If(_,_,_) ) ;
-        <elif-then-to-box> If(b1, b2) => b4
-      ; <if-else-to-box> If(b1, b2, b3) => b5
+        <elj2py-if-then-to-box> If(b1, b2) => b4
+      ; <j2py-if-else-to-box> If(b1, b2, b3) => b5
 
-  elif-to-box:
+  j2py-elif-to-box:
     If(b1, b2, b3) -> V vs=0 [b4 b5]
     where
         ( !b3 => If(_,_,_) ) ;
-        <elif-then-to-box> If(b1, b2) => b4
-      ; <elif-to-box> b3 => b5
+        <elj2py-if-then-to-box> If(b1, b2) => b4
+      ; <j2py-elif-to-box> b3 => b5
 
-  elif-then-to-box :
+  elj2py-if-then-to-box :
     If(b1, b2) -> V is=2 vs=0 [H hs=0 ["elif " b1 ":"] b2]
     where
       not(!b2 => Block(_))
 
-  elif-then-to-box :
+  elj2py-if-then-to-box :
     If(b1, b2) -> V vs=0 [H hs=0 ["elif " b1 ":"] b2]
     where
       !b2 => Block(_)
@@ -151,16 +153,16 @@ rules
   java2py-to-box:
     f@For(init, cond, update, b2) -> box |[ V is=2 vs=0 [b1 b2] ]|
     where
-      <for-head> f => b1
+      <j2py-for-head> f => b1
       ; not(!b2 => Block(_))
 
   java2py-to-box:
     f@For(init, cond, update, b2) -> box |[ V vs=0 [b1 b2] ]|
     where
-      <for-head> f => b1
+      <j2py-for-head> f => b1
       ; !b2 => Block(_)
 
-  for-head :
+  j2py-for-head :
     For(init, cond, update, body)
       ->
     V [  
@@ -174,7 +176,7 @@ rules
     where
       <separate-by-comma> update => bupdate
 
-      ; < LocalVarDec-to-box; ![<id>]
+      ; < j2py-LocalVarDec-to-box; ![<id>]
           <+ is-list; separate-by-comma
         > init => binit
 
@@ -190,16 +192,16 @@ rules
   java2py-to-box:
     f@ForEach(param, source, b2) -> box |[ V is=2 vs=0 [b1 b2] ]|
     where
-      <for-each-head> f => b1
+      <j2py-for-each-head> f => b1
       ; not(!b2 => Block(_))
 
   java2py-to-box:
     f@ForEach(param, source, b2) -> box |[ V vs=0 [b1 b2] ]|
     where
-      <for-each-head> f => b1
+      <j2py-for-each-head> f => b1
       ; !b2 => Block(_)
 
-  for-each-head :
+  j2py-for-each-head :
     ForEach(param, source, body)
       ->
     H hs=1 [
@@ -248,7 +250,7 @@ rules
 
   java2py-to-box:
     SwitchBlock(groups, labels) ->
-      <block-structure> (1, <conc> (groups, labels))
+      <j2py-block-structure> (1, <conc> (groups, labels))
 
 
   java2py-to-box:
@@ -261,7 +263,7 @@ rules
       -> 
      V is=4 vs=0 [ H hs=0 ["if _switch in [" ~params "]:"] ~*stms ]
      where
-       <list-to-args2> labels => params
+       <j2py-list-to-args2> labels => params
       
 
   java2py-to-box:

@@ -7,6 +7,9 @@ def static(something):
     else:
         return staticclass(something)
 
+def abstract(func):
+    return func
+
 def protected(func):
     return func
     

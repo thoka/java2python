@@ -20,9 +20,14 @@ rules
   java2py-to-box:
     ElemValArrayInit(vals) -> ArrayInit(vals)
 
+/* obsolete: coming from java-front
+
 strategies
 
   is-Java-Anno =
       ?MarkerAnno(_)
     + ?SingleElemAnno(_, _)
     + ?Anno(_, _)
+
+*/
+

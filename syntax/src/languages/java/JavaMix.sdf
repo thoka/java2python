@@ -1,3 +1,0 @@
-module languages/java/JavaMix[Ctx]
-imports
-  languages/java-15/JavaMix[Ctx]

@@ -1,7 +1,9 @@
-com.google.gwt.user: pyjs
-java.util: j2py
+com.google.gwt.user: pyjamas
 com.allen_sauer.gwt.dnd.client: dnd
 com.google.gwt.core.client.GWT: pyjs.ui
+java.util.HashMap: java.util
+java.util.Iterator: java.util
+java.util.ArrayList: java.util
 
 
 

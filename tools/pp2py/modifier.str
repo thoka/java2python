@@ -12,7 +12,7 @@ strategies
   java2py-to-box: Transient()    -> box |[ "@java.transient"    ]|
   java2py-to-box: Volatile()     -> box |[ "@java.volatile"  ]|
   java2py-to-box: Synchronized() -> box |[ "@java.synchronized" ]|
-  java2py-to-box: StrictFP()     -> box |[ "Qjava.strictfp" ]|
+  java2py-to-box: StrictFP()     -> box |[ "@java.strictfp" ]|
   java2py-to-box: Decorator(s)   -> box |[ s ]|
 
   java2py-to-box: 
@@ -22,7 +22,7 @@ strategies
        H hs=0 [ "@java.typed" ~l1 ] 
     ]|
     where 
-      <list-to-args> l => l1
+      <j2py-list-to-args> l => l1
       
   
   

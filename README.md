@@ -1,10 +1,11 @@
-## JavaFront/java2py
+## java2py
 
-This is a hack of the JavaFront library for stratego, which
-includes a pretty printer to print a python representation of a java src.
+Toolchain to translate java to python, using
 
-This project is in an early stage. Basic translation is working.
-You can not expect to get full java2python translation.
+* strategoxt / java-front to parse java
+* a python aterm library and python scripts to transform java ast
+* java2py, a hacked version of java-front pp-java to transform java ast to python
+* a python "java" runtime, to emulate java behaviour in python
 
 See COPYING for Copyright and License.
 
@@ -32,13 +33,16 @@ at least libtool have to come from debian/testing
  
 ## Installation
 
-Install the required build dependencies for java-front
+Install the required dependencies
 
 - aterm-2.5
 - sdf2-bundle-2.4
 - strategoxt-0.17 
+- java-front-0.9.1
 
 You will find them on http://strategoxt.org/Stratego/JavaFrontRelease09
+
+Install yaml support for python
 
 The make files depend on bash. Check `/bin/sh --version`
 if it is bash. If not, change the symlink  `/bin/sh` to point to `/bin/bash`.
@@ -63,9 +67,9 @@ and look inside j2py/test for java files with transformation.
    
 
 Play
-    tools/parse-java --preserve-comments -i j2py/test/locals1.java
-    tools/parse-java --preserve-comments -i j2py/test/locals1.java | tools/java2py
-    tools/parse-java --preserve-comments -i j2py/test/locals1.java | j2py/j2py.py | tools/java2py
+    parse-java --preserve-comments -i j2py/test/locals1.java
+    parse-java --preserve-comments -i j2py/test/locals1.java | tools/java2py
+    parse-java --preserve-comments -i j2py/test/locals1.java | j2py/j2py.py | tools/java2py
 
     j2py/run.py j2py/test/java/out/ArithmeticDemo.py
     
@@ -76,11 +80,27 @@ As demonstrated by the third example above, python scripts can step in, to chang
    
 ## TODO / Roadmap
 
+- ++i etc
+- inner assignments
+- boolean -> bool
+- comment out @java.extends by default
+- add typed to interfaces
+- do not add self.__class__ in class_init
+- do more tests for str add , seems to be broken
+- lastindexof -> rfind
+- substring -> [:]
+- remove @private, @protected
+- get empty line before @java.init
+- get docstrings in interfaces and abstract classes right
+- move static final attribs into module
+- java.static has to be first decorator
 - Write and collect example/test java files with supposed translations.
 - do switch statement right
 - make install
 - do java.typed right for VarArityParam (see LoopStyles)
 - find a way to translate statements to produce no output 
+- implement HashMap
+- file bug report for quotes not working in pp-aterm
 
 
 ### Pitfalls
@@ -90,3 +110,4 @@ As demonstrated by the third example above, python scripts can step in, to chang
 - Due to a bug in stratego pp-aterm, quotes in comments are not quoted by pp-aterm.
   AST of java src, which include quotes in comments will not be understood by j2py/aterm parser.
     
+

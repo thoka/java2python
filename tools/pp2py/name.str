@@ -59,8 +59,12 @@ rules
   java2py-to-box:
     Field(Id(s)) -> box |[ s ]|
 
+/* obsolete: from java-front  
+
   qualifier-empty =
     ?PackageName([])
+*/
+
 
 /*
   qid-to-box:
@@ -68,6 +72,7 @@ rules
     where <name-to-box> q => prefix
 */
 
+/* obsolete: provided by java-front
   name-to-box :
     ids -> H hs=0 [b*]
     where
@@ -75,3 +80,6 @@ rules
       ; map(\ Id(s) -> box |[ s ]| \)
       ; separate-by(point)
       ; ?b*
+
+*/
+

@@ -29,4 +29,7 @@ class Arrays(object):
         res.extend(a)
         return res
                              
-
+class HashMap(Object):
+    # TODO
+    pass
+    

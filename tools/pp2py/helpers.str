@@ -10,17 +10,17 @@ strategies
  */
 rules
 
-  block-structure : /* box |[ V is=1 vs=1 [~*elems] ]| */
+  j2py-block-structure : /* box |[ V is=1 vs=1 [~*elems] ]| */
     (1, elems) ->  box |[ V vs=0 [H hs=3 [" " V vs=0 [~*elems]]] ]|
     where
       not(!elems => [])
 
-  block-structure :
+  j2py-block-structure :
     (0, elems) -> box |[ V vs=0 [H hs=3 [" " V vs=0 [V vs=0 [~*elems]]]] ]|
     where
       not(!elems => [])
 
-  block-structure :
+  j2py-block-structure :
     (_, []) -> box |[ V ["    pass"] ]|
 
 /**
@@ -39,6 +39,7 @@ rules
     ExtendsInterfaces(is) -> box |[ H hs=0 ["@java.extends(" ~interfaces ")"] ]|
       where <separate-by-comma> is; ?interfaces
 
+/* from java-front
 rules
 
   hbox = 
@@ -51,6 +52,7 @@ rules
   point = 
     !box |[ "." ]|
 
+*/
 
 /**
  * Rewrites a list of boxes to a single box, where the elements are
@@ -60,33 +62,33 @@ rules
  */
 rules
 
-  list-to-args :
+  j2py-list-to-args :
     [] -> box |[ H hs=0 ["(" ")"] ]|
 
-  list-to-args :
+  j2py-list-to-args :
     exprs@[_ | _ ] -> box |[ H hs=0 ["(" ~args ")"] ]|
     where
       <separate-by-comma> exprs => args
 
-  list-to-args2 :
+  j2py-list-to-args2 :
     [] -> box |[ H hs=0 [] ]|
 
-  list-to-args2 :
+  j2py-list-to-args2 :
     exprs@[_ | _ ] -> box |[ H hs=0 [ ~args ] ]|
     where
       <separate-by-comma> exprs => args
 
-  list-to-args3 :
+  j2py-list-to-args3 :
     [] -> box |[ H hs=0 ["(self)"] ]|
 
-  list-to-args3 :
+  j2py-list-to-args3 :
     exprs@[_ | _ ] -> box |[ H hs=0 [ "(self, " ~args ")" ] ]|
     where
       <separate-by-comma> exprs => args
 
 
 /*
-  list-to-args3 :
+  j2py-list-to-args3 :
     exprs@[_ | _ ] -> box |[ H hs=0 [ ~args ] ]|
     where
       <separate-by-comma> ( <conc> ( box |[ H hs=0 [ "self" ] ]| , exprs) ) => args
@@ -100,6 +102,7 @@ rules
    *
    * @type List(Box) -> Box
    */
+/* from java -front
   separate-by-comma =
     rec x(
       ?[<id>]
@@ -110,3 +113,6 @@ rules
        ; !H hs=1 [H hs=0 [b1 ","] b2]
        }
     )
+
+*/
+

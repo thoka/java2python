@@ -18,7 +18,7 @@ transform() {
     local dst=$(dirname $src)/$(basename $src).py # where py goes
     
     #parse
-    $scriptpath/../tools/parse-java --preserve-comments -i $src.java  > $adst.aterm
+    parse-java --preserve-comments -i $src.java  > $adst.aterm
     
     #do python conversions
     cat $adst.aterm | $scriptpath/j2py.py > $adst.j2py 2>&1 #

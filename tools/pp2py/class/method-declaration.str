@@ -5,7 +5,11 @@ rules
     MethodDec(dec, b@Block(_)) -> V vs=0 [~dec b ""]
 
   java2py-to-box:
-    MethodDec(dec, NoMethodBody()) -> H hs=0 [~dec "pass #0004" ""]
+    MethodDec(dec, NoMethodBody()) -> V [
+       H hs=0 [~dec]
+       "    pass" 
+       ""
+   ]   
 
   java2py-to-box:
     MethodDecHead(mods, type-params, type, Id(n), params, None())
@@ -18,8 +22,8 @@ rules
     // ]|
     where
       // where(<debug> [ "Enter: ", <id> ]) ;
-      <list-to-args3> params => args
-      ; <type-params-to-boxes> type-params => targboxes
+      <j2py-list-to-args3> params => args
+      ; <j2py-type-params-to-boxes> type-params => targboxes
       ; !Conc(mods, targboxes) => foo
 
   java2py-to-box:
@@ -32,8 +36,8 @@ rules
       ]
     ]|
     where
-      <list-to-args3> params => args
-    ; <type-params-to-boxes> type-params => targboxes
+      <j2py-list-to-args3> params => args
+    ; <j2py-type-params-to-boxes> type-params => targboxes
     ; !Conc(mods, targboxes) => foo
 
   java2py-to-box:
@@ -45,8 +49,8 @@ rules
       H hs=1 ["def" H hs=0 [~lit:n ~args] H hs=0 [~*dims ":" /* "#DeprMethodDecHead"  */ ]]
     ]  
     where
-      <list-to-args3> params => args
-    ; <type-params-to-boxes> type-params => b*
+      <j2py-list-to-args3> params => args
+    ; <j2py-type-params-to-boxes> type-params => b*
 
 rules
 

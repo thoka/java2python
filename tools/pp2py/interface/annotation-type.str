@@ -9,7 +9,7 @@ rules
       "    \"\"\""
     ] ]|
     where
-      <block-structure> (1, decs) => decs'
+      <j2py-block-structure> (1, decs) => decs'
       
   java2py-to-box:
     AnnoDecHead(mods, Id(name))

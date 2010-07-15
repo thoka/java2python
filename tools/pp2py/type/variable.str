@@ -6,17 +6,17 @@ rules
     where
       <separate-by-comma> params => parameters
 
-  type-params-to-boxes :
+  j2py-type-params-to-boxes :
     None() -> []
 
-  type-params-to-boxes :
+  j2py-type-params-to-boxes :
     Some(p@TypeParams(_)) -> [p]
 
 
-  type-params-to-boxes2 :
+  j2py-type-params-to-boxes2 :
     None() -> []
 
-  type-params-to-boxes2 :
+  j2py-type-params-to-boxes2 :
     Some(p@TypeParams(_)) -> [p2]
     where
       <separate-by(!S("&"))> p => p2

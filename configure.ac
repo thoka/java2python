@@ -1,7 +1,7 @@
 AC_PREREQ([2.58])
-AC_INIT([java-front],[0.9.1],[users@strategoxt.org])
+AC_INIT([j2py],[0.1],[thomas.kalka@googlemail.com])
 AC_CONFIG_AUX_DIR([config])
-AM_INIT_AUTOMAKE([1.7.2 -Wall -Wno-portability])
+AM_INIT_AUTOMAKE([1.7.2 -Wall -Wno-portability foreign])
 
 # comment to make this a stable release
 XT_PRE_RELEASE
@@ -19,24 +19,12 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_LIBTOOL
 
-AC_CONFIG_SUBDIRS([syntax])
+#AC_CONFIG_SUBDIRS([syntax])
+#  j2py.spec
+#  j2py.pc
+
 AC_CONFIG_FILES([
-  java-front.spec
-  java-front.pc
   Makefile
-  news-archive/Makefile
-    
-  syntax-embedding/Makefile
-  lib/Makefile
   tools/Makefile
-  
-  test/Makefile
-  test/syn/Makefile
-  test/syn/Java/Makefile
-  test/syn/StrategoJava/Makefile
-  test/gnu-classpath/Makefile
-  test/gnu-classpath/v1.5/Makefile
-  test/j2sdk/Makefile
-  test/pp/Makefile
 ])
 AC_OUTPUT

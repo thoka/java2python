@@ -34,6 +34,12 @@ class Assign2 {
         --y; ++x;
         System.out.println(x);
         System.out.println(y);
+        
+        x = 10;
+        y = 2*(x++);
+        
+        System.out.println(x);
+        System.out.println(y);
 
 
     }

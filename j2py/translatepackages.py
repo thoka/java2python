@@ -24,6 +24,8 @@ def translate_packages(ast):
             print p
         if len(p)==1 and p[0][0].name=="Id":
             pkg = p[0][0][0]
+            module = p[0][1][0]
+            fname = "%s.%s" % (pkg,module) 
             if DEBUG:
                 print pkg
             for m,r in conversions.iteritems():
@@ -32,7 +34,9 @@ def translate_packages(ast):
                     if DEBUG:
                         print pkg,"-->",p[0][0]
                         print " ",p
-               
+                if fname == m :
+                    p.replace(aterm.decode('Id("from %s import %s")' % (r,module)))
+                    
 if __name__ == '__main__':
 
     if DEBUG:

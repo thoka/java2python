@@ -1,8 +1,0 @@
-module Stratego-Java-EBlock
-imports
-  StrategoMix[StrategoHost]
-  languages/java/EmbeddedJavaMix[JavaObject Term[[StrategoHost]]]
-  languages/java/eblock/JavaEBlockMix[JavaObject]
-
-exports
-  context-free start-symbols Module[[StrategoHost]]

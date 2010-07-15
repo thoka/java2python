@@ -4,7 +4,42 @@ imports
   libjava-front
   libstratego-tool-doc
   pp2py/main
-  java/pretty-print2py
+
+//  java/pretty-print2py
+
+strategies
+  /**
+   * Pretty-prints the Java AST to a string.
+   *
+   * @type Java -> String
+   */
+  
+ // pp-java-stream = pp-java2py-stream //TODO hack, to get java2java running now 
+   
+  pp-java2py-string =
+    pp-java52py-to-string
+
+  /**
+   * Pretty-prints the Java AST to the Stream.
+   *
+   * @param Stream
+   * @type Java -> Stream
+   */
+  pp-java2py-stream(|stream) =
+    pp-java2py-box
+    ; box2text-stream(|800, stream)
+
+  /**
+   * Pretty-prints the Java AST to a Box representation.
+   *
+   * @type Java -> Box
+   */
+  pp-java2py-box =
+    pp-java2py-box(fail)
+
+  pp-java2py-box(extension) =
+  	pp-java52py-to-abox(extension)
+
 
 strategies
 
@@ -28,15 +63,20 @@ strategies
 
   java2py-usage =
     <tool-doc>
-      [ Usage("pp-java [OPTIONS]")
-      , Summary("Convers a Java abstract syntax tree in ATerm format to a Python source file.")
+      [ Usage("java2py [OPTIONS]")
+      , Summary("Converts a Java abstract syntax tree in ATerm format to a Python source file.")
       , OptionUsage()
       , AutoReportBugs()
       ]
   java2py-about =
     <tool-doc>
       [ AutoProgram()
-      , Author(Person("Martin Bravenboer", "martin.bravenboer@gmail.com"))
+      , Author(
+         ItemList([
+           Person("Thomas Kalka", "thomas.kalka@googlemail.com")
+          ,Person("Martin Bravenboer", "martin.bravenboer@gmail.com")]
+         )
+        )
       , GNU_LGPL("2002-2007", "Martin Bravenboer <martin.bravenboer@gmail.com>")
       , Config([
           DefaultXTCRepository()
