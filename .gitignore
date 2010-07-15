@@ -20,15 +20,8 @@ Makefile.in
 *.m4
 .gedit-save*
 *.sdf
-tools/auto-java-front
-tools/core-lift-eblocks
-tools/java-concat-ids
-tools/jtree15-parenthesize
-tools/jtree15-to-abox
-tools/parse-java
-tools/pp-java2py
+config
 tools/java2py
-java-front.pc
 BUILDTIME_XTC
 autom4te.cache/*
 java-front.pc
@@ -43,4 +36,3 @@ config/config.sub
 configure
 ltmain.sh
 .svn
-
