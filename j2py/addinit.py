@@ -40,7 +40,7 @@ MethodDec(
 
 def make_init():
     return decode(init)
-    
+
 def verbatim(code):
     i = ATerm("Id",[code])
     #i.append(AString(code))
@@ -49,7 +49,7 @@ def verbatim(code):
 
 def add_decorator(dec,mdec):
     mdec[0][0].insert(0,ATerm("Id",["@"+dec]))
- 
+
 def add_init(ast):
     """
     add __init__ to any class in ast
@@ -62,7 +62,7 @@ def add_init(ast):
 
     imp = decode('Id("import java")')
     ast[1].insert(0,imp)
-    
+
     # fix inits for int
     for fd in ast.findall("FieldDec"):
         if fd[1].name in ["Char","Int","Short","Long","Byte","Double","Float"]:
@@ -77,35 +77,35 @@ def add_init(ast):
             for vd in fd.findall("VarDec"):
                 if len(vd)==1:
                     vd.append(decode('Id("\\"\\"")'))
-                       
+
     for c in ast.findall("ClassDec"):
         """
         create init, decoreate overloaded methods
         """
-        
-        #insert Object as base class, if none exists 
+
+        #insert Object as base class, if none exists
         base_class = c[0][3]
         if base_class.name == "None":
             c[0][3] = ATerm("Id",["Object"])
-        
+
         body_code = c.findfirst("ClassBody")[0]
 
         i = make_init()
         block = i[1][0]
-        
+
         remove = []
         methods = {}
         overloaded_methods = set()
-        
+
         cblock = decode("[]")
-        
+
         use_class_init = False
-        
+
         for n in body_code:
             if n.name == "StaticInit":
                 use_class_init = True
                 break
-    
+
         for n in body_code:
             if n.name == "FieldDec":
                 dest = block
@@ -113,7 +113,7 @@ def add_init(ast):
                     if use_class_init:
                         dest = cblock
                     else:
-                        continue                   
+                        continue
                 for v in n.findall("VarDec"):
                     vc=v.copy()
                     vcn = vc.findfirst("Id")
@@ -125,22 +125,22 @@ def add_init(ast):
             elif n.name == "StaticInit":
                 for e in n[0][0]:
                     cblock.append(e)
-                remove.append(n)    
+                remove.append(n)
             elif n.name == "MethodDec":
                 mname = n[0][3][0]
-                if not methods.has_key(mname): 
+                if not methods.has_key(mname):
                     methods[mname]=n
                 else:
                     if mname not in overloaded_methods:
                         add_decorator("java.overloaded",methods[mname])
-                        overloaded_methods.add(mname) 
+                        overloaded_methods.add(mname)
                     add_decorator(mname+".register",n)
-            
+
         for n in remove:
-            body_code.remove(n)                
-        
-        
-        i[0][0].append(ATerm("Id",[AString("@java.init")])) 
+            body_code.remove(n)
+
+
+        i[0][0].append(ATerm("Id",[AString("@java.init")]))
         body_code.insert(0,i)
 
         if len(cblock)>0:
@@ -149,8 +149,7 @@ def add_init(ast):
             body_code.insert(0,cinit)
             c[0][0].append(ATerm("Id",["@java.use_class_init"]))
 
-skipmods=["Public"]
-
+skipmods=[]
 
 def filtered_mods(mods):
     newmods = AList()
@@ -168,14 +167,14 @@ def fix_mods(ast):
                 mdh = i[0]
                 mdh[0] = filtered_mods(mdh[0])
 
- 
+
     #interfaces ...
     for idec in ast.findall("InterfaceDec"):
         for i in idec[1]:
             if i.name in ["AbstractMethodDec"]:
                 i[0] = filtered_mods(i[0])
-        idec[0][0].append(ATerm("Id",["@java.interface"]))        
-                
+        idec[0][0].append(ATerm("Id",["@java.interface"]))
+
 def add_typed(ast):
     #print "add typed"
     for c in ast.findall("ClassBody"):
@@ -211,10 +210,10 @@ def fix_super(ast):
     """
     in java super is called by default
     so add it to python constructor as default too
-    """    
+    """
     for c in ast.findall("ClassDec"):
         # has bases classes ?
-        bases = c[0][3] 
+        bases = c[0][3]
         if not bases.name == "None":
             for i in c[1][0]:
                 if i.name in ["ConstrDec"]:
@@ -241,7 +240,7 @@ def remove_FieldDec(ast):
         remove.append(f)
     for f in remove:
         f.up.remove(f)
-        
+
 def run(ast):
     fix_super(ast)
     fix_mods(ast)

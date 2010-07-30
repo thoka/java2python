@@ -39,7 +39,7 @@ strategies
 
   j2py-expr-to-box: Plus(e)     -> H hs=0 [   "+"  ~e]
   j2py-expr-to-box: Minus(e)    -> H hs=0 [   "-"  ~e]
-  
+
   j2py-expr-to-box: PreIncr(e)  -> H hs=0 [ "java.preIncr(\"" ~e "\")" ]
   j2py-expr-to-box: PreDecr(e)  -> H hs=0 [ "java.preDecr(\"" ~e "\")" ]
   j2py-expr-to-box: PostIncr(e) -> H hs=0 [ "java.postIncr(\"" ~e "\")" ]
@@ -81,30 +81,30 @@ strategies
  * Method Invocations
  */
 rules
-  java2py-to-box: 
+  java2py-to-box:
     Invoke(method, exprs) -> box |[ H hs=0 [~method ~args] ]|
       where <j2py-list-to-args> exprs => args
 
-  java2py-to-box: 
+  java2py-to-box:
     Method(n) -> n
 
-  java2py-to-box: 
+  java2py-to-box:
     Method(e, type-args, Id(s)) -> box |[ H hs=0 [~e "." s] ]|
     where
       <j2py-type-args-to-boxes> type-args => type-args'
 
-  java2py-to-box: 
+  java2py-to-box:
     SuperMethod(type-args, Id(s)) -> box |[ H hs=0 [KW["super(self.__class__,self)"] "."  s] ]|
     where
       <j2py-type-args-to-boxes> type-args => type-args'
 
-  java2py-to-box: 
+  java2py-to-box:
     QSuperMethod(q, type-args, Id(s)) -> box |[ H hs=0 [~q "." KW["super"] "."  s "###NOTIMPL###" ] ]|
     where
       <j2py-type-args-to-boxes> type-args => type-args'
 
-  java2py-to-box: 
-    GenericMethod(type-name, type-args, Id(s)) -> box |[ H hs=0 [~type-name "."  s "###NOTIMPL###" ] ]|
+  java2py-to-box:
+    GenericMethod(type-name, type-args, Id(s)) -> box |[ H hs=0 [~type-name "." s ] ]|
     where
       <j2py-type-args-to-boxes> Some(type-args) => type-args'
 
@@ -113,37 +113,37 @@ rules
  */
 rules
 
-  java2py-to-box: 
+  java2py-to-box:
     NewInstance(
        type-args
      , ClassOrInterfaceType( type, Some(type-args2))
      , exprs
      , None()
-    ) 
-      -> 
+    )
+      ->
     box |[ H hs=0 [~type "((" ~type-args' ")," ~args ")" ] ]|
     where
       //where(<debug> [ "//////////////////", <id> ]) ;
-      // !type => ClassOrInterfaceType( typeid, Some(type-args2)) ; 
+      // !type => ClassOrInterfaceType( typeid, Some(type-args2)) ;
         <j2py-list-to-args2> exprs => args
       ; <j2py-type-args-to-boxes> Some(type-args2) => type-args'
 
 
-  java2py-to-box: 
+  java2py-to-box:
     NewInstance(
        type-args
      , ClassOrInterfaceType( type, None())
      , exprs
      , None()
-    ) 
-      -> 
+    )
+      ->
     box |[ H hs=0 [~type ~args] ]|
     where
       <j2py-list-to-args> exprs => args
       ; <j2py-type-args-to-boxes> type-args => type-args'
 
 
-  java2py-to-box: 
+  java2py-to-box:
     QNewInstance(e, type-args1, Id(s), type-args2, exprs, None())
       ->
     box |[ H hs=0 [~e "."  s  ~args] ]|
@@ -157,28 +157,26 @@ rules
  */
 rules
 
-  java2py-to-box: 
-    NewInstance(type-args, type, exprs, Some(body)) 
-      -> box |[ V vs=0[H hs=0 [H hs=1 [~type ~args] ] ~body] ]|
+  java2py-to-box:
+    NewInstance(type-args, type, exprs, Some(body))
+      -> box |[
+        V vs=0[
+          H hs=0 [~type-args']
+          H hs=0 ["class anonymous(" ~type ")" ~args ":"]
+          ~body
+        ] ]|
     where
       <j2py-list-to-args> exprs => args
       ; <j2py-type-args-to-boxes> type-args => type-args'
 
-/*
-  java2py-to-box: 
-    NewInstance(type-args, type, exprs, Some(body)) 
-      -> box |[ V vs=0[H hs=0 [H hs=1 [~type ~args] ] ~body] ]|
-    where
-      <j2py-list-to-args> exprs => args
-      ; <j2py-type-args-to-boxes> type-args => type-args'
 
-*/
-
-
-  java2py-to-box: 
+  java2py-to-box:
     QNewInstance(e, type-args1, Id(s), type-args2, exprs, Some(body))
       ->
-    box |[ V vs=0 [H hs=0 [~e "."  H hs=1 [ H hs=0  [s] ] ~args] ~body] ]|
+    box |[ V vs=0 [
+      H hs=0 ["##QNewInstance" ~e "."  H hs=1 [ H hs=0  [s] ] ~args ":"]
+      ~body
+    ] ]|
     where
       <j2py-list-to-args> exprs => args
       ; <j2py-type-args-to-boxes> type-args1 => type-args1'
@@ -186,52 +184,52 @@ rules
 
 rules
 
-  java2py-to-box: 
+  java2py-to-box:
     NewArray(type, dimexprs, dims) -> box |[ H hs=0 ["[ None for i in " ~*dimexprs "]" ~*dims] ]|
     where
         <is-list> dimexprs
       ; <is-list> dims
 
-  java2py-to-box: 
+  java2py-to-box:
     NewArray(type, dims, init@ArrayInit(_)) -> box |[ H hs=0 [H hs=1 ["#NewArray2" ~type] ~*dims ~init] ]|
 
   /**
    * Special ArrayBaseType
    */
-  java2py-to-box: 
+  java2py-to-box:
     UnboundWld(name) -> box |[ H hs=0 [ ~name "<" "?" ">"] ]|
 
 rules
 
 
-  java2py-to-box: 
+  java2py-to-box:
     ToStr(b) -> H hs=0 [ "java.str(" b ")"]
 
-  java2py-to-box: 
+  java2py-to-box:
     ArrayAccess(b1, b2) -> H hs=0 [ b1 "[" b2 "]"]
 
-  java2py-to-box: 
+  java2py-to-box:
     CastPrim(b1, b2) -> H hs=0 [b2]
 
-  java2py-to-box: 
+  java2py-to-box:
     CastRef(b1, b2) -> H hs=0 [ b2]
 
-  java2py-to-box: 
+  java2py-to-box:
     Field(b, Id(s)) -> H hs=0 [b "." s]
 
-  java2py-to-box: 
+  java2py-to-box:
     SuperField(Id(s)) -> H hs=0 [KW["##SuperField"] "." s]
 
-  java2py-to-box: 
+  java2py-to-box:
     QSuperField(b, Id(s)) -> H hs=0 [b "." KW["##QSuperField"] "." s]
 
 signature
   constructors
     Parenthetical : Unknown -> Unknown
-    
+
     ToStr : Unknown -> Unknown
     Pass: Unknown -> Unknown
- 
+
     InnerAssign : Unknown * Unknown -> Unknown
     InnerAssignMul: Unknown * Unknown -> Unknown
     InnerAssignDiv : Unknown * Unknown -> Unknown
@@ -241,7 +239,6 @@ signature
     InnerAssignLeftShift : Unknown * Unknown -> Unknown
     InnerAssignRightShift : Unknown * Unknown -> Unknown
     InnerAssignURightShift : Unknown * Unknown -> Unknown
-    InnerAssignAnd  : Unknown * Unknown -> Unknown       
-    InnerAssignExcOr : Unknown * Unknown -> Unknown     
-    InnerAssignOr : Unknown * Unknown -> Unknown        
-
+    InnerAssignAnd  : Unknown * Unknown -> Unknown
+    InnerAssignExcOr : Unknown * Unknown -> Unknown
+    InnerAssignOr : Unknown * Unknown -> Unknown

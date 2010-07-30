@@ -3,14 +3,13 @@ rules
 
   java2py-to-box :
     AnnoDec(head, decs) -> box |[ V hs=0 [
+      ""
       ~head
-      "    \"\"\"" 
       ~decs'
-      "    \"\"\""
     ] ]|
     where
       <j2py-block-structure> (1, decs) => decs'
-      
+
   java2py-to-box:
     AnnoDecHead(mods, Id(name))
       ->
@@ -24,16 +23,16 @@ rules
     where
       <  split-fetch-keep(not(is-Java-Anno))
          ; \ (l1, t, l2)  -> (l1, [t | l2]) \
-         
+
       <+ !(<map(is-Java-Anno)>, [])
-      
+
       <+ !([], <id>)
       > mods => (annos, mods')
 
   java2py-to-box :
     AnnoMethodDec(mods, type, Id(name), default)
       ->
-    box |[ H hs=1 [~*mods ~type ~lit:name "(" ")" ~*default' ] ]|
+    box |[ H hs=1 ["#" ~*mods ~type ~lit:name "(" ")" ~*default' ] ]|
     where
       let default-to-boxes =
             \ None() -> [] \

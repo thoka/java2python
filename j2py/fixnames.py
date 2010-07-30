@@ -4,8 +4,7 @@
 import aterm
 import sys
 
-from simplify import simplify_names
-
+import simplify
 
 """
 add "self." to the right places ...
@@ -22,7 +21,7 @@ def imported_names(ast):
         assert n[0].name == "TypeName"
         assert n[0][1].name == "Id"
         res.append(n[0][1][0])
-    return res    
+    return res
 
 
 def inner_classes(treepos):
@@ -34,7 +33,7 @@ def inner_classes(treepos):
                   classname = d[0][1][0]
                   res.append(classname)
     return res
-    
+
 
 
 def is_static(exp):
@@ -56,10 +55,10 @@ def static_classvars(treepos):
                 if f.name in ['FieldDec'] and is_static(f):
                     for v in f.findall("VarDec"):
                         res.append(v[0][0])
-    
+
     return res
-     
- 
+
+
 def local_vars(treepos):
     "try to find local vars at treepos"
     res = []
@@ -68,30 +67,30 @@ def local_vars(treepos):
             for t in n.findall("VarDec"):
                 if t[0].name == 'ArrayVarDecId':
                     res.append(t[0][0][0])
-                else:    
+                else:
                     res.append(t[0][0])
         if n.name in ['ForEach','MethodDecHead','ConstrDecHead','Catch']: #TODO interface ?
             for p in n.findall(["Param","VarArityParam"]):
                 res.append(p[2][0])
-            
-    return res          
- 
+
+    return res
+
 def fix_names(ast,decorate=DECORATE):
     """
     look for local variables, add __local__ to their name
     add self. to all other variables
     TODO: how to deal with static etc etc
     """
-    simplify_names(ast)
-    
+    ast.concat_ids()
+
     imports = imported_names(ast)
     if DEBUG:
         print "imports:",imports
-     
-    interesting = ['FieldDec'] 
-    
+
+    interesting = ['FieldDec']
+
     if decorate:
-        # do name decoration for testing purposes 
+        # do name decoration for testing purposes
         dec_local = "@l@"
         dec_imported = "@i@"
         dec_innerclass = "@ic@"
@@ -100,16 +99,16 @@ def fix_names(ast,decorate=DECORATE):
         dec_imported = ""
         dec_innerclass = ""
 
-    
+
     for exp in ast.findall(["ExprName","MethodName"]):
         if exp[0].name == "Id":
-            if DEBUG: 
+            if DEBUG:
                 print exp
                 print "   path:",exp.path()
             local = local_vars(exp)
             if DEBUG:
                 print "  locals:",local
-            varname = exp[0][0].split('.')[0]  
+            varname = exp[0][0].split('.')[0]
             if varname in local:
                 exp[0][0] = dec_local + exp[0][0]
             elif varname in imports:
@@ -120,8 +119,8 @@ def fix_names(ast,decorate=DECORATE):
                     #print "innerclasses for",exp,inner_classes(exp)
             	else:
                     if not varname[0].isupper():
-            	        exp[0][0] = "self." + exp[0][0]                    
-            if 0:    
+            	        exp[0][0] = "self." + exp[0][0]
+            if 0:
                 for n in exp.walkback():
                     print "   ->",n.name
                     if n.name in interesting:
@@ -136,14 +135,15 @@ def fix_names(ast,decorate=DECORATE):
         else:
             if dec_innerclass is not "":
                 exp[1][0][0][0] = dec_innerclass + classname
-        
-               
+
+
 #or varname[0] in inner_classes(exp):
+
+run = fix_names
+
 
 if __name__ == '__main__':
     ast = aterm.decode(sys.stdin.read())
-    fix_names(ast)
+    run(ast)
     if not DEBUG:
         print ast
-
-

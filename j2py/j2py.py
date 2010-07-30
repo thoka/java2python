@@ -4,29 +4,28 @@
 import aterm
 import sys
 
-
-import rename 
-from fixnames import fix_names
-from translatepackages import translate_packages
+import rename
+import fixnames
+import translatepackages
 import fixstradd
 import addinit
-from fixcomments import convert_comments
-from fixenum import fix_enum
+import fixcomments
+import fixenum
 import fix_values
 import rename_methods
-                
-if __name__ == '__main__':
-    ast = aterm.decode(sys.stdin.read())
+
+def run(ast):
     rename.run(ast)
     fix_values.run(ast)
-    convert_comments(ast)
-    fix_names(ast)
+    fixnames.run(ast)
     rename_methods.run(ast)
-    translate_packages(ast)
+    translatepackages.run(ast)
     fixstradd.run(ast)
- 
     addinit.run(ast)
-    fix_enum(ast)
+    fixenum.run(ast)
+    fixcomments.run(ast) #run at least after addinit, to have docstrings in first position
+
+if __name__ == '__main__':
+    ast = aterm.decode(sys.stdin.read())
+    run(ast)
     print ast
-
-

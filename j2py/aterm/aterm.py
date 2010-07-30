@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
-  
+
 """Implementation of ATermDecoder
 
 hacked from JSONDecoder code
@@ -19,8 +19,8 @@ FLAGS = re.VERBOSE | re.MULTILINE | re.DOTALL
 class AString(str):
     def __repr__(self):
         return encode_string(self)
-    
-        
+
+
 class ATerm (list):
     def __init__(self,name,params=[],annotation=None):
         self.up = None
@@ -28,7 +28,7 @@ class ATerm (list):
         self.extend(params)
         self.annotation=annotation
         self._update_children()
-        
+
     def __repr__(self):
         if self.annotation is None:
             return "%s(%s)" % (self.name,list.__repr__(self)[1:-1])
@@ -41,25 +41,25 @@ class ATerm (list):
         elif y.__class__ is list:
             y = AList(y)
         if isinstance(y,ATerm):
-            y.up = self    
+            y.up = self
         list.__setitem__(self,i,y)
-   
+
     def append(self,y):
         if y.__class__ is str:
             y = AString(y)
         elif y.__class__ is list:
             y = AList(y)
         if isinstance(y,ATerm):
-            y.up = self    
+            y.up = self
         list.append(self,y)
-        
+
     def insert(self,i,y):
         if y.__class__ is str:
             y = AString(y)
         elif y.__class__ is list:
             y = AList(y)
         if isinstance(y,ATerm):
-            y.up = self    
+            y.up = self
         list.insert(self,i,y)
 
     def extend(self,l):
@@ -67,7 +67,7 @@ class ATerm (list):
             self.append(i)
 
     #TODO: write further setters ...
-        
+
     def _update_children(self):
         # hm, not needed any further ... ?
         # if all setters set up ...
@@ -89,13 +89,13 @@ class ATerm (list):
             if isinstance(c,ATerm):
                 for i in c.walk():
                     yield i
-                    
+
     def walkback(exp):
-        """ 
+        """
         returns iterator over all nodes before node exp
-        
-        
-        """ 
+
+
+        """
         if exp.up is None:
             raise StopIteration()
         pos = exp.pos()-1
@@ -103,7 +103,7 @@ class ATerm (list):
         while pos>=0:
             yield exp[pos]
             pos -= 1
-        yield exp    
+        yield exp
         for n in exp.walkback():
             yield n
 
@@ -111,7 +111,7 @@ class ATerm (list):
     def findall(self,name):
         """
         returns all subnodes with name 'name'
-        
+
         name can be a string or a list of strings
         """
         if not isinstance(name,list):
@@ -119,25 +119,32 @@ class ATerm (list):
         for i in self.walk():
             if isinstance(i,ATerm) and i.name in name:
                 yield i
-                
+
     def findfirst(self,name):
         """
         returns first subnode with name 'name'
-        
+
         name can be a string or a list of strings
         """
         return self.findall(name).next()
-                                
+
+    def __getattr__(self,name):
+        if name[0:1].isupper():
+            return self.findfirst(name)
+        else:
+            raise AttributeError
+
+
     def pos(self):
         "returns self position in parent"
-        return self.up.index(self) 
-                
+        return self.up.index(self)
+
     def replace(self,new_node):
         "replace self with new_node on parent"
         up = self.up
         up[self.pos()] = new_node
-        new_node.up = up
-    
+        if isinstance(new_node,ATerm): new_node.up = up
+
     def parents(exp):
         "iterates over the parents of exp"
         while exp.up is not None:
@@ -145,17 +152,17 @@ class ATerm (list):
             exp = exp.up
 
     def path(exp,join=None):
-        "gives a list of parent names of node exp, concatenated by join, if given" 
+        "gives a list of parent names of node exp, concatenated by join, if given"
         res = [ p.name for p in exp.parents() ]
         res.reverse()
         if join is None:
             return res
         return join.join(res)
-        
+
     def copy(self):
         "returns a new copy of self"
         return decode(repr(self))
-        
+
 
 class AList(ATerm):
     def __init__(self):
@@ -207,7 +214,7 @@ def scanstring(s, end, encoding=None, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.
     Unescapes all valid JSON string escape sequences and raises ValueError
     on attempt to decode an invalid string. If strict is False then literal
     control characters are allowed in the string.
-    
+
     Returns a tuple of the decoded string and the index of the character in s
     after the end quote."""
     if encoding is None:
@@ -222,7 +229,7 @@ def scanstring(s, end, encoding=None, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.
                 errmsg("Unterminated string starting at", s, begin))
         end = chunk.end()
         content, terminator = chunk.groups()
- 
+
         # Content is contains zero or more unescaped string characters
         if content:
             if not isinstance(content, unicode):
@@ -311,11 +318,11 @@ def skip_whitespace(string,idx):
     return idx
 
 def scan(string, idx):
-        
+
     idx = skip_whitespace(string,idx)
-   
+
     nextchar = string[idx:idx+1]
-     
+
     if nextchar == None:
         return None
     if nextchar == '"':
@@ -328,7 +335,7 @@ def scan(string, idx):
         res = ATuple()
         res.extend(l)
         return ( res , idx )
-                    
+
     m = match_number(string, idx)
     if m is not None:
         integer, frac, exp = m.groups()
@@ -337,7 +344,7 @@ def scan(string, idx):
         else:
             res = int(integer)
         return res, m.end()
-        
+
     m = match_ID(string,idx)
     if m is not None:
         id_ = string[ m.start() : m.end() ]
@@ -354,13 +361,13 @@ def scan(string, idx):
                 annotation,idx = scan(string,idx+1)
                 idx = expect(string,idx,'}')
         return ATerm(id_,params,annotation),idx
-                
+
     raise ValueError( errmsg("Syntax error", string, idx))
 
 def parse_list(string,idx,terminator):
     l = AList()
     debug("parse list "+string[idx:idx+20])
-    
+
     while True:
         idx = skip_whitespace(string,idx)
         if string[idx] == terminator:
@@ -372,20 +379,20 @@ def parse_list(string,idx,terminator):
         debug("now at "+string[idx:idx+20])
         l.append( val )
         idx = skip_whitespace(string,idx)
-        
+
         nextchar = string[idx:idx+1]
-                
+
         if nextchar is None:
             raise ValueError( errmsg("EOF in list, at least %s expected" % terminator, string, idx))
         if nextchar == ',':
-            idx += 1 
+            idx += 1
             continue
         elif nextchar == terminator:
             idx += 1
             break
         else:
             raise ValueError( errmsg("Syntax error while parsing list", string, idx))
-    
+
     return l,idx
 
 
@@ -426,11 +433,20 @@ def reverse(iterator):
     for i in a:
         yield i
 
+def transformation(transform):
+    """
+    decorator, which registers transform as a aterm transformation
+
+    transform(ast) should either
+    - do some work on ast, return ast
+    - return transformation
+    """
+
+    setattr(ATerm,transform.__name__,transform)
+    return transform
+
+
 if __name__ == '__main__':
     import sys
-    
+
     print decode ( sys.stdin.read())
-    
-    
-
-

@@ -4,7 +4,7 @@ imports
   libstratego-gpp
 //  java/signature/v5
 //  java/signature/eblock
-  
+
   pp2py/helpers
   pp2py/statement
   pp2py/expression
@@ -22,7 +22,7 @@ imports
 
   pp2py/interface/annotation
   pp2py/interface/annotation-type
-  
+
   //java/pp/parenthesize
 
 
@@ -40,12 +40,12 @@ strategies
    */
   pp-java52py-to-abox =
     pp-java52py-to-abox(fail)
-    
+
   /**
    *  @param extension  Strategy that converts an aterm to an abox,
    *                    overriding the default pretty printing rules.
    */
-  pp-java52py-to-abox(extension) =    
+  pp-java52py-to-abox(extension) =
     parenthesize-Java5
     ; bottomup(try(j2py))
     ; topdown(
@@ -53,15 +53,15 @@ strategies
         ; try(j2py-comments(extension <+ java2py-to-box))
         ; repeat(j2py <+ extension <+ java2py-to-box)
       )
-    // ; where(<debug> [ "//////////////////", <id> ])  
+    // ; where(<debug> [ "//////////////////", <id> ])
 
 rules
- 
+
   j2py: ExprStm(PreIncr(e))  -> H hs=1 [ ~e "+= 1"]
   j2py: ExprStm(PreDecr(e))  -> H hs=1 [ ~e "-= 1"]
   j2py: ExprStm(PostIncr(e)) -> H hs=1 [ ~e "+= 1"]
   j2py: ExprStm(PostDecr(e)) -> H hs=1 [ ~e "-= 1"]
-  j2py: For( 
+  j2py: For(
           LocalVarDec([],Int(),[VarDec(e, e1)]),
           Some(Lt(ExprName(e), e2)),
           [PostIncr(ExprName(e))],
@@ -70,39 +70,39 @@ rules
   j2py:
     ClassOrInterfaceType(TypeName(Id("Object")), None())
       -> ClassOrInterfaceType(TypeName(Id("java.Object")), None())
-      
-  j2py:
-    SuperDec(ClassType(TypeName(Id("Object")), None()))
-      -> SuperDec(ClassType(TypeName(Id("java.Object")), None()))  
 
   j2py:
-    ExprStm( Assign(e1, PostIncr(e2)) )  
+    SuperDec(ClassType(TypeName(Id("Object")), None()))
+      -> SuperDec(ClassType(TypeName(Id("java.Object")), None()))
+
+  j2py:
+    ExprStm( Assign(e1, PostIncr(e2)) )
     ->
-    Block2([ 
+    Block2([
         ExprStm(Assign(e1, e2))
       , ExprStm(PostIncr( e2 ))
     ])
-                
+
   j2py:
-    ExprStm( Assign(e1, PostDecr(e2)) )  
+    ExprStm( Assign(e1, PostDecr(e2)) )
     ->
-    Block2([ 
+    Block2([
         ExprStm(Assign(e1, e2))
       , ExprStm(PostDecr( e2 ))
     ])
- 
+
   j2py:
-    ExprStm( Assign(e1, PreIncr(e2)) )  
+    ExprStm( Assign(e1, PreIncr(e2)) )
     ->
-    Block2([ 
+    Block2([
         ExprStm(PostIncr( e2 ))
       , ExprStm(Assign(e1, e2))
     ])
 
   j2py:
-    ExprStm( Assign(e1, PreDecr(e2)) )  
+    ExprStm( Assign(e1, PreDecr(e2)) )
     ->
-    Block2([ 
+    Block2([
         ExprStm(PostDecr( e2 ))
       , ExprStm(Assign(e1, e2))
     ])
@@ -111,7 +111,7 @@ rules
 
   j2py:
     ExprStm(AssignURightShift(e1, e2))
-      -> 
+      ->
     ExprStm(
       Assign(
         e1,
@@ -121,7 +121,7 @@ rules
 
 */
 
-/* from java-front             
+/* from java-front
 rules
 
   very-special-conflict:
@@ -137,22 +137,42 @@ rules
     ?t{a*}
 
     ; where(
-        <fetch(?(Comment(_), s))> a*
+        <fetch(?(Comment(_), s ))> a*
+      ; <pprules> t => b
+      ; <is-string> s
+      )
+
+    ; if !b => V(_, _) then // block comments
+        !|[ V vs=0 [ /* "##C1" */ s b] ]|
+      else
+        // if <explode-string> s => cs@['/', '/' | _] then
+        //  <trim(?'\n' + ?'\r' + ?' ' + ?'\t'); implode-string> cs => s1
+        //  ; !|[ V vs=0 [b /* "##C2" */ s1] ]|
+        // else // inline comments
+        !|[ H hs=1 [b /* "##C3" */ s] ]|
+        // end
+      end
+
+  j2py-comments(pprules) =
+    ?t{a*}
+
+    ; where(
+        <fetch(?(Comment(_), a2* ))> a*
       ; <pprules> t => b
       )
 
     ; if !b => V(_, _) then // block comments
-        !|[ V vs=0 [s b] ]|
+        <pprules> a2* => s; !|[ V vs=0 [ /* "##C4" */ ~s b ] ]|
       else
-        if <explode-string> s => cs@['/', '/' | _] then
-          <trim(?'\n' + ?'\r' + ?' ' + ?'\t'); implode-string> cs => s1
-          ; !|[ V vs=0 [b s1] ]|
-        else // inline comments
-          !|[ H hs=1 [b s] ]|
-        end
+        // if <explode-string> s => cs@['/', '/' | _] then
+        //  <trim(?'\n' + ?'\r' + ?' ' + ?'\t'); implode-string> cs => s1
+        //  ; !|[ V vs=0 [b /* "##C5" */ s1] ]|
+        // else // inline comments
+         <pprules> a2* => s; !|[ H hs=1 [b /* "##C6" */ ~s] ]|
+        // end
       end
 
- 
+
 rules
 
   // TODO: This could probably be written much nicer; learn stratego ....
@@ -167,7 +187,7 @@ rules
 
   java2py-to-box:
     Verbatim(s1,e,s2) ->  box |[ V [ s1 ~e s2 ] ]|
-    
+
   java2py-to-box:
     Verbatim(e) ->  box |[ V [ ~*e ] ]|
 
@@ -194,21 +214,21 @@ rules
 rules
 
   java2py-to-box:
-    TypeImportDec(TypeName(pname,Id(s))) -> H hs=0 [ "from " ~pname "." s  " import " s ]
+    TypeImportDec(TypeName(pname,Id(s))) -> H hs=0 [ "from " ~pname  " import " s ]
 
   java2py-to-box:
-    TypeImportOnDemandDec(pname) 
+    TypeImportOnDemandDec(pname)
       ->
-    V [ 
-      H hs=1 ["import" ~pname ]
-      H hs=1 ["from" ~pname "import *" ] 
+    V [
+      H hs=1 ["import" ~pname "; " "from" ~pname "import *" ]
+      // H hs=1 [ ]
     ]
-    
-  java2py-to-box:
-    StaticImportDec(tname, Id(s)) -> H hs=0 ["from " ~tname "." s " import " s " ##staticimport"] 
 
   java2py-to-box:
-    StaticImportOnDemandDec(tname)  -> H hs=1 ["import" ~tname "import *"  " ##staticimport"] 
+    StaticImportDec(tname, Id(s)) -> H hs=0 ["from " ~tname " import " s " ##staticimport"]
+
+  java2py-to-box:
+    StaticImportOnDemandDec(tname)  -> H hs=1 ["from" ~tname "import *"  " ##staticimport"]
 
 rules
 
@@ -219,11 +239,11 @@ rules
     InterfaceDec(InterfaceDecHead(mods, Id(name), type-args, implements), body)
       ->
     V vs=0 [
-      ~*mods 
-      ~implements
-      H hs=0 ["class " ~lit:name b* "(java.Interface):"] 
-      b2 
       ""
+      ~*mods
+      ~implements
+      H hs=0 ["class " ~lit:name b* "(java.Interface):"]
+      b2
     ]
     where
       <j2py-type-params-to-boxes> type-args => b*
@@ -233,24 +253,25 @@ rules
     ClassDec(ClassDecHead(mods, Id(name), None(), extends, implements), body)
       ->
     V vs=0 [
+      ""
       ~*mods
       ~implements
       H hs=1 ["class" H hs=0 [~lit:name "(" ~extends "):"]]
-      "" 
-      ~body
       ""
+      ~body
     ]
 
   java2py-to-box:
     ClassDec(ClassDecHead(mods, Id(name), Some(type-args), extends, implements), body)
       ->
     V vs=0 [
+        ""
         H hs=0 ["def " ~lit:name "((" b* "),*a,**kw):" ]
         H hs=0 [ "    " V vs=0 [
           ~*mods
           ~implements
           H hs=1 ["class" H hs=0 [~lit:name "(" ~extends "):"]]
-          "" 
+          ""
           ~body
         ] ]
         H hs=0 ["    return " ~lit:name "(*a,**kw)" ]
@@ -263,7 +284,7 @@ rules
     ClassBody(decs) -> <j2py-block-structure> (1, decs)
 
   java2py-to-box:
-    None() -> box |[ H hs=0 [""] ]|
+    None() -> box |[ H hs=0 ["##None"] ]|
 
   java2py-to-box:
     Some(c) -> c
@@ -293,23 +314,24 @@ rules
     AbstractMethodDec(mods, type-params, type, Id(n), params, throws)
       ->
     box |[ V [
+      ""
       H hs=0 [ ~MethodDecHead(mods, type-params, type, Id(n), params, throws) ]
-      "    pass" 
+      "    pass"
     ] ]|
 
   java2py-to-box:
     ConstrDec(ConstrDecHead(mods, type-params, class, params, throws), body)
       ->
     V vs=0 [
+      ""
       ~*mods
       H hs=0 ["def __init__" ~targboxes "(self, " ~args "):"]
-      ~body 
-      ""
+      ~body
     ]
-    where 
-      <j2py-list-to-args2> params => args 
-    ; <j2py-type-params-to-boxes> type-params => targboxes 
-    ; !Conc(mods, targboxes) => foo 
+    where
+      <j2py-list-to-args2> params => args
+    ; <j2py-type-params-to-boxes> type-params => targboxes
+    ; !Conc(mods, targboxes) => foo
 
   java2py-to-box:
     ConstrBody(None(), stms) -> <j2py-block-structure> (0, stms)
@@ -318,13 +340,13 @@ rules
     ConstrBody(Some(cinvoke), stms) -> <j2py-block-structure> (0, [cinvoke | stms])
 
   java2py-to-box:
-    FieldDec(mods, type, ds) -> V [ ~ds ] 
- 
+    FieldDec(mods, type, ds) -> V [ ~ds ]
+
 /* TODO: init static attrs
   java2py-to-box:
     FieldDec(mods, type, ds)
       ->
-    H hs=1 [ H hs=0 ["self." ~decs ] ] 
+    H hs=1 [ H hs=0 ["self." ~decs ] ]
     where
       <separate-by-comma> ds => decs
 
@@ -357,21 +379,21 @@ rules
       <separate-by-comma> exprs => vals
 
   java2py-to-box:
-    AltConstrInv(type-args, exprs) 
+    AltConstrInv(type-args, exprs)
       -> H hs=0 [ "self" ~args " ##AltConstrInv" ]
     where
       <j2py-list-to-args> exprs => args
     ; <j2py-type-args-to-boxes> type-args => b1*
 
   java2py-to-box:
-    SuperConstrInv(type-args, exprs) 
+    SuperConstrInv(type-args, exprs)
       -> box |[ H hs=0 [ "self.__init__._super" b2 /* "##SuperConstrInv" */] ]|
     where
       <j2py-list-to-args> exprs => b2
     ; <j2py-type-args-to-boxes> type-args => b1*
 
   java2py-to-box:
-    QSuperConstrInv(b0, type-args, exprs) 
+    QSuperConstrInv(b0, type-args, exprs)
       -> box |[ H hs=0 [ "self.__init__._super" b2 /* "##QSuerConstrInv" */ ] ]|
     where
       <j2py-list-to-args> exprs => b2

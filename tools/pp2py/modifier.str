@@ -2,7 +2,7 @@ module java/pp2py/modifier
 
 strategies
 
-  java2py-to-box: Public()       -> box |[ "#public"  ]|
+  java2py-to-box: Public()       -> box |[ "@java.public"  ]|
   java2py-to-box: Private()      -> box |[ "@java.private"  ]|
   java2py-to-box: Protected()    -> box |[ "@java.protected" ]|
   java2py-to-box: Abstract()     -> box |[ "@java.abstract" ]|
@@ -15,20 +15,18 @@ strategies
   java2py-to-box: StrictFP()     -> box |[ "@java.strictfp" ]|
   java2py-to-box: Decorator(s)   -> box |[ s ]|
 
-  java2py-to-box: 
-    Typed(l)      
-        -> 
-    box |[ 
-       H hs=0 [ "@java.typed" ~l1 ] 
+  java2py-to-box:
+    Typed(l)
+        ->
+    box |[
+       H hs=0 [ "@java.typed" ~l1 ]
     ]|
-    where 
+    where
       <j2py-list-to-args> l => l1
-      
-  
-  
+
+
+
 signature
   constructors
     Decorator  : String -> Unknown
     Typed      : Unknown -> Unknown
-    
-    

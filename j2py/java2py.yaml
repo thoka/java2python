@@ -1,0 +1,11 @@
+rename-packages:
+  com.google.gwt.user.client: pyjamas
+  com.allen_sauer.gwt.dnd.client: dnd
+  com.google.gwt.core.client.GWT: pyjamas.ui
+  java.util.HashMap: java.util
+  java.util.Iterator: java.util
+  java.util.ArrayList: java.util
+skip:
+  - '#@java.annotated'
+  - '##None'
+  - '@java.public'

@@ -13,9 +13,9 @@ strategies
    *
    * @type Java -> String
    */
-  
- // pp-java-stream = pp-java2py-stream //TODO hack, to get java2java running now 
-   
+
+ // pp-java-stream = pp-java2py-stream //TODO hack, to get java2java running now
+
   pp-java2py-string =
     pp-java52py-to-string
 
@@ -44,17 +44,25 @@ strategies
 strategies
 
   main-java2py =
-    io-stream-wrap(
+    io-wrap( pp-java2py-box <+ report-failure )
+
+
+  main-java2py_old =
+    io-wrap(
       fail
     , java2py-usage
     , java2py-about
-    , java2py <+ report-failure-no-trace
+    , java2py_new <+ report-failure
     )
 
   java2py =
     ?(<read-from-stream>, fout)
     ; pp-java2py-stream(|fout)
     ; <fputs> ("\n", fout)
+
+  java2py_new =
+    pp-java2py-box
+
 
 /**
  * Documentation
@@ -64,10 +72,11 @@ strategies
   java2py-usage =
     <tool-doc>
       [ Usage("java2py [OPTIONS]")
-      , Summary("Converts a Java abstract syntax tree in ATerm format to a Python source file.")
+      , Summary("Converts a Java abstract syntax tree in ATerm format to a Python ABox file.")
       , OptionUsage()
       , AutoReportBugs()
       ]
+
   java2py-about =
     <tool-doc>
       [ AutoProgram()

@@ -1,15 +1,25 @@
 module java/pp2py/statement
 rules
 
-/*
-  stm-box:
+
+  j2py-stm-box:
     x -> box |[ H hs=0 [~x ] ]|
-*/
 
 /*
   j2py:
     Block([]) -> Block([Pass(None())])
 */
+
+  java2py-to-box:
+    DocString(s)
+      ->
+    |[ V [ "\"\"\"" ~*l "\"\"\"" ] ]|
+    where
+       <get-lines; map(trim-whitespace); map(tos)> s => l
+
+  tos:
+    s -> S(s)
+
 
   java2py-to-box:
     Block(stms) -> <j2py-block-structure> (0, stms)
@@ -20,11 +30,11 @@ rules
   java2py-to-box:
     ClassDecStm(classdec) -> classdec
 
-  java2py-to-box: Return(None())  -> <stm-box> box |[  KW["return"] ]|
-  java2py-to-box: Return(Some(e)) -> <stm-box> box |[ H hs=1 [KW["return"] ~e] ]|
+  java2py-to-box: Return(None())  -> <j2py-stm-box> box |[  KW["return"] ]|
+  java2py-to-box: Return(Some(e)) -> <j2py-stm-box> box |[ H hs=1 [KW["return"] ~e] ]|
 
   java2py-to-box:
-    ExprStm(e) -> <stm-box> e
+    ExprStm(e) -> <j2py-stm-box> e
 
   java2py-to-box:
     Empty()  -> box |[ V ["pass ##Empty"] ]|
@@ -135,12 +145,12 @@ rules
     While(cond, b) -> V vs=0 [H hs=0 ["while " ~cond ":"] ~b]
 
   java2py-to-box:
-    DoWhile(b, cond) -> 
+    DoWhile(b, cond) ->
       V vs=0 [
-        "while True:" 
+        "while True:"
         V vs=0 [
-          ~b 
-          H hs=0 ["    if not (" ~cond "):"] 
+          ~b
+          H hs=0 ["    if not (" ~cond "):"]
           "        break"
         ]
       ]
@@ -165,14 +175,14 @@ rules
   j2py-for-head :
     For(init, cond, update, body)
       ->
-    V [  
+    V [
         ~binit
         H hs=0 [
           "while " ~*bcond ":"
         ]
-        H hs=0 ["    " ~bupdate]  
+        H hs=0 ["    " ~bupdate]
     ]
-    
+
     where
       <separate-by-comma> update => bupdate
 
@@ -229,18 +239,18 @@ rules
     Continue(None())      -> H hs=0 [KW["continue"] ]
 
   java2py-to-box:
-    Labeled(Id(s), stm) -> box |[ V [ H hs=0 [ "#LABELED" s ":" ] ~stm] ]| 
+    Labeled(Id(s), stm) -> box |[ V [ H hs=0 [ "#LABELED" s ":" ] ~stm] ]|
 
 /*
   java2py-to-box:
-    AssertStm(e) -> box |[ H hs=0 [ "if not " ~e ": raise AssertionError" ] ]| 
+    AssertStm(e) -> box |[ H hs=0 [ "if not " ~e ": raise AssertionError" ] ]|
 
   java2py-to-box:
     AssertStm(e1, e2) -> H hs=0 [ "if not " ~e1 ": raise AssertionError, " ~e2 ]
 */
 
   java2py-to-box:
-    AssertStm(e) -> box |[ H hs=0 [ "assert " ~e ] ]| 
+    AssertStm(e) -> box |[ H hs=0 [ "assert " ~e ] ]|
 
   java2py-to-box:
     AssertStm(e1, e2) -> H hs=0 [ "assert " ~e1 ", " ~e2 ]
@@ -254,17 +264,17 @@ rules
 
 
   java2py-to-box:
-    SwitchGroup([Default()], stms) 
-      -> 
+    SwitchGroup([Default()], stms)
+      ->
      V is=4 vs=0 [ H hs=1 ["if True:"] ~*stms ]
 
   java2py-to-box:
-    SwitchGroup(labels, stms) 
-      -> 
+    SwitchGroup(labels, stms)
+      ->
      V is=4 vs=0 [ H hs=0 ["if _switch in [" ~params "]:"] ~*stms ]
      where
        <j2py-list-to-args2> labels => params
-      
+
 
   java2py-to-box:
     Case(e) -> H hs=0 [~e]
@@ -277,6 +287,6 @@ rules
 
 signature
   constructors
+    DocString: Unknown -> Unknown
     Pass: Unknown -> Unknown
     Block2 : Unknown -> Unknown // TODO could get a nicer name
-    

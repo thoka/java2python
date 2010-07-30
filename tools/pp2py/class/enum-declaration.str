@@ -2,38 +2,38 @@ module java/pp2py/class/enum-declaration
 rules
 
   java2py-to-box:
-    EnumDec(head, body) 
-      -> 
-    box |[ 
+    EnumDec(head, body)
+      ->
+    box |[
       V hs=0 [
         ~head1
         ~body1
-      ] 
+      ]
     ]|
-    where 
+    where
       <java2py-to-box> head => head1
-      ; <java2py-to-box> body => body1 
+      ; <java2py-to-box> body => body1
 
   java2py-to-box:
     EnumDecHead(mods, Id(name), implements)
       ->
-    box |[ 
-      V [  
+    box |[
+      V [
+        ""
         "@java.enum"
         ~*mods
         H hs=0 ["class "  ~lit:name "(java.Enum):" /* ~implements */]
-        "" 
       ]
     ]|
 
 /*
 
   java2py-to-box:
-    EnumBody(consts, body) -> <block-structure> (1, [ |[ 
-      V [ 
-        H hs = 0 ["init = [" ~consts2 "]" ]
+    EnumBody(consts, body) -> <j2py-block-structure> (1, [ |[
+      V [
         ""
-      ] 
+        H hs = 0 ["init = [" ~consts2 "]" ]
+      ]
     ]| , body2])
     where
       <separate-by-comma> consts => consts2
@@ -42,23 +42,23 @@ rules
 */
 
   java2py-to-box:
-    EnumBody(consts, body ) -> <block-structure> (1, [ |[ 
-      V [ 
-        H hs = 0 ["init = [" ~consts2 "]" ]
+    EnumBody(consts, body ) -> <j2py-block-structure> (1, [ |[
+      V [
         ""
-      ] 
+        H hs = 0 ["init = [" ~consts2 "]" ]
+      ]
     ]| , None() ])
     where
       <separate-by-comma> consts => consts2
     ; !body => Some(EnumBodyDecs([]))
-    
-    
+
+
   java2py-to-box:
-    EnumBody(consts, body ) -> <block-structure> (1, [ |[ 
-      V [ 
-        H hs = 0 ["init = [" ~consts2 "]" ]
+    EnumBody(consts, body ) -> <j2py-block-structure> (1, [ |[
+      V [
         ""
-      ] 
+        H hs = 0 ["init = [" ~consts2 "]" ]
+      ]
     ]| , body2])
     where
       <separate-by-comma> consts => consts2
@@ -79,10 +79,9 @@ rules
       !EnumConst(Id(s), args, None()) => enum
 
   java2py-to-box:
-   EnumBodyDecs(decs) -> 
-     box |[ V vs=1 [ 
+   EnumBodyDecs(decs) ->
+     box |[ V vs=1 [
+       ""
        "class EnumItem(java.EnumItem):"
-       H hs=0 [ "    " V [ ~*decs ] ]        
+       H hs=0 [ "    " V [ ~*decs ] ]
      ] ]|
-   
-  

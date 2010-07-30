@@ -2,13 +2,17 @@ module java/pp2py/interface/annotation
 rules
 
   java2py-to-box:
-    MarkerAnno(name) -> box |[ V [H hs=0 ["@java.annotated(" ~name "())" ]] ]|
+    MarkerAnno(name) -> box |[ V [H hs=0 ["#@java.annotated(" ~name "())" ]] ]|
 
   java2py-to-box:
-    SingleElemAnno(name, val) -> box |[ H hs=0 ["##SingleElemAnno @" ~name "(" ~val ")"] ]|
+    SingleElemAnno(name, val) -> box |[ H hs=0 ["#@java.annotated(" ~name "(" ~val "))"] ]|
 
   java2py-to-box:
-    Anno(name, pairs) -> box |[ V [H hs=0 ["@java.annotated(" ~name "(" ~pairs' "))"]] ]|
+    Anno(name, pairs)
+      ->
+    box |[ V [
+      H hs=0 ["#@java.annotated(" ~name "(" ~pairs' "))"]]
+    ]|
     where
       <separate-by-comma> pairs => pairs'
 
@@ -30,4 +34,3 @@ strategies
     + ?Anno(_, _)
 
 */
-
