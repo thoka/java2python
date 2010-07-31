@@ -16,15 +16,15 @@ transform() {
     local adst=$adir/$(basename $src)
     mkdir -p $adir
     local dst=$(dirname $src)/$(basename $src).py # where py goes
-    
+
     #parse
     parse-java --preserve-comments -i $src.java  > $adst.aterm
-    
+
     #do python conversions
     cat $adst.aterm | $scriptpath/j2py.py > $adst.j2py 2>&1 #
-    
+
     #transform ast -> python
-    cat $adst.j2py | $scriptpath/../tools/java2py > $dst    
+    cat $adst.j2py | $scriptpath/../tools/java2py | abox2text --width 1000 > $dst
 
     # make nice intermediate outputs
     cat $adst.aterm | pp-aterm > $adst.aterm.pp
@@ -41,25 +41,25 @@ compile_and_run() {
     local class=$(basename ${1%.java})
     pushd $path > /dev/null
 
-    if [[ "$class.java" -nt "$class.class" ]] 
+    if [[ "$class.java" -nt "$class.class" ]]
     then
         echo "- compiling java $1 ..."
         $JAVAC "$class.java"
     fi
-   
+
     #run and compare output
-    if grep -q "main(\s*String" "$class.java" 
+    if grep -q "main(\s*String" "$class.java"
     then
-    
+
         #run java
         echo "- running java ... "
         #grep "public static void main" $class.java && \
-        
+
         if [[ "$class.class" -nt "$class.java.run" ]]
         then
             java -ea $class > $class.java.run
         fi
-        
+
         #run python
         echo -n "- running python ... "
         local dst=$class.py
@@ -68,13 +68,13 @@ compile_and_run() {
         cat $logfile.tmp >> $dst.run
         #cat $logfile.tmp >> $logfile
         rm $logfile.tmp
-        
+
         #compare output
-        ( diff $class.java.run $dst.run && echo "OK" ) || 
+        ( diff $class.java.run $dst.run && echo "OK" ) ||
           ( (echo "Output differs: $1" >> $logfile) && ( echo "Error") \
             && (diff $class.java.run $dst.run >> $logfile))
-    fi    
-   
+    fi
+
     popd > /dev/null
 }
 
@@ -86,7 +86,5 @@ for src in $(find test -iname "$1*.java" | sort ); do
     transform $src
     compile_and_run $src
     echo
-    echo 
+    echo
 done
-
-

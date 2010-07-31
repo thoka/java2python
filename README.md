@@ -80,14 +80,12 @@ As demonstrated by the third example above, python scripts can step in, to chang
 
 ## TODO / Roadmap
 
-- boolean -> bool
+- lastindexof -> rfind
 - import neded classes in package
 - ++i etc
 - understand static imports
 - do switch statement right
 - java.static has to be first decorator
-- lastindexof -> rfind
-- substring -> [:]
 - add typed to interfaces
 - convert map,list,string acces to python
 - inner assignments
@@ -106,11 +104,12 @@ As demonstrated by the third example above, python scripts can step in, to chang
 - file bug report for quotes not working in pp-aterm
 
 ## recently done
++ boolean -> bool
++ substring -> [:]
 + make parse-java available from python
 + comment decorations out
 + comment typed out
 + remove decorations by default
-
 
 ### Pitfalls
 

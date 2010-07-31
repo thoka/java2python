@@ -209,6 +209,12 @@ rules
     ArrayAccess(b1, b2) -> H hs=0 [ b1 "[" b2 "]"]
 
   java2py-to-box:
+    Slice(b1, b2, b3) -> H hs=0 [ b1 "[" b2 ":" b3 "]"]
+
+  java2py-to-box:
+    Slice(b1, b2, b3, b4) -> H hs=0 [ b1 "[" b2 ":" b3 ":" b4 "]"]
+
+  java2py-to-box:
     CastPrim(b1, b2) -> H hs=0 [b2]
 
   java2py-to-box:
@@ -229,6 +235,10 @@ signature
 
     ToStr : Unknown -> Unknown
     Pass: Unknown -> Unknown
+
+    Slice : Unknown * Unknown * Unknown -> Unknown
+    Slice : Unknown * Unknown * Unknown * Unknown -> Unknown
+
 
     InnerAssign : Unknown * Unknown -> Unknown
     InnerAssignMul: Unknown * Unknown -> Unknown

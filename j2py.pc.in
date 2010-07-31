@@ -1,0 +1,11 @@
+prefix=@prefix@
+datarootdir=@datarootdir@
+pkgdatadir=@datadir@/@PACKAGE@
+xtc_repo=@REPOSITORY@
+strcflags=-I @datadir@/java-front-syntax -I ${pkgdatadir} -la ${prefix}/lib/libjava-front.la
+strcxtcflags=--xtc-repo ${xtc_repo}
+
+Name: j2py
+Description: Java to python translator for the java-front/stratego framework.
+Version: @PACKAGE_VERSION@
+#Libs: ${prefix}/lib/libjava-front.la

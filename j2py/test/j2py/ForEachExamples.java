@@ -51,4 +51,3 @@ public final class ForEachExamples {
     System.out.println(aThing);
   }
 }
-

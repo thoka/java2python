@@ -7,20 +7,23 @@ def static(something):
     else:
         return staticclass(something)
 
-def abstract(func):
-    return func
+def abstract(f):
+    return f
 
-def protected(func):
-    return func
+def protected(f):
+    return f
 
-def volatile(func):
-    return func
+def volatile(f):
+    return f
 
-def final(func):
-    return func
+def final(f):
+    return f
 
-def private(func):
-    return func
+def private(f):
+    return f
+
+def public(f):
+    return f
 
 def constructor(func):
     return func

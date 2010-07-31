@@ -1,11 +1,11 @@
 module java/pp2py/type/primitive
 strategies
 
-  java2py-to-box: Boolean() -> box |[ KW["boolean"] ]|
-  java2py-to-box: Byte()    -> box |[ KW["byte"]    ]|
-  java2py-to-box: Short()   -> box |[ KW["short"]   ]|
+  java2py-to-box: Boolean() -> box |[ KW["bool"] ]|
+  java2py-to-box: Byte()    -> box |[ KW["java.byte"]    ]|
+  java2py-to-box: Short()   -> box |[ KW["java.short"]   ]|
   java2py-to-box: Int()     -> box |[ KW["int"]     ]|
-  java2py-to-box: Long()    -> box |[ KW["long"]    ]|
-  java2py-to-box: Char()    -> box |[ KW["char"]    ]|
-  java2py-to-box: Float()   -> box |[ KW["float"]   ]|
-  java2py-to-box: Double()  -> box |[ KW["double"]  ]|
+  java2py-to-box: Long()    -> box |[ KW["java.long"]    ]|
+  java2py-to-box: Char()    -> box |[ KW["java.char"]    ]|
+  java2py-to-box: Float()   -> box |[ KW["java.float"]   ]|
+  java2py-to-box: Double()  -> box |[ KW["java.double"]  ]|

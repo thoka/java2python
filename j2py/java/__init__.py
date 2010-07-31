@@ -2,7 +2,7 @@
 java runtime lib for j2py
 """
 
-from decorators import abstract,static,protected,private,volatile,final,constructor,interface
+from decorators import abstract,static,protected,private,public,volatile,final,constructor,interface
 from decorators import init,innerclass,typed,staticclass,overloaded
 from decorators import implements,extends,use_class_init
 
@@ -15,5 +15,3 @@ from helpers import str,bsr,synchronize
 
 
 from annotation import annotated, Annotation
-
-
