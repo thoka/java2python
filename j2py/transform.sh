@@ -21,10 +21,13 @@ transform() {
     parse-java --preserve-comments -i $src.java  > $adst.aterm
 
     #do python conversions
-    cat $adst.aterm | $scriptpath/j2py.py > $adst.j2py 2>&1 #
+    cat $adst.aterm | $scriptpath/j2py.py 2>&1 >$adst.j2py
 
     #transform ast -> python
-    cat $adst.j2py | $scriptpath/../tools/java2py | abox2text --width 1000 > $dst
+    echo "#!/usr/bin/env python" > $dst
+    echo "#-*- coding:utf-8 -*" >> $dst
+    echo "#translated by jf2py" >> $dst
+    cat $adst.j2py | $scriptpath/../tools/java2py | abox2text --width 1000 >> $dst
 
     # make nice intermediate outputs
     cat $adst.aterm | pp-aterm > $adst.aterm.pp

@@ -16,10 +16,13 @@ makes java front programs accessable from python
 FIX_PP_BUG = True
 
 class run_cmd:
+
     def __init__(self,command,instr=""):
         self.command = command
         p = Popen(command, stdin=PIPE,stderr=PIPE, stdout=PIPE)
         self.res,self.err = p.communicate(instr)
+        self.res=unicode(self.res,'utf8')
+        self.err=unicode(self.res,'utf8')
 
     def __str__(self):
         return "%s\n  res=%s\n  err=%s" % (self.command,self.res,self.err)
@@ -33,7 +36,6 @@ def parse_java(fname):
 
     if len(pj.err)>0:
         raise ParseError('parse-java:'+pj.err)
-
     return aterm.decode(pj.res)
 
 import string

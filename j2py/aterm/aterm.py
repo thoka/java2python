@@ -15,13 +15,16 @@ DEBUG=False
 
 FLAGS = re.VERBOSE | re.MULTILINE | re.DOTALL
 
+import sys
 
-class AString(str):
-    def __repr__(self):
+class Encodable(object):
+    pass
+
+class AString(unicode,Encodable):
+    def encode(self):
         return encode_string(self)
-
-
-class ATerm (list):
+    
+class ATerm (list,Encodable):
     def __init__(self,name,params=[],annotation=None):
         self.up = None
         self.name = name
@@ -29,11 +32,18 @@ class ATerm (list):
         self.annotation=annotation
         self._update_children()
 
-    def __repr__(self):
+    def __str__(self): return self.encode()
+
+    def encode(self):
+        args = [encode(i) for i in self]
         if self.annotation is None:
-            return "%s(%s)" % (self.name,list.__repr__(self)[1:-1])
+            return u"%s(%s)" % ( self.name, u','.join(args) )
         else:
-            return "%s(%s){%s}" % (self.name,list.__repr__(self)[1:-1],repr(self.annotation))
+            return u"%s(%s){%s}" % (
+                self.name,
+                u','.join(args),
+                encode(self.annotation)
+            )
 
     def __setitem__(self,i,y):
         if y.__class__ is str:
@@ -130,7 +140,10 @@ class ATerm (list):
 
     def __getattr__(self,name):
         if name[0:1].isupper():
-            return self.findfirst(name)
+            try:
+                return self.findfirst(name)
+            except StopIteration:
+                raise RuntimeError("node named %s not found in %s" % (name,self))
         else:
             raise AttributeError
 
@@ -161,26 +174,24 @@ class ATerm (list):
 
     def copy(self):
         "returns a new copy of self"
-        return decode(repr(self))
+        return decode(self.encode())
 
 
-class AList(ATerm):
+class AList(ATerm,Encodable):
     def __init__(self):
         ATerm.__init__(self,'[]')
-    def __repr__(self):
-        return '[%s]' % (','.join([repr(l) for l in self]))
+    def encode(self):
+        return u'[%s]' % (u','.join([encode(l) for l in self]))
 
-class ATuple(ATerm):
+class ATuple(ATerm,Encodable):
     def __init__(self):
         ATerm.__init__(self,'()')
-    def __repr__(self):
-        return '(%s)' % (','.join([repr(l) for l in self]))
-
+    def encode(self):
+        return u'(%s)' % (u','.join([encode(l) for l in self]))
 
 def debug(msg):
     if DEBUG:
         print "DEBUG:",msg
-
 
 def linecol(doc, pos):
     lineno = doc.count('\n', 0, pos) + 1
@@ -283,13 +294,14 @@ def scanstring(s, end, encoding=None, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.
             end = next_end
         # Append the unescaped character
         _append(char)
-    return AString(''.join(chunks)), end
+
+    s = u''.join(chunks)
+    return AString(s), end
 
 match_whitespace = re.compile(r'[ \t\n\r]*', FLAGS).match
 WHITESPACE = ' \t\n\r'
 
-ID_START = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-match_ID = re.compile(r'[A-Z]+[A-Za-z0-9]*', FLAGS).match
+match_ID = re.compile(r'[A-Za-z]+[A-Za-z0-9]*', FLAGS).match
 
 NUMBER_RE = re.compile(
     r'(-?(?:0|[1-9]\d*))(\.\d+)?([eE][-+]?\d+)?',
@@ -313,7 +325,7 @@ def expect(string,idx,s):
 def skip_whitespace(string,idx):
     if idx<len(string) and string[idx] in WHITESPACE:
         m = match_whitespace(string,idx)
-        debug("skip whitespace %i" % (m.end()) )
+        #debug("skip whitespace %i" % (m.end()) )
         return m.end()
     return idx
 
@@ -366,7 +378,7 @@ def scan(string, idx):
 
 def parse_list(string,idx,terminator):
     l = AList()
-    debug("parse list "+string[idx:idx+20])
+    #debug("parse list "+string[idx:idx+20])
 
     while True:
         idx = skip_whitespace(string,idx)
@@ -375,8 +387,8 @@ def parse_list(string,idx,terminator):
             break
 
         val,idx = scan(string,idx)
-        debug("append "+repr(val))
-        debug("now at "+string[idx:idx+20])
+        #debug("append "+repr(val))
+        #debug("now at "+string[idx:idx+20])
         l.append( val )
         idx = skip_whitespace(string,idx)
 
@@ -403,29 +415,56 @@ def decode(string):
 
 ### Encoding ###
 
-ESCAPE = re.compile(r'[\x00-\x1f\\"\b\f\n\r\t]')
-ESCAPE_ASCII = re.compile(r'([\\"]|[^\ -~])')
-HAS_UTF8 = re.compile(r'[\x80-\xff]')
-ESCAPE_DCT = {
-    '\\': '\\\\',
-    '"': '\\"',
-    '\b': '\\b',
-    '\f': '\\f',
-    '\n': '\\n',
-    '\r': '\\r',
-    '\t': '\\t',
-}
+def encode(obj):
+    # this seems ugly, should everything inside a aterm be encodable ?
+    if isinstance(obj,Encodable): return obj.encode()
+    if isinstance(obj,int): return str(obj)
+    if isinstance(obj,basestring): return encode_string(obj)
 
+    #TODO clean this up    
+    print 'missing encode for'
+    print obj.__class__
+    print obj
+    raise RuntimeError()
+    return str(obj)
+
+ESCAPE = re.compile(r'[\x00-\x1f\\"\b\f\n\r\t]')
+#ESCAPE_ASCII = re.compile(r'([\\"]|[^\ -~])')
+#HAS_UTF8 = re.compile(r'[\x80-\xff]')
+
+ESCAPE_DCT = {
+    u'\\': u'\\\\',
+    u'"': u'\\"',
+    u'\b': u'\\b',
+    u'\f': u'\\f',
+    u'\n': u'\\n',
+    u'\r': u'\\r',
+    u'\t': u'\\t',
+}
 
 for i in range(0x20):
     #ESCAPE_DCT.setdefault(chr(i), '\\u{0:04x}'.format(i))
     ESCAPE_DCT.setdefault(chr(i), '\\u%04x' % (i,))
 
+for i in range(128,256):
+    ESCAPE_DCT.setdefault(chr(i), 'XX')
+
 def encode_string(s):
     "Return a JSON representation of a Python string"
-    def replace(match):
+
+    def replace(match): 
         return ESCAPE_DCT[match.group(0)]
-    return '"' + ESCAPE.sub(replace, s) + '"'
+   
+    if isinstance(s,str): 
+        s = unicode(s,'utf8')
+    elif isinstance(s,unicode):
+        pass
+    else:
+        raise RuntimeError('bad type '+s.__class__.__name__)
+
+    s = ESCAPE.sub(replace, s)
+    return '"%s"' % s
+
 
 def reverse(iterator):
     a = [i for i in iterator]
@@ -445,8 +484,7 @@ def transformation(transform):
     setattr(ATerm,transform.__name__,transform)
     return transform
 
-
 if __name__ == '__main__':
     import sys
-
-    print decode ( sys.stdin.read())
+    print decode ( unicode.decode(sys.stdin.read(),'utf8')).encode().encode('utf8')
+    

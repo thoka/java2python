@@ -13,10 +13,13 @@ import fixcomments
 import fixenum
 import fix_values
 import rename_methods
+import fix_expressions
+
 
 def run(ast):
     rename.run(ast)
     fix_values.run(ast)
+    fix_expressions.run(ast)
     fixnames.run(ast)
     rename_methods.run(ast)
     translatepackages.run(ast)
@@ -26,6 +29,7 @@ def run(ast):
     fixcomments.run(ast) #run at least after addinit, to have docstrings in first position
 
 if __name__ == '__main__':
-    ast = aterm.decode(sys.stdin.read())
+    ast = aterm.decode(unicode(sys.stdin.read(),'utf8'))
     run(ast)
-    print ast
+    print ast.encode().encode('utf8')
+    
