@@ -80,9 +80,11 @@ As demonstrated by the third example above, python scripts can step in, to chang
 
 ## TODO / Roadmap
 
+- make anonymous inner classes working
 - convert map,list acces to python
-- get empty line before @java.init
 - import neded classes in package
+- create dispatchers for overwritten methods, do not use decorators as default
+  (decorators are difficult to understand, debug, translate by pyjs)
 - ++i etc
 - add checks/translations for typecasts
 - understand static imports
@@ -100,6 +102,7 @@ As demonstrated by the third example above, python scripts can step in, to chang
 - find a way to translate statements to produce no output
 - implement HashMap
 - file bug report for quotes not working in pp-aterm
+- get empty line before @java.init
 
 ## recently done
 + boolean -> bool
