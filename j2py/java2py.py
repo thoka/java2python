@@ -8,41 +8,61 @@ import os.path
 
 from translatepackages import rename_pkg
 import java_front
-from config import config
+from config import config,logger
+
 
 DEBUG = True
 save_intermediates = DEBUG
 
 
-def package2py(basedir,pkg,outbase):
+def package2py(basedir,pkg=None,outbase=None,recursive=True):
     """
     translates all java src in pkg to python,
     writes py src into outbase/pkg
     """
 
+    if outbase is None:
+        outbase = os.path.join(basedir,"..","py")
+
+    logger.debug(pkg)
     #figure out output dir
     outpkg = rename_pkg(pkg)
-    print "outpkg",outpkg
-
 
     pkgdir = os.path.join(basedir,pkg.replace(".",os.path.sep))
-    outdir = os.path.join(outbase,outpkg.replace(".",os.path.sep))
-    if not os.path.isdir(outdir): os.makedirs(outdir)
+    if outpkg is None:
+        outdir = outbase
+    else:
+        outdir = os.path.join(outbase,outpkg.replace(".",os.path.sep))
 
-    print "pkgdir",pkgdir
-    print "outdir",outdir
+    if not os.path.isdir(outdir):
+        os.makedirs(outdir)
+
+    logger.info("starting java2py")
+    logger.info("  pkgdir: %s",pkgdir)
+    logger.info("  outdir: %s",outdir)
 
     pi = pkginfo.PackageInfo.load(basedir,pkg)
 
     #make __init__.py
     of = open(os.path.join(outdir,"__init__.py"),"w")
-    of.write('''#-*- coding:utf-8 -*-\n"""%s"""''' % pi.doc)
+    of.write('''#-*- coding:utf-8 -*-\n"""%s"""\n''' % pi.doc)
+
+    of.write('\n#public classes:\n')
+    for c in pi.public_classes():
+        of.write('from %s import %s\n' % (c.name,c.name) )
+
+    of.write('\n#public interfaces:\n')
+    for i in pi.public_interfaces():
+        of.write('from %s import %s\n' % (i.name,i.name) )
+
     of.close()
 
-
-
     for n in os.listdir(pkgdir):
-        if n.endswith(".java"):
+        if recursive and os.path.isdir(os.path.join(pkgdir,n)) \
+           and not n.startswith('.') \
+           and (True or os.path.exists(os.path.join(pkgdir,n,'package.html'))):
+            package2py(basedir,pkg+"."+n,outbase,True)
+        elif n.endswith(".java"):
             print "translating",n
 
             ast = java_front.parse_java(os.path.join(pkgdir,n))
@@ -89,4 +109,14 @@ if __name__ == '__main__':
     pkg = 'com.google.gwt.user.client'
     outbase = '/home/toka/dv2/google-web-toolkit/user/py/'
 
-    package2py(basedir,pkg,outbase)
+    basedir = '/home/toka/dv/gwt1.7-dnd/DragDrop/src/'
+    pkg = 'com.allen_sauer.gwt.dnd'
+    outbase = None
+
+    basedir = '/home/toka/dv2/gwt-facebook/GwittIt/src'
+    pkg = 'com.gwittit'
+    outbase = None
+
+    recursive = True
+
+    package2py(basedir,pkg,outbase,recursive)

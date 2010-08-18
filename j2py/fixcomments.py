@@ -4,9 +4,10 @@
 import aterm
 import sys
 import java_front
+import config
+import logging
 
-DEBUG = False
-
+logger = logging.getLogger('j2py.fixcomments')
 
 def strip_java_comment(s):
     """
@@ -91,7 +92,10 @@ def convert_comments(ast):
 
             p = '/'.join(exp.path()) + '/' + exp.name
 
-            if exp.name in make_docstring_for:
+            comment = exp.annotation[1]
+            # logger.debug(repr(comment))
+
+            if exp.name in make_docstring_for and comment.startswith('/**'):
                 #try:
                     if exp.name == 'AbstractMethodDec':
                         #print "convert from",exp.pp()
@@ -125,8 +129,7 @@ def convert_comments(ast):
     for exp in ast.walk():
         if isinstance(exp,aterm.ATerm):
             if exp.annotation is not None:
-                if DEBUG:
-                    print exp.name, exp.path()
+                logging.debug(exp.name, exp.path())
                 if exp.name in not_wanted:
                     for dest in exp.parents():
                         if not dest.name in not_wanted:

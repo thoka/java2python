@@ -38,7 +38,7 @@ rules
 
 rules
 
-  java2py-to-box: String(parts) -> box |[ H hs=0 ["\"" ~*parts "\""] ]|
+  java2py-to-box: String(parts) -> box |[ H hs=0 ["u\"" ~*parts "\""] ]|
   java2py-to-box: Chars(s) -> box |[ s ]|
 
 rules

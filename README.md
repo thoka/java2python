@@ -80,23 +80,21 @@ As demonstrated by the third example above, python scripts can step in, to chang
 
 ## TODO / Roadmap
 
-- lastindexof -> rfind
+- convert map,list acces to python
+- get empty line before @java.init
 - import neded classes in package
 - ++i etc
+- add checks/translations for typecasts
 - understand static imports
 - do switch statement right
 - java.static has to be first decorator
 - add typed to interfaces
-- convert map,list,string acces to python
 - inner assignments
 - comment out @java.extends by default
 - do not add self.__class__ in class_init
 - do more tests for str add , seems to be broken
 - remove @private, @protected
-- get empty line before @java.init
-- get docstrings in interfaces and abstract classes right
 - get acces to static final attribs right: always self.attrib
-- Write and collect example/test java files with supposed translations.
 - make install
 - do java.typed right for VarArityParam (see LoopStyles)
 - find a way to translate statements to produce no output
@@ -106,10 +104,12 @@ As demonstrated by the third example above, python scripts can step in, to chang
 ## recently done
 + boolean -> bool
 + substring -> [:]
++ lastindexof -> rfind
 + make parse-java available from python
 + comment decorations out
 + comment typed out
 + remove decorations by default
++ get docstrings in interfaces and abstract classes right
 
 ### Pitfalls
 

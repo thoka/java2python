@@ -1,7 +1,8 @@
 rename-packages:
   com.google.gwt.user.client: pyjamas
-  com.allen_sauer.gwt.dnd.client: dnd
+  com.allen_sauer.gwt.dnd: dnd
   com.google.gwt.core.client.GWT: pyjamas.ui
+  com.gwittit : gwittit
   java.util.HashMap: java.util
   java.util.Iterator: java.util
   java.util.ArrayList: java.util
@@ -9,3 +10,39 @@ skip:
   - '#@java.annotated'
   - '##None'
   - '@java.public'
+assign-expressions:
+  - Assign
+  - AssignMul
+  - AssignDiv
+  - AssignRemain
+  - AssignPlus
+  - AssignMinus
+  - AssignLeftShift
+  - AssignRightShift
+  - AssignURightShift
+  - AssignAnd
+  - AssignExcOr
+  - AssignOr
+  - PostIncr
+  - PostDecr
+  - PreIncr
+  - PreDecr
+logging:
+    version: 1
+    formatters:
+      simple:
+        format: format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+    handlers:
+      console:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: simple
+        stream: ext://sys.stderr
+    loggers:
+      simpleExample:
+        level: DEBUG
+        handlers: [console]
+        propagate: no
+    root:
+        level: DEBUG
+        handlers: [console]

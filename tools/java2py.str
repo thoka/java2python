@@ -44,8 +44,9 @@ strategies
 strategies
 
   main-java2py =
-    io-wrap( pp-java2py-box <+ report-failure )
-
+    io-wrap(
+      pp-java2py-box <+ report-failure
+    )
 
   main-java2py_old =
     io-wrap(
