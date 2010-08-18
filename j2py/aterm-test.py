@@ -153,6 +153,16 @@ class TestFind(unittest.TestCase):
         self.assertEquals(r[0][0].name,"D")
         r = [i for i in t.findall(['B','C']) ]
         self.assertEquals(len(r), 2)
+        
+class TestAterm(unittest.TestCase):
+    def test_copy(self):
+        a = decode('A(B(1),B(C(D("äöäö"),E())),F())')      
+        b = a.copy()
+        self.assertEquals(a.encode(),b.encode())
+        
+        
+        
+        
 
 if __name__ == '__main__':
     unittest.main()
