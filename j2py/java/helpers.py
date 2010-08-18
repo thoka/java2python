@@ -7,6 +7,8 @@ def str(o):
         return "true"
     elif o is False:
         return "false"
+    elif isinstance(o,unicode):
+        return o.encode('utf8')
     else:
         return _str(o)
         
