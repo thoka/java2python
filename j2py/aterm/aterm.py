@@ -486,9 +486,5 @@ def transformation(transform):
 
 if __name__ == '__main__':
     import sys
-<<<<<<< HEAD
     print decode ( unicode.decode(sys.stdin.read(),'utf8')).encode().encode('utf8')
-=======
-    print decode ( unicode.decode(sys.stdin.read(),'utf8').encode().encode('utf8')
->>>>>>> f3361c17109735dc84f1f7b46ca4f9ed77984121
-    
+
