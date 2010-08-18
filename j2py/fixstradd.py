@@ -15,16 +15,15 @@ therefore, replace str + expr with str + str(expr)
 #TODO rename to fix_str
 
 DEBUG = False
-        
+
 def is_string(e):
     return (e.name == "Lit" and e[0].name=="String") or e.name == "ToStr"
-            
 
 def make_string(e):
-    return aterm.decode("ToStr(%s)" % repr(e))
+    return aterm.decode(u"ToStr(%s)" % e.encode())
 
 def fix_toString(e):
-    # change defintion of methods 
+    # change defintion of methods
     for c in e.findall("ClassDec"):
         body_code = c.findfirst("ClassBody")[0]
         for n in body_code:
@@ -37,30 +36,28 @@ def fix_toString(e):
     for i in e.findall("Invoke"):
         try:
             if i[0][0][1][0] == "toString":
-               i.replace( make_string(i[0][0][0]) )    
+               i.replace( make_string(i[0][0][0]) )
         except:
             pass
 
 def fix_str_add(ast):
-    "replace str + expr with str + str(expr)" 
+    "replace str + expr with str + str(expr)"
     for p in aterm.reverse(ast.findall("Plus")):
         if len(p)==2:
             if is_string(p[0]) or is_string(p[1]):
                if not is_string(p[0]):
                     p[0].replace(make_string(p[0]))
                if not is_string(p[1]):
-                    p[1].replace(make_string(p[1])) 
+                    p[1].replace(make_string(p[1]))
 
 
 
 def run(ast):
     fix_toString(ast)
     fix_str_add(ast)
-                
+
 if __name__ == '__main__':
     ast = aterm.decode(sys.stdin.read())
     run(ast)
     if not DEBUG:
         print ast
-
-

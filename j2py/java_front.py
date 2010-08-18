@@ -18,11 +18,12 @@ FIX_PP_BUG = True
 class run_cmd:
 
     def __init__(self,command,instr=""):
+        if isinstance(instr,unicode): instr = instr.encode('utf8')
         self.command = command
         p = Popen(command, stdin=PIPE,stderr=PIPE, stdout=PIPE)
         self.res,self.err = p.communicate(instr)
         self.res=unicode(self.res,'utf8')
-        self.err=unicode(self.res,'utf8')
+        self.err=unicode(self.err,'utf8')
 
     def __str__(self):
         return "%s\n  res=%s\n  err=%s" % (self.command,self.res,self.err)
@@ -47,7 +48,7 @@ def fixpp(ast):
     for exp in ast.walk():
         if isinstance(exp,aterm.ATerm) and exp.annotation is not None:
             c = exp.annotation[1]
-            if isinstance(c,str):
+            if isinstance(c,basestring):
                 exp.annotation[1] = c.replace("\"","\\\"")
             else:
                 for s in c.findall("S"):
@@ -55,7 +56,7 @@ def fixpp(ast):
     return ast
 
 def pp_aterm(s):
-    if isinstance(s,aterm.ATerm): s = str(s.copy().fixpp())
+    if isinstance(s,aterm.ATerm): s = s.copy().fixpp().encode()
     return run_cmd(['pp-aterm'],s).res
 
 @aterm.transformation
@@ -63,13 +64,13 @@ def pp(s):
     return pp_aterm(s)
 
 def java2py(s):
-    if isinstance(s,aterm.ATerm): s = str(s)
+    if isinstance(s,aterm.ATerm): s = s.encode()
     run = run_cmd([os.path.join(os.path.dirname(__file__), "../tools/java2py")],s)
     if len(run.err)>0: sys.stderr.write(run.err)
     return run.res
 
 def abox2text(s):
-    if isinstance(s,aterm.ATerm): s = str(s)
+    if isinstance(s,aterm.ATerm): s = s.encode()
     run = run_cmd(["abox2text","--width","1000"],s)
     if len(run.err)>0: sys.stderr.write(run.err)
     return run.res

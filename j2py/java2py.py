@@ -2,6 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import pkginfo
+import codecs
 import j2py
 
 import os.path
@@ -68,19 +69,27 @@ def package2py(basedir,pkg=None,outbase=None,recursive=True):
             ast = java_front.parse_java(os.path.join(pkgdir,n))
 
             if save_intermediates:
-                open(os.path.join(outdir,n+".aterm"),"w").write(java_front.pp_aterm(ast))
+                f = codecs.open(os.path.join(outdir,n+".aterm"),"w","utf8")
+                f.write(java_front.pp_aterm(ast))
+                f.close()
 
             j2py.run(ast)
 
             #todo: add package imports
 
             if save_intermediates:
-                open(os.path.join(outdir,n+".j2py.aterm"),"w").write(java_front.pp_aterm(ast))
+                f = codecs.open(os.path.join(outdir,n+".j2py.aterm"),"w","utf8")
+                s = java_front.pp_aterm(ast)
+                f.write(s)
+                f.close()
 
             py_ast = java_front.java2py(ast)
 
             if save_intermediates:
-                open(os.path.join(outdir,n+".box"),"w").write(java_front.pp_aterm(py_ast))
+                f = codecs.open(os.path.join(outdir,n+".box"),"w","utf8")
+                s = java_front.pp_aterm(py_ast)
+                f.write(s)
+                f.close()
 
             py = java_front.abox2text(py_ast)
 
@@ -102,21 +111,19 @@ def package2py(basedir,pkg=None,outbase=None,recursive=True):
             py = "\n".join(res)
 
             pyfn = n.replace('.java','.py')
-            open(os.path.join(outdir,pyfn),'w').write(py)
+            f = codecs.open(os.path.join(outdir,pyfn),'w','utf8')
+            f.write(py)
+            f.close()
 
 if __name__ == '__main__':
+    #hardcoded args while developing ...
     basedir = '/home/toka/dv2/google-web-toolkit/user/src/'
     pkg = 'com.google.gwt.user.client'
-    outbase = '/home/toka/dv2/google-web-toolkit/user/py/'
 
     basedir = '/home/toka/dv/gwt1.7-dnd/DragDrop/src/'
     pkg = 'com.allen_sauer.gwt.dnd'
-    outbase = None
 
     basedir = '/home/toka/dv2/gwt-facebook/GwittIt/src'
     pkg = 'com.gwittit'
-    outbase = None
 
-    recursive = True
-
-    package2py(basedir,pkg,outbase,recursive)
+    package2py(basedir,pkg)
