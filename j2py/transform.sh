@@ -44,15 +44,15 @@ compile_and_run() {
     local class=$(basename ${1%.java})
     pushd $path > /dev/null
 
-    if [[ "$class.java" -nt "$class.class" ]]
-    then
-        echo "- compiling java $1 ..."
-        $JAVAC "$class.java"
-    fi
-
     #run and compare output
     if grep -q "main(\s*String" "$class.java"
     then
+
+        if [[ "$class.java" -nt "$class.class" ]]
+        then
+            echo "- compiling java $1 ..."
+            $JAVAC "$class.java"
+        fi
 
         #run java
         echo "- running java ... "
