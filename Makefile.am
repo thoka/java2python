@@ -12,4 +12,4 @@ XTC_IMPORT = $(STRATEGOXT)/share/strategoxt/XTC
 
 ACLOCAL_AMFLAGS = -I .
 
-pkgconfig_DATA = j2py.pc
+#pkgconfig_DATA = j2py.pc
