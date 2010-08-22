@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import syck
-import os.path
-import logging
-import sys
-
+try:
+    import syck as yaml
+except:
+    import yaml 
+        
+import os.path, logging, sys
 
 config_data = os.path.join(os.path.dirname(__file__), "java2py.yaml")
-config = syck.load(open(config_data))
+config = yaml.load(open(config_data))
 
 # create logger
 logger = logging.getLogger("j2py")
