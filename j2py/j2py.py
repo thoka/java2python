@@ -14,6 +14,7 @@ import fixenum
 import fix_values
 import rename_methods
 import fix_expressions
+import fix_annonclass
 
 
 def run(ast):
@@ -26,6 +27,7 @@ def run(ast):
     fixstradd.run(ast)
     addinit.run(ast)
     fixenum.run(ast)
+    fix_annonclass.run(ast)
     fixcomments.run(ast) #run at least after addinit, to have docstrings in first position
 
 if __name__ == '__main__':
